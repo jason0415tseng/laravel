@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\register;
 use Illuminate\Support\Facades\Validator;
-// use Validator;
+use App\Http\Requests\Auth;
 
 class RegisterController extends Controller
 {
@@ -27,21 +27,19 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Auth $request)
     {
         //驗證
         $data = $request->all();
         // print_r($data);
         // exit;
-        $messages = [
-            'password.confirmed' => '密碼需相同',
-        ];
+        // $messages = [
+        //     'password.confirmed' => '密碼需相同',
+        // ];
 
-        $validator = Validator::make($data, [
-            'password' => 'required|confirmed',
-            // 'password' => 'password == password_confirmation'
-        ],$messages);
+        // $validator = Validator::make($data,$this->rule,$this->$messages);
 
+        
 //         if($validator->fails()){
 //             $errors = $validator->errors();
 //             return back()->withErrors($validator);

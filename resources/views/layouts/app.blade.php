@@ -18,6 +18,22 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        .prompt{
+            display: block;
+            /* width: 100%; */
+            /* height: calc(2.19rem + 2px); */
+            /* padding: .375rem .75rem; */
+            font-size: 14px;
+            line-height: 2.6;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            /* border: 1px solid #ced4da; */
+            /* border-radius: .25rem; */
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+    </style>
 </head>
 <body>
     <div id="app">

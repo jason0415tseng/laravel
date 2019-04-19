@@ -6,15 +6,6 @@
 <div class="container">
     <h1>register</h1>
 </div> --}}
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 @extends('layouts.app')
 
 
@@ -34,8 +25,16 @@
                         <div class="form-group row">
                             <label for="account" class="col-md-4 col-form-label text-md-right">{{ ('帳號') }}</label>
 
-                            <div class="col-md-6">
-                                <input id="account" type="text" name="account" value="{{ old('account') }}" maxlength="6" placeholder="請輸入帳號" required autofocus>
+                            <div class="col-md-3">
+                                <input id="account" type="text" class="form-control{{ $errors->has('account') ? ' is-invalid' : '' }}" name="account" pattern="^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).*$" value="{{ old('account') }}" maxlength="6" placeholder="請輸入帳號" required autofocus>
+                                @if ($errors->has('account'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('account') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="col-md-4">
+                                <span class="prompt">請輸入6位數(英文、數字組合)</span>
                             </div>
                         </div>
 
@@ -45,8 +44,8 @@
                                 {{-- <div class="col-md-6">
                                     <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
                                 </div> --}}
-                                <div class="col-md-6">
-                                    <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
+                                <div class="col-md-3">
+                                    <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
     
                                     
                                 </div>
@@ -55,8 +54,8 @@
                         <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ ('密碼') }}</label>
 
-                            <div class="col-md-6">
-                                <input id="password" type="password" name="password" required>
+                            <div class="col-md-4">
+                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" pattern="^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).*$" maxlength="8" required oninvalid="setCustomValidity('請輸入密碼');" oninput="setCustomValidity('');">
                                 {{-- <span class="invalid-feedback" role="alert">
                                     <strong>password</strong>
                                 </span> --}}
@@ -80,13 +79,16 @@
                                         </span>
                                     @endif --}}
                             </div>
+                            <div class="col-md-4">
+                                <span class="prompt">請輸入8位數(英文、數字組合)</span>
+                            </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ ('再次確認密碼') }}</label>
 
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                            <div class="col-md-4">
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" pattern="^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).*$" maxlength="8" required>
                             </div>
                         </div>
 
