@@ -35,6 +35,13 @@ class Auth extends FormRequest
                 // 'regex:(^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).*$)',
 
                 // 'regex:/^((\d+)$)[0-9a-zA-Z]+)/u',
+
+                'unique:user,account',
+                'max:6' ,
+            ],
+            'name' => [
+                'required',
+                'unique:user,name',
                 'max:6' ,
             ],
             'password' => 'required|string|confirmed|max:8',
@@ -47,6 +54,8 @@ class Auth extends FormRequest
             'account.required' => '請輸入帳號' ,
             'account.regex' => '請輸入正確格式' ,
             // 'account.^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).*$' => '請輸入正確格式' ,
+            'account.unique' => '帳號已存在' ,
+            'name.unique' => '名稱已存在' ,
             'password.required' => '請輸入密碼' ,
             'password.confirmed' => '密碼需相同',
         ];
