@@ -18,16 +18,27 @@
                         <div class="form-group row">
                             <label for="account" class="col-md-4 col-form-label text-md-right">{{ ('帳號') }}</label>
 
-                            <div class="col-md-6">
-                                <input id="account" type="text" name="account" value="{{ old('account') }}" maxlength="6" placeholder="請輸入帳號" required autofocus>
+                            <div class="col-md-4">
+                                <input id="account" type="text" class="form-control{{ $errors->has('account') ? ' is-invalid' : '' }}" name="account" value="{{ old('account') }}" maxlength="6" placeholder="請輸入帳號" required autofocus>
+                                @if ($errors->has('account'))
+                                    dd($errors)
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('account') }}</strong>
+                                        </span>
+                                @endif
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ ('密碼') }}</label>
 
-                            <div class="col-md-6">
-                                <input id="password" type="password" name="password" required>
+                            <div class="col-md-4">
+                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" maxlength="8" placeholder="請輸入密碼" required>
+                                @if ($errors->has('password'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('password') }}</strong>
+                                        </span>
+                                @endif
                             </div>
                         </div>
 

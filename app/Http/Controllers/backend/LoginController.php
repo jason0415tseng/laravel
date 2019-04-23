@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\login;
 use DB;
+use Illuminate\Support\MessageBag;
 
 class LoginController extends Controller
 {
@@ -51,9 +52,17 @@ class LoginController extends Controller
     {
         //
         // echo($request);
+        //資料
+        $data = $request->all();
+
+        //檢查資料
+        $error = $this->checkLogin($data);
+
         $account = $request->account;
 
         $user = DB::table('user')->where('account', $account)->first();
+
+        dd($user);
 
         echo $user->name;
         // return "aaaa";
@@ -92,5 +101,28 @@ class LoginController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+        /**
+     * Display the specified resource.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Http\Response
+     */
+    public function checkLogin($data)
+    {
+        //
+        $errors = new MessageBag;
+
+        $Account = $data['account'];
+        $Password = base64_encode($data['password']);
+
+        $user = DB::table('user')->where('account', $Account )->first();
+        
+
+        print_r($user);
+        exit;
+        echo $Password;
+        exit;
     }
 }

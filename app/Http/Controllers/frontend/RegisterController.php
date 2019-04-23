@@ -8,6 +8,7 @@ use App\Models\register;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\MessageBag;
 
 class RegisterController extends Controller
 {
@@ -30,44 +31,31 @@ class RegisterController extends Controller
      */
     public function create(Request $request)
     {
-        //驗證
+        //資料
         $data = $request->all();
+    
+        //檢查資料
+        $error = $this->checkUser($data);
 
+        //判斷是否有錯誤訊息
+        if($error != null){
+            return back()->withErrors($error)->withInput();
+        }
         
-        // $Auth->rules($data);
-        // $User = $this->checkUser($data);
-        // if(!$User){
-        //     return false;
-        // }
-        // exit;
-        // print_r($data);
-        // exit;
-        // $messages = [
-        //     'password.confirmed' => '密碼需相同',
-        // // ];
+
+        //原生檢查的方式 == S ==
         $Auth = new Auth;
 
         $validator = Validator::make($data,$Auth->rules($data),$Auth->messages());
-
-        
-//         if($validator->fails()){
-//             $errors = $validator->errors();
-//             return back()->withErrors($validator);
-// // print_r($errors->first('password'));
-// // exit;
-// //             echo $errors->first('password');
-//             // return $errors;
-//         }else{
-//             return redirect()->route('/');
-//         }
 
         if ($validator->fails()) {
             return redirect('/register')
                         ->withErrors($validator)
                         ->withInput();
         }
+        //原生檢查的方式 == E ==
 
-        //
+        //註冊
         $register = new register;
 
         // $NowTime=date("Y-m-d H:i:s");
@@ -82,7 +70,7 @@ class RegisterController extends Controller
         // $register->NewTime = $NowTime; 
         // $register->UpdateTime = '';
 
-        // $register->save();
+        $register->save();
 
         return redirect('/');
         // echo ($request);
@@ -154,77 +142,47 @@ class RegisterController extends Controller
      */
     public function checkUser($data)
     {
-        // print_r($data);
-        // exit;
-        //判斷帳號是否重複
+        
+        $errors = new MessageBag;
+
         $Account = $data['account'];
         $Name = $data['name'];
-        // echo $Account;
-        // exit;
-        $User = DB::select('select Account , Name from user where Account = :Account AND Name = :Name', ['Account' => $Account , 'Name' => $Name]);
+        $Password = $data['password'];
+        $Password2 = $data['password_confirmation'];
+
+
+        //判斷帳號是否重複
+             
+        $User = DB::select('select Account , Name from user where Account = :Account' , ['Account' => $Account]);
+        //轉換格式
         $User = json_encode($User);
         $User = json_decode($User , true);
-        // foreach ($User as $user) {
-        //     print_r($user);
-        // }
-        // dd($User);
-       
-//         if(empty($User[0])){
-            // echo "AAAA";
-//         }else{
-//             echo "BBBBBBB";
-//         }
 
-        // $name = $data['name'];
-        // $Name = DB::select('select name from user where name = :name', ['name' => $name]);
+        //判斷名稱是否重複
+        
+        $Name = DB::select('select name from user where Name = :Name', ['Name' => $Name]);
+        //轉換格式
+        $Name = json_encode($Name);
+        $Name = json_decode($Name , true);
 
-        // $Name = json_decode($Name , true);
-// print_r($User);
-// exit;
-        if(!empty($User[0])){
-            // print_r($User);
-            // exit;
-            // echo ('select Account from user where Account'). $Account;
-            echo "AAAA";
-            // return $errors->account('帳號已存在');
-            // return $this->withErrors('required','帳號已存在');
-            // echo '帳號已存在';
-            // return view('/frontend.register',['account'=>'test']);
-            $err= '帳號已存在';
-            // exit;
-            return ('/');
-            // return view('frontend.register')->with('account','$err');
-            // return back()->with('account',$err);
-        // }else {
-        //     if(!empty($Name[0])){
-        //         // print_r($Name);
-        //         // exit;
-        //         // echo "BBBB";
-        //     //判斷名稱是否重複
-        //                     // return $errors->account('帳號已存在');
-        //         // return $this->withErrors('required','帳號已存在');
-        //         // echo '帳號已存在';
-        //         // return view('/frontend.register',['account'=>'test']);
-        //         $err= '名稱已存在';
-        //         // return view('frontend.register')->with('account','$err');
-        //         return back()->with('name',$err);
-            
-        //     }else{
-        //         echo "CCCC";
-        //         return true; 
-        //     }
+        //帳號是否存在
+        if(count($User)>0){
+
+            $errors->add('account','帳號已存在');         
+
+        //名稱是否存在
+        }elseif(count($Name)>0){
+
+            $errors->add('name','名稱已存在');
+
+        //密碼是否一致
+        }elseif ($Password != $Password2) {        
+
+            $errors->add('password','密碼需相同');
+
         }
-
-        //帳號名稱都為空時才回傳正確
-        // if($User =='' && $Name ==''){
-        //     return true;
-        // }
-        // print_r($results);
-        // exit;
-        // echo "AAA/AAA";
-        // exit;
-        // print_r($data);
-        // exit;
+        
+        return $errors;
     }
 
 }

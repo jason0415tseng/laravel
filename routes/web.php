@@ -13,6 +13,7 @@
 
 // use App\News as NewsModel;
 use App\News;
+use App\Http\Middleware\CheckData;
 
 
 
@@ -24,9 +25,9 @@ use App\News;
 //     return $user;
 // });
 
-Route::get('api/users/{user}', function (App\User $user) {
-    return $user->email;
-});
+// Route::get('api/users/{user}', function (App\User $user) {
+//     return $user->email;
+// });
 
 
 // Route::get('/', function () {
@@ -47,20 +48,20 @@ Route::get('api/users/{user}', function (App\User $user) {
 
 
 //1號路由
-Route::get('/users/{id?}',function($id=null){
-    if(!is_null($id)){
-        //如果有id就重導向至/student/profile
-        return redirect()->route('profile');
-    }else{
-        return '無使用者資料';
-    }
-});
+// Route::get('/users/{id?}',function($id=null){
+//     if(!is_null($id)){
+//         //如果有id就重導向至/student/profile
+//         return redirect()->route('profile');
+//     }else{
+//         return '無使用者資料';
+//     }
+// });
 
 
-//2號路由
-Route::get('/student/profile',function(){
-    return '已查到使用者資料';
-})->name('profile');
+// //2號路由
+// Route::get('/student/profile',function(){
+//     return '已查到使用者資料';
+// })->name('profile');
 
 
 // Route::get('/news','NewsController@index');
@@ -76,10 +77,10 @@ Route::get('/student/profile',function(){
 Route::get('/','NewsController@hello');
 
 
-Route::get('/news/{id}','NewsController@show_id');
+// Route::get('/news/{id}','NewsController@show_id');
 
 
-Route::get('profile', 'UserController@show')->middleware('auth');
+// Route::get('profile', 'UserController@show')->middleware('auth');
 
 //新增
 Route::get('/insert',function(){
@@ -152,13 +153,15 @@ Route::get('/delete',function(){
 Auth::routes();
 
 //登入介面
+// Route::get('login' , 'backend\LoginController@index')->name('login');
 Route::get('login' , 'backend\LoginController@index')->name('login');
 
 //登入
-Route::post('/login', 'backend\LoginController@login');
+Route::post('/login', 'backend\LoginController@login')->middleware(CheckData::class);
 
 
 //註冊介面
+// Route::get('register' , 'frontend\RegisterController@index')->name('register');
 Route::get('register' , 'frontend\RegisterController@index')->name('register');
 // Route::get('store', 'Frontend\StoreController@index')->name('store');
     // return '註冊';
