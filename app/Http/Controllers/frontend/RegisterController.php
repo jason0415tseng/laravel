@@ -19,9 +19,7 @@ class RegisterController extends Controller
      */
     public function index()
     {
-        //
         return view('frontend.register');
-        // return 'asdasd';
     }
 
     /**
@@ -38,7 +36,7 @@ class RegisterController extends Controller
         $error = $this->checkUser($data);
 
         //判斷是否有錯誤訊息
-        if($error != null){
+        if($error->any()){
             return back()->withErrors($error)->withInput();
         }
         
@@ -58,24 +56,18 @@ class RegisterController extends Controller
         //註冊
         $register = new register;
 
-        // $NowTime=date("Y-m-d H:i:s");
-        // $time = strtotime('Y-m-d H:i:s', $now);
-        // $register->Uid = '';
-        // $register->Level = '';
-        //[a-zA-0-9]
         $register->account = $request->account;
         $register->password = base64_encode($request->password);
         $register->name = $request->name;
-        // $register->Freeze = '';
-        // $register->NewTime = $NowTime; 
-        // $register->UpdateTime = '';
+
 
         $register->save();
 
-        return redirect('/');
-        // echo ($request);
-        // exit;
-        // return "sdasdads";
+        //註冊完登入
+        $request->session()->put('account', $register->account);
+
+        return redirect('/index');
+
     }
 
     /**
@@ -149,7 +141,6 @@ class RegisterController extends Controller
         $Name = $data['name'];
         $Password = $data['password'];
         $Password2 = $data['password_confirmation'];
-
 
         //判斷帳號是否重複
              

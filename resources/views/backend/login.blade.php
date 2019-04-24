@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ ('Login') }}</div>
+                <div class="card-header">{{ ('登入') }}</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
@@ -19,9 +19,8 @@
                             <label for="account" class="col-md-4 col-form-label text-md-right">{{ ('帳號') }}</label>
 
                             <div class="col-md-4">
-                                <input id="account" type="text" class="form-control{{ $errors->has('account') ? ' is-invalid' : '' }}" name="account" value="{{ old('account') }}" maxlength="6" placeholder="請輸入帳號" required autofocus>
+                                <input id="account" type="text" class="form-control{{ $errors->has('account') ? ' is-invalid' : '' }}" name="account" value="{{ old('account') }}" maxlength="6" pattern="^[A-Za-z\d\.]{6,}$" placeholder="請輸入帳號" required autofocus>
                                 @if ($errors->has('account'))
-                                    dd($errors)
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('account') }}</strong>
                                         </span>
@@ -47,6 +46,9 @@
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                     {{ ('登入') }}
+                                </button>
+                                <button type="button" class="btn btn-primary">
+                                    <a href="/"  style="text-decoration:none;color:seashell">{{ ('返回') }}</a>
                                 </button>
                             </div>
                         </div>

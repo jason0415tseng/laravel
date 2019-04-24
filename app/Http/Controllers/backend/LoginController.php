@@ -22,13 +22,13 @@ class LoginController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display the specified resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function show()
     {
-        //
+        return view('/index');
     }
 
     /**
@@ -50,22 +50,21 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        //
-        // echo($request);
         //資料
         $data = $request->all();
 
         //檢查資料
         $error = $this->checkLogin($data);
 
-        $account = $request->account;
+        if($error->any()){
+            return back()->withErrors($error)->withInput();
+        }
 
-        $user = DB::table('user')->where('account', $account)->first();
+        $Account = $request->account;
 
-        dd($user);
+        $request->session()->put('account',$Account);
 
-        echo $user->name;
-        // return "aaaa";
+        return redirect('/index');
         
     }
 
@@ -103,7 +102,7 @@ class LoginController extends Controller
         //
     }
 
-        /**
+    /**
      * Display the specified resource.
      *
      * @param  array  $data
@@ -111,18 +110,39 @@ class LoginController extends Controller
      */
     public function checkLogin($data)
     {
-        //
         $errors = new MessageBag;
 
         $Account = $data['account'];
         $Password = base64_encode($data['password']);
 
-        $user = DB::table('user')->where('account', $Account )->first();
-        
+        $user = DB::table('user')
+                    ->select('account','password')
+                    ->where('account', $Account)
+                    ->where('password', $Password )
+                    ->first();   
 
-        print_r($user);
-        exit;
-        echo $Password;
-        exit;
+
+        if(!$user){
+            $errors->add('password','帳號或密碼錯誤');
+        }
+
+        return $errors;
+
+    }
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        //清除session
+        $request->session()->flush();
+
+        return redirect('/');
+
     }
 }

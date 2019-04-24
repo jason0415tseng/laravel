@@ -26,22 +26,15 @@ class Auth extends FormRequest
         return [
             'account' => [
                 'required',
-                // 'string',
-                // 'regex:^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).*$',
-
-
-                'regex:/^[a-zA-Z]+[0-9]+$|[0-9]+[a-zA-Z]+$/',
-
-                // 'regex:(^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).*$)',
-
-                // 'regex:/^((\d+)$)[0-9a-zA-Z]+)/u',
-
+                'string',
+                'regex:/^[a-zA-Z]+[\d]+$|[\d]+[a-zA-Z]+$/',
                 'unique:user,account',
                 'max:6' ,
             ],
             'name' => [
                 'required',
                 'unique:user,name',
+                'regex:/^[a-zA-Z]+[\d]+$|[\d]+[a-zA-Z]+$/',
                 'max:6' ,
             ],
             'password' => 'required|string|confirmed|max:8',
@@ -53,9 +46,10 @@ class Auth extends FormRequest
         return [
             'account.required' => '請輸入帳號' ,
             'account.regex' => '請輸入正確格式' ,
-            // 'account.^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).*$' => '請輸入正確格式' ,
             'account.unique' => '帳號已存在' ,
+            'name.required' => '請輸入名稱' ,
             'name.unique' => '名稱已存在' ,
+            'name.regex' => '格式錯誤' ,
             'password.required' => '請輸入密碼' ,
             'password.confirmed' => '密碼需相同',
         ];

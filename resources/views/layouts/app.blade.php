@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -18,30 +19,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <style>
-        .prompt{
-            /* display: block; */
-            /* width: 200px; */
-                /* height: calc(2.19rem + 2px); */
-                /* padding: .375rem .75rem; */
-            /* font-size: 14px;
-            line-height: 2.6;
-            color: #495057;
-            margin-top: 3px; */
-                /* background-color: #fff; */
-                /* background-clip: padding-box; */
-                /* border: 1px solid #ced4da; */
-                /* border-radius: .25rem; */
-                /* transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out; */
-                /* display: block; */
-    /* width: 100%; */
-    /* margin-top: .25rem;
-    font-size: 80%; */
-    padding-top: 6px;
-    color: #e3342f;
-        }
-                 
-    </style>
+    
 </head>
 <body>
     <div id="app">
@@ -62,35 +40,22 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest                        
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('註冊') }}</a>
-                                </li>
-                            @endif
+                         @if (session('account'))
                             <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('登入') }}</a>
-                                </li>
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
+                                <div class="nav-link">{{ session('account') }}</div>
                             </li>
-                        @endguest
+                            
+                            <button type="button" class="btn btn-primary">
+                                <a href="/logout"  style="text-decoration:none;color:seashell">{{ ('登出') }}</a>
+                            </button>
+                        @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('register') }}">{{ __('註冊') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('登入') }}</a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </div>
