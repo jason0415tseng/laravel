@@ -30,43 +30,43 @@ class RegisterController extends Controller
     public function create(Request $request)
     {
         //資料
-        $data = $request->all();
+        $Data = $request->all();
     
         //檢查資料
-        $error = $this->checkUser($data);
+        $Error = $this->checkUser($Data);
 
         //判斷是否有錯誤訊息
-        if($error->any()){
-            return back()->withErrors($error)->withInput();
+        if($Error->any()){
+            return back()->withErrors($Error)->withInput();
         }
         
 
         //原生檢查的方式 == S ==
         $Auth = new Auth;
 
-        $validator = Validator::make($data,$Auth->rules($data),$Auth->messages());
+        $Validator = Validator::make($Data,$Auth->rules($Data),$Auth->messages());
 
-        if ($validator->fails()) {
+        if ($Validator->fails()) {
             return redirect('/register')
-                        ->withErrors($validator)
+                        ->withErrors($Validator)
                         ->withInput();
         }
         //原生檢查的方式 == E ==
 
         //註冊
-        $register = new register;
+        $Register = new register;
 
-        $register->account = $request->account;
-        $register->password = base64_encode($request->password);
-        $register->name = $request->name;
+        $Register->account = $request->account;
+        $Register->password = base64_encode($request->password);
+        $Register->name = $request->name;
 
 
-        $register->save();
+        $Register->save();
 
         //註冊完登入
-        $request->session()->put('account', $register->account);
+        $request->session()->put('account', $Register->account);
 
-        return redirect('/index');
+        return redirect('/success');
 
     }
 
@@ -129,51 +129,44 @@ class RegisterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  array  $data
+     * @param  array  $Data
      * @return \Illuminate\Http\Response
      */
-    public function checkUser($data)
+    public function checkUser($Data)
     {
         
-        $errors = new MessageBag;
+        $Errors = new MessageBag;
 
-        $Account = $data['account'];
-        $Name = $data['name'];
-        $Password = $data['password'];
-        $Password2 = $data['password_confirmation'];
+        $Account = $Data['account'];
+        $Name = $Data['name'];
+        $Password = $Data['password'];
+        $Password2 = $Data['password_confirmation'];
 
-        //判斷帳號是否重複
-             
-        $User = DB::select('select Account , Name from user where Account = :Account' , ['Account' => $Account]);
-        //轉換格式
-        $User = json_encode($User);
-        $User = json_decode($User , true);
-
-        //判斷名稱是否重複
-        
-        $Name = DB::select('select name from user where Name = :Name', ['Name' => $Name]);
-        //轉換格式
-        $Name = json_encode($Name);
-        $Name = json_decode($Name , true);
+        //判斷帳號、名稱是否重複
+        $User = register::
+                    select('Account' , 'Name')
+                    ->where('Account' , $Account)
+                    ->orwhere('Name' , $Name)
+                    ->first();
 
         //帳號是否存在
-        if(count($User)>0){
+        if($User['Account']){
 
-            $errors->add('account','帳號已存在');         
+            $Errors->add('account','帳號已存在');         
 
         //名稱是否存在
-        }elseif(count($Name)>0){
+        }elseif($User['Name']){
 
-            $errors->add('name','名稱已存在');
+            $Errors->add('name','名稱已存在');
 
         //密碼是否一致
         }elseif ($Password != $Password2) {        
 
-            $errors->add('password','密碼需相同');
+            $Errors->add('password','密碼需相同');
 
         }
         
-        return $errors;
+        return $Errors;
     }
 
 }

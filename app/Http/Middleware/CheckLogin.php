@@ -16,11 +16,11 @@ class CheckLogin
     public function handle($request, Closure $next)
     {
 
-        $value = $request->session()->get('account');
+        $Value = $request->session()->get('account');
 
-        if($value){
+        if($Value){
  
-            return redirect('/index');
+            return redirect('/');
         }
 
         return $next($request);

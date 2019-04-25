@@ -59,7 +59,13 @@
                                 <ul class="navbar-nav mr-auto">
             
                                 </ul>
-
+                                <ul class="navbar-nav ml-auto">
+                                    @if (session('account'))
+                                       <li class="nav-item">
+                                           <a class="nav-link" href="{{ route('MemberCenter') }}">{{ __('資料') }}</a>
+                                       </li>
+                                   @endif
+                               </ul>
                             </div>
                         </div>
                     </nav>

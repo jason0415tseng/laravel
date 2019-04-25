@@ -7,15 +7,19 @@
             <div class="card">
                 <div class="card-header">{{ session('account') }}</div>
 
+                
+
                 <div class="card-body">
                     @if (session('account'))
                         <div class="alert alert-success" role="alert">
                                 恭喜登入!
                         </div>
+ 
                     @endif
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 @endsection

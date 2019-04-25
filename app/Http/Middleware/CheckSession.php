@@ -16,9 +16,15 @@ class CheckSession
     public function handle($request, Closure $next)
     {
         
-        $value = session()->get('account');
-        if(!$value){
+        $Message = session()->get('Message');
+
+        $Account = session()->get('account');
+        if(!$Account){
             return redirect('login');
+        }
+
+        if(!$Message){
+            return redirect('/');
         }
 
         return $next($request);

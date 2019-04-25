@@ -39,7 +39,7 @@ Route::get('/login' , 'backend\LoginController@index')->middleware('CheckLogin')
 Route::post('/login', 'backend\LoginController@login')->middleware('CheckData');
 
 //登入成功
-Route::get('/index' , 'backend\LoginController@show')->middleware('CheckSession')->name('index');
+Route::get('/success' , 'backend\LoginController@show')->middleware('CheckSession')->name('success');
 
 //登出
 Route::get('/logout', 'backend\LoginController@logout')->name('logout');
@@ -49,4 +49,9 @@ Route::get('/register' , 'frontend\RegisterController@index')->middleware('Check
 
 //註冊
 Route::post('/register', 'frontend\RegisterController@create');
+
+//會員中心
+Route::get('/MemberCenter', 'MemberCenterController@index')->name('MemberCenter');
+// MemberCentre
+
 

@@ -18,14 +18,14 @@ class CheckData
     {
 
         //資料
-        $data = $request->all();
+        $Data = $request->only(['account', 'password']);
         
         //檢查資料
-        $error = $this->checkPost($data);
+        $Error = $this->checkPost($Data);
 
         //判斷有錯導回
-        if($error->any()){
-            return back()->withErrors($error)->withInput();
+        if($Error->any()){
+            return back()->withErrors($Error)->withInput();
         }
         
         return $next($request);
@@ -34,33 +34,28 @@ class CheckData
     /**
      * Display the specified resource.
      *
-     * @param  array  $data
+     * @param  array  $Data
      * @return \Illuminate\Http\Response
      */
-    public function checkPost($data)
+    public function checkPost($Data)
     {
         
-        $errors = new MessageBag;
-
-        $Account = $data['account'];
-        
-        $Password = $data['password'];
+        $Errors = new MessageBag;
         
         //判斷帳號格式
-        if(!(preg_match('/^[a-zA-Z]+[\d]+$|[\d]+[a-zA-Z]+$/', $Account))){
+        if(!(preg_match('/^[a-zA-Z]+[\d]+$|[\d]+[a-zA-Z]+$/', $Data['account']))){
 
-            $errors->add('account','請輸入正確格式');
-
+            $Errors->add('account','請輸入正確格式');
              
         }
         //判斷密碼格式
-        if(!(preg_match('/^[a-zA-Z]+[\d]+$|[\d]+[a-zA-Z]+$/', $Password))){
+        if(!(preg_match('/^[a-zA-Z]+[\d]+$|[\d]+[a-zA-Z]+$/', $Data['password']))){
             
-            $errors->add('password','請輸入正確格式');
+            $Errors->add('password','請輸入正確格式');
 
         }
 
         //回傳
-        return $errors;
+        return $Errors;
     }
 }

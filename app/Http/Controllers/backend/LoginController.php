@@ -28,7 +28,7 @@ class LoginController extends Controller
      */
     public function show()
     {
-        return view('/index');
+        return view('/success');
     }
 
     /**
@@ -51,20 +51,30 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         //資料
-        $data = $request->all();
+        $Data = $request->only(['account', 'password']);
 
         //檢查資料
-        $error = $this->checkLogin($data);
+        $Error = $this->checkLogin($Data);
 
-        if($error->any()){
-            return back()->withErrors($error)->withInput();
+        if($Error->any()){
+            return back()->withErrors($Error)->withInput();
         }
 
         $Account = $request->account;
 
         $request->session()->put('account',$Account);
 
-        return redirect('/index');
+        // return redirect('/index');
+        return redirect('/success')->with([
+            //跳轉資訊
+            'Message'=>'恭喜登入，請您耐心等待！',
+            //自己的跳轉路徑
+            'Url' =>'/',
+            //跳轉路徑名稱
+            'UrlName' =>'首頁',
+            //跳轉等待時間（s）
+            'JumpTime'=>3,
+     ]);
         
     }
 
@@ -105,28 +115,28 @@ class LoginController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  array  $data
+     * @param  array  $Data
      * @return \Illuminate\Http\Response
      */
-    public function checkLogin($data)
+    public function checkLogin($Data)
     {
-        $errors = new MessageBag;
+        $Errors = new MessageBag;
 
-        $Account = $data['account'];
-        $Password = base64_encode($data['password']);
+        $Account = $Data['account'];
+        $Password = base64_encode($Data['password']);
 
-        $user = DB::table('user')
-                    ->select('account','password')
+        $User = login::
+                    select('account','password')
                     ->where('account', $Account)
                     ->where('password', $Password )
                     ->first();   
 
 
-        if(!$user){
-            $errors->add('password','帳號或密碼錯誤');
+        if(!$User){
+            $Errors->add('password','帳號或密碼錯誤');
         }
 
-        return $errors;
+        return $Errors;
 
     }
 
