@@ -10,6 +10,15 @@ use Illuminate\Support\MessageBag;
 
 class LoginController extends Controller
 {
+
+    protected $Uid;
+    protected $Account;
+    protected $Level;
+    protected $View = '';
+    // protected $Message = '';
+    protected $Url = '';
+    protected $UrlName = '';
+
     /**
      * Display a listing of the resource.
      *
@@ -54,24 +63,33 @@ class LoginController extends Controller
         $Data = $request->only(['account', 'password']);
 
         //檢查資料
-        $Error = $this->checkLogin($Data);
+        $Error = $this->CheckLogin($Data);
 
         if($Error->any()){
             return back()->withErrors($Error)->withInput();
         }
 
-        $Account = $request->account;
+        // print_r($this->Level);
+        // exit;
+        //判斷是否為管理者
+        // $Level = $this->CheckLevel( $Data);
+        // $View = '';
+        // $Message = '';
+        // $Url = '';
+        // $UrlName = '';
 
-        $request->session()->put('account',$Account);
+        // $Account = $request->account;
+
+        $request->session()->put('account',$this->Account);
 
         // return redirect('/index');
         return redirect('/success')->with([
             //跳轉資訊
             'Message'=>'恭喜登入，請您耐心等待！',
             //自己的跳轉路徑
-            'Url' =>'/',
+            'Url' => $this->Url ,
             //跳轉路徑名稱
-            'UrlName' =>'首頁',
+            'UrlName' =>  $this->UrlName ,
             //跳轉等待時間（s）
             'JumpTime'=>3,
      ]);
@@ -118,7 +136,7 @@ class LoginController extends Controller
      * @param  array  $Data
      * @return \Illuminate\Http\Response
      */
-    public function checkLogin($Data)
+    public function CheckLogin($Data)
     {
         $Errors = new MessageBag;
 
@@ -126,19 +144,107 @@ class LoginController extends Controller
         $Password = base64_encode($Data['password']);
 
         $User = login::
-                    select('account','password')
+                    select('uid','account','password','freeze','level')
                     ->where('account', $Account)
                     ->where('password', $Password )
-                    ->first();   
-
+                    ->first();
 
         if(!$User){
             $Errors->add('password','帳號或密碼錯誤');
+        }elseif($User['freeze'] == 'N'){
+            $Errors->add('freeze','目前帳號已被凍結');
+        }
+
+        $this->Level = $User['level'];
+
+        //判斷Level 設定訊息
+        switch($this->Level){
+            case '0':
+                //Uid
+                $this->Uid = $User['uid'];
+                //account
+                $this->Account = $User[ 'account'];
+                //跳轉資訊
+                // $this->Message = '恭喜登入，請您耐心等待！';
+                //自己的跳轉路徑
+                $this->Url = '/admin';
+                //跳轉路徑名稱
+                $this->UrlName = '管理頁';
+                break;
+            case '1':
+                //Uid
+                $this->Uid = $User['uid'];
+                //account
+                $this->Account = $User['account'];
+                //跳轉資訊
+                // $this->Message = '恭喜登入，請您耐心等待！';
+                //自己的跳轉路徑
+                $this->Url = '/admin';
+                //跳轉路徑名稱
+                $this->UrlName = '管理頁';
+                break;
+            case '2':
+                //Uid
+                $this->Uid = $User['uid'];
+                //account
+                $this->Account = $User['account'];
+                //跳轉資訊
+                // $this->Message = '恭喜登入，請您耐心等待！';
+                //自己的跳轉路徑
+                $this->Url = '/admin';
+                //跳轉路徑名稱
+                $this->UrlName = '管理頁';
+                break;
+            case '3':
+                //Uid
+                $this->Uid = $User['uid'];
+                //account
+                $this->Account = $User['account'];
+                //跳轉資訊
+                $this->Message = '恭喜登入，請您耐心等待！';
+                //自己的跳轉路徑
+                $this->Url = '/';
+                //跳轉路徑名稱
+                $this->UrlName = '首頁';
+                break;
+            default:
+                break;
         }
 
         return $Errors;
 
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  array  $Data
+     * @return \Illuminate\Http\Response
+     */
+    public function CheckLevel($Data)
+    {
+        $Errors = new MessageBag;
+
+        $Account = $Data['account'];
+        $Password = base64_encode($Data['password']);
+
+        $User = login::select('account', 'password', 'freeze', 'level')
+            ->where('account', $Account)
+            ->where('password', $Password)
+            ->first();
+
+
+        if (!$User) {
+            $Errors->add('password', '帳號或密碼錯誤');
+        } elseif ($User['freeze'] == 'N') {
+            $Errors->add('freeze', '目前帳號已被凍結');
+        } elseif ($User['level'] == 0) {
+            $Errors->add('admin', '您好管理者');
+        }
+
+        return $Errors;
+    }
+
 
 
     /**

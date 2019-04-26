@@ -19,11 +19,15 @@
                             <label for="account" class="col-md-4 col-form-label text-md-right">{{ ('帳號') }}</label>
 
                             <div class="col-md-4">
-                                <input id="account" type="text" class="form-control{{ $errors->has('account') ? ' is-invalid' : '' }}" name="account" value="{{ old('account') }}" maxlength="6" pattern="^[A-Za-z\d\.]{6,}$" placeholder="請輸入帳號" required autofocus>
+                                <input id="account" type="text" class="form-control{{ $errors->has('account')|$errors->has('freeze') ? ' is-invalid' : '' }}" name="account" value="{{ old('account') }}" maxlength="6" pattern="^[A-Za-z\d\.]{6,}$" placeholder="請輸入帳號" required autofocus>
                                 @if ($errors->has('account'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('account') }}</strong>
-                                        </span>
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('account') }}</strong>
+                                    </span>
+                                @elseif ($errors->first('freeze'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('freeze') }}</strong>
+                                    </span>
                                 @endif
                             </div>
                         </div>
@@ -59,4 +63,10 @@
     </div>
 </div>
    
+<script>
+    var msg = '{{ $errors->first('freeze')}}';
+    if(msg){
+        alert(msg);
+    }
+</script>
 @endsection

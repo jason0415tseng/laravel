@@ -45,57 +45,53 @@
     <body>
             
         <div class="content">
-                <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
-                        <div class="container">
-                            <a class="navbar-brand" href="{{ url('/') }}">
-                                {{ config('app.name', 'Laravel') }}
-                            </a>
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-            
-                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                                <!-- Left Side Of Navbar -->
-                                <ul class="navbar-nav mr-auto">
-            
-                                </ul>
-                                <ul class="navbar-nav ml-auto">
-                                    @if (session('account'))
-                                       <li class="nav-item">
-                                           <a class="nav-link" href="{{ route('MemberCenter') }}">{{ __('資料') }}</a>
-                                       </li>
-                                   @endif
-                               </ul>
-                            </div>
+            <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
+                <div class="container">
+                    <a class="navbar-brand" href="{{ url('/') }}">
+                        {{ config('app.name', 'Laravel') }}
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <!-- Left Side Of Navbar -->
+                            <ul class="navbar-nav mr-auto">
+                            </ul>
+                            <ul class="navbar-nav ml-auto">
+                                @if (session('account'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('MemberCenter') }}">{{ __('資料') }}</a>
+                                    </li>
+                                @endif
+                            </ul>
                         </div>
-                    </nav>
+                </div>
+            </nav>
             <div class="row justify-content-center">
                 <div class="col-md-8">
-            <div class="card">
-                    <div class="card-header" style="font-size:84px;">
-                    Member system
+                    <div class="card">
+                        <div class="card-header" style="font-size:84px;">
+                            Member system
+                        </div>
                     </div>
-            </div>
-            @if (session('account'))
-                <div>
-                    <span>
-                    <h1>你好! {{session('account')}}</h>
-                    </span>
-                    <button type="button" class="btn btn-primary">
-                            <a href="/logout" style="text-decoration:none;color:seashell">{{ ('登出') }}</a>
-                        </button>
+                        @if (session('account'))
+                            <div class="card-body">
+                                <span>
+                                    <h1>你好! {{session('account')}}</h1>
+                                </span>
+                                <button type="button" class="btn btn-primary">
+                                    <a href="/logout" style="text-decoration:none;color:seashell">{{ ('登出') }}</a>
+                                </button>
+                            </div>
+                        @else
+                            <div class="card-body">
+                                <div class="links">
+                                    <a href="{{ url('/login') }}" style="text-decoration:none;">Login</a>
+                                    <a href="{{url('/register')}}" style="text-decoration:none;">Register</a>
+                                </div>
+                            </div>
+                        @endif
                 </div>
-                
-            @else
-            <div class="card-body">
-                <div class="links">
-                    <a href="{{ url('/login') }}" style="text-decoration:none;">Login</a>
-                    <a href="{{url('/register')}}" style="text-decoration:none;">Register</a>
-                </div>
-            </div>
-            @endif
-            </div>
-            </div>
             </div>
         </div>
     </body>

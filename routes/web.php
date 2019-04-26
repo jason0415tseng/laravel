@@ -51,7 +51,15 @@ Route::get('/register' , 'frontend\RegisterController@index')->middleware('Check
 Route::post('/register', 'frontend\RegisterController@create');
 
 //會員中心
-Route::get('/MemberCenter', 'MemberCenterController@index')->name('MemberCenter');
+Route::get('/memberCenter', 'MemberCenterController@index')->name('memberCenter');
 // MemberCentre
 
+//管理者
+Route::get('/admin', 'backend\AdminController@index')->name('admin');
+
+//管理者->取帳號資料
+Route::get('/admin/{user}', 'backend\AdminController@getaccount')->name('admin.account');
+
+//管理者->修改帳號資料
+Route::post('/admin/{user}', 'backend\AdminController@editaccount');
 
