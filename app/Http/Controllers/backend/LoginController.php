@@ -81,6 +81,7 @@ class LoginController extends Controller
         // $Account = $request->account;
 
         $request->session()->put('account',$this->Account);
+        $request->session()->put('level', $this->Level);
 
         // return redirect('/index');
         return redirect('/success')->with([

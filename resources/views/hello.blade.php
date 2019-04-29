@@ -59,9 +59,18 @@
                             </ul>
                             <ul class="navbar-nav ml-auto">
                                 @if (session('account'))
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('MemberCenter') }}">{{ __('資料') }}</a>
-                                    </li>
+                                {{-- @php
+                                 dd((session('level')));   
+                                @endphp --}}
+                                    @if (session('level') < 3)
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ route('admin') }}">{{ __('管理帳號') }}</a>
+                                        </li>
+                                    @else
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ route('memberCenter') }}">{{ __('資料') }}</a>
+                                        </li>
+                                    @endif
                                 @endif
                             </ul>
                         </div>

@@ -51,9 +51,10 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ ('登入') }}
                                 </button>
-                                <button type="button" class="btn btn-primary">
-                                    <a href="/"  style="text-decoration:none;color:seashell">{{ ('返回') }}</a>
-                                </button>
+                                <a href="/"  style="text-decoration:none;color:seashell">
+                                        <button type="button" class="btn btn-primary">{{ ('返回') }}</button>
+                                </a>
+                                <a href="{{ route('password.forgot') }}">忘記密碼</a>
                             </div>
                         </div>
                     </form>

@@ -28,24 +28,36 @@ use App\Http\Middleware\CheckData;
 // });
 
 
-Route::get('/','NewsController@hello');
+Route::get('/', 'NewsController@hello');
 
 Auth::routes();
 
 //登入介面
-Route::get('/login' , 'backend\LoginController@index')->middleware('CheckLogin')->name('login');
+Route::get('/login', 'backend\LoginController@index')->middleware('CheckLogin')->name('login');
 
 //登入
 Route::post('/login', 'backend\LoginController@login')->middleware('CheckData');
 
 //登入成功
-Route::get('/success' , 'backend\LoginController@show')->middleware('CheckSession')->name('success');
+Route::get('/success', 'backend\LoginController@show')->middleware('CheckSession')->name('success');
 
 //登出
 Route::get('/logout', 'backend\LoginController@logout')->name('logout');
 
+//忘記密碼介面
+Route::get('/password/forgot', 'frontend\ForgotPasswordController@index')->name('password.forgot');
+
+//忘記密碼
+Route::post('/password/account', 'frontend\ForgotPasswordController@resetaccount')->name('password.account');
+
+//重設密碼介面
+Route::get('/password/reset', 'frontend\ForgotPasswordController@resetindex')->name('password.reset');
+
+//重設密碼
+Route::post('/password/update', 'frontend\ForgotPasswordController@reset')->name('password.update');
+
 //註冊介面
-Route::get('/register' , 'frontend\RegisterController@index')->middleware('CheckLogin')->name('register');
+Route::get('/register', 'frontend\RegisterController@index')->middleware('CheckLogin')->name('register');
 
 //註冊
 Route::post('/register', 'frontend\RegisterController@create');
@@ -61,5 +73,7 @@ Route::get('/admin', 'backend\AdminController@index')->name('admin');
 Route::get('/admin/{user}', 'backend\AdminController@getaccount')->name('admin.account');
 
 //管理者->修改帳號資料
-Route::post('/admin/{user}', 'backend\AdminController@editaccount');
+Route::post('/admin/update', 'backend\AdminController@editaccount');
 
+//管理者->刪除帳號資料
+Route::post('/admin/delete', 'backend\AdminController@deleteaccount')->name('admin.delete');
