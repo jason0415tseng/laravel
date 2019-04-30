@@ -47,9 +47,9 @@
                                 <div class="nav-link">{{ session('account') }}</div>
                             </li>
                             
-                            <button type="button" class="btn btn-primary">
-                                <a href="/logout"  style="text-decoration:none;color:seashell">{{ ('登出') }}</a>
-                            </button>
+                            <a href="/logout" style="text-decoration:none;color:seashell">
+                                        <button type="button" class="btn btn-primary">{{ ('登出') }}</button>
+                            </a>
                         @else
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('register') }}">{{ __('註冊') }}</a>

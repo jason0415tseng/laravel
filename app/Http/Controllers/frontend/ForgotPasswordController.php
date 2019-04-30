@@ -43,25 +43,20 @@ class ForgotPasswordController extends Controller
         $Errors = new MessageBag;
         $Data = $request->only('account','name');
         $User = forgot::
-                    select('uid','account','name')
+                    select('uid','account','name','freeze')
                     ->where('account',$Data['account'])
                     ->where('name', $Data['name'])
-                    ->where('level','3')
                     ->first();
         
-// print_r($User->uid);
-// exit;
         if (!$User) {
             return back()->withErrors($Errors->add('name','查無帳號或名稱'))->withInput();
         } else {
-            // echo "OK";
-            // exit;
-            $User->toArray();
-            return view('frontend.reset')->with(['uid'=> $User->uid , 'account'=> $User->account]);
+            if(($User->freeze)== 'N'){
+                return back()->withErrors($Errors->add('name', '此帳號目前凍結中'))->withInput();
+            }else{
+                return redirect('/password/reset')->with('User', $User->makeHidden('attribute')->toArray());
+            }
         }
-        // print_r($User);
-        // exit;
-        //
     }
 
     /**
@@ -94,38 +89,46 @@ class ForgotPasswordController extends Controller
      */
     public function reset(Request $request)
     {
-        // $Data = $request->all();
-        // print_r($Data);
-        // exit;
+        //
         $Data = $request->only('uid','account','password', 'password_confirmation');
-        // print_r($Data);
-        // exit;
-        // print_r($request->uid);
-        // print_r("\n");
-        // print_r($request->account);
-        // exit;
-
 
         //原生檢查的方式 == S ==
         $Auth = new Auth;
 
-        $Validator = Validator::make($Data, $Auth->rules($Data), $Auth->messages());
-        // echo "ASDASD";
-        // exit;
-// print_r($Validator);
-// exit;
-        if ($Validator->fails()) {
+        $Validator = Validator::make($Data, $Auth->forgotrules($Data), $Auth->messages());
 
-            // dd(back());
-            // return redirect()->back()
-            return view('frontend.reset')
+        if ($Validator->fails()) {
+            return redirect('/password/reset')
                 ->withErrors($Validator)
-                ->withInput($request->only('uid','account'));
+                ->withInput();
         }
         //原生檢查的方式 == E ==
-        // print_r($Data);
-        // exit;
-        //
+
+        $Password = base64_encode($Data['password']);
+
+        $Result = forgot::
+                where('uid', $Data['uid'])
+                    ->update(['password' => $Password]);
+
+        //修改完登入
+        $User = forgot::
+                select('account','level')
+                    ->where('account', $Data['account'])
+                    ->where('password', $Password )
+                    ->first();
+
+        $request->session()->put(['account' => $User['account'], 'level' => $User['level']]);
+
+        return redirect('/success')->with([
+            //跳轉資訊
+            'Message' => '恭喜登入，請您耐心等待！',
+            //自己的跳轉路徑
+            'Url' => '/',
+            //跳轉路徑名稱
+            'UrlName' =>  '首頁',
+            //跳轉等待時間（s）
+            'JumpTime' => 3,
+        ]);
     }
 
     /**

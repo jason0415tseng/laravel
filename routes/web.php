@@ -63,8 +63,11 @@ Route::get('/register', 'frontend\RegisterController@index')->middleware('CheckL
 Route::post('/register', 'frontend\RegisterController@create');
 
 //會員中心
-Route::get('/memberCenter', 'MemberCenterController@index')->name('memberCenter');
+Route::get('/memberCenter', 'frontend\MemberCenterController@index')->name('memberCenter');
 // MemberCentre
+
+//會員修改
+Route::post('/memberCenter/update', 'frontend\MemberCenterController@updateuser')->name('memberCenter.user');
 
 //管理者
 Route::get('/admin', 'backend\AdminController@index')->name('admin');
@@ -73,7 +76,7 @@ Route::get('/admin', 'backend\AdminController@index')->name('admin');
 Route::get('/admin/{user}', 'backend\AdminController@getaccount')->name('admin.account');
 
 //管理者->修改帳號資料
-Route::post('/admin/update', 'backend\AdminController@editaccount');
+Route::post('/admin/update', 'backend\AdminController@editaccount')->middleware('CheckAdmin');
 
 //管理者->刪除帳號資料
 Route::post('/admin/delete', 'backend\AdminController@deleteaccount')->name('admin.delete');

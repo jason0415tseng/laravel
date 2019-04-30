@@ -65,6 +65,7 @@ class RegisterController extends Controller
 
         //註冊完登入
         $request->session()->put('account', $Register->account);
+        $request->session()->put('level', '3');
 
         return redirect('/success');
 

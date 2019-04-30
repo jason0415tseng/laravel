@@ -14,6 +14,6 @@ class forgot extends Model
     protected $primarykey = 'Uid';
 
     protected $fillable = [
-        'uid', 'account', 'name', 'password',
+        'uid', 'level', 'account', 'name', 'password',
     ];
 }

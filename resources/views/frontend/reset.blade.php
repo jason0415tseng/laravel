@@ -21,30 +21,13 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('password.update') }}">
                         @csrf
-                        {{-- @if ($uid)
-                        @php
-                        // dd($uid);
-                        // dd($account);
-                        @endphp
-
-                        @endif --}}
 
                         <div class="form-group row">
                                 <label for="account" class="col-md-4 col-form-label text-md-right">{{ ('帳號') }}</label>
                                 <div class="col-md-4">
-                                    <input id="uid" name="uid" value="{{$errors->has('account') ? $errors->has('account') : $uid}}" style="display:none">
-                                    <input id="account" name="account" value="{{$errors->has('account') ? $errors->has('account') : $account}}" style="display:none">
-                                    {{-- <input id="account" type="text" class="form-control{{ $errors->has('account') ? ' is-invalid' : '' }}" name="account" value="{{ old('account') }}" maxlength="6" required autofocus placeholder="*請輸入帳號">                                
-                                        @if ($errors->has('account'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('account') }}</strong>
-                                            </span>
-                                        @endif --}}
-                                        {{-- @php
-                                         dd($errors->has('account'));   
-                                        @endphp --}}
-                                        <span class="form-control">{{$errors->has('account') ? $errors->has('account') : $account}}</span>
-                                        
+                                    <input id="uid" name="uid" value="{{ session('User')['uid'] ? session('User')['uid'] : old('uid')}}" style="display:none">
+                                    <input id="account" name="account" value="{{ session('User')['account'] ? session('User')['account'] : old('account')}}" style="display:none">
+                                    <span class="form-control">{{ session('User')['account'] ? session('User')['account'] : old('account')}}</span>    
                                 </div>
                         </div>
 

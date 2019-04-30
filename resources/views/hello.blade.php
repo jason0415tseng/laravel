@@ -88,9 +88,9 @@
                                 <span>
                                     <h1>你好! {{session('account')}}</h1>
                                 </span>
-                                <button type="button" class="btn btn-primary">
-                                    <a href="/logout" style="text-decoration:none;color:seashell">{{ ('登出') }}</a>
-                                </button>
+                                <a href="/logout" style="text-decoration:none;color:seashell">
+                                        <button type="button" class="btn btn-primary">{{ ('登出') }}</button>
+                                </a>
                             </div>
                         @else
                             <div class="card-body">

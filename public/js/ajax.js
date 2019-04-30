@@ -16,9 +16,6 @@ function OpenWindow(id) {
 
 //關閉視窗
 function CloseWindow() {
-    //   <span style="color: #FF3300">opener</span>.document.form1.msg.value =
-    //          document.form2.msg.value;
-    //   <span style="color: #FF9900">window.close();</span>
     window.close();
 }
 
@@ -50,33 +47,15 @@ function Update() {
         },
         dataType: 'json',
         success: function(data) {
-            // alert(data);
-            // console.log(data);
-            // $('#frmAddTask').trigger("reset");
-            // $("#frmAddTask .close").click();
             opener.window.location.reload();
             self.close();
             window.close();
         },
         error: function(data) {
-            var errors = $.parseJSON(data.responseText);
-            alrert(errors);
-            // $('#add-task-errors').html('');
-            // $.each(errors.messages, function(key, value) {
-            //     $('#add-task-errors').append('<li>' + value + '</li>');
-            // });
-            // $("#add-error-bag").show();
+            var errors = data.responseJSON;
+            alert(errors.message);
+            window.close();
         }
     });
-    // window.close();
-    // window.location.reload();
-}
 
-function deleteuser() {
-    // alert("確定要刪除?");
-    if (confirm("確定要刪除?")) {
-        alert("你按下確定");
-    } else {
-        alert("你按下取消");
-    }
 }

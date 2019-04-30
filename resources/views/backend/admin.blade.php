@@ -1,7 +1,3 @@
-{{-- @section('content')
-<div class="container">
-    <h1>login</h1>
-</div> --}}
 @extends('layouts.app')
 
 @section('content')

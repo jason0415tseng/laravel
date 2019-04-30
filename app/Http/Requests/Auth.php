@@ -41,6 +41,23 @@ class Auth extends FormRequest
         ];
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function forgotrules()
+    {
+        return [
+            'account' => [
+                'required',
+                'string',
+                'max:6',
+            ],
+            'password' => 'required|string|confirmed|max:8',
+        ];
+    }
+
     public function messages()
     {
         return [

@@ -239,8 +239,6 @@ class LoginController extends Controller
             $Errors->add('password', '帳號或密碼錯誤');
         } elseif ($User['freeze'] == 'N') {
             $Errors->add('freeze', '目前帳號已被凍結');
-        } elseif ($User['level'] == 0) {
-            $Errors->add('admin', '您好管理者');
         }
 
         return $Errors;
