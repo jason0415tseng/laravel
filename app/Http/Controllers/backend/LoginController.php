@@ -43,10 +43,10 @@ class LoginController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $Request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $Request)
     {
         //
     }
@@ -54,13 +54,13 @@ class LoginController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $Request
      * @return \Illuminate\Http\Response
      */
-    public function login(Request $request)
+    public function login(Request $Request)
     {
         //資料
-        $Data = $request->only(['account', 'password']);
+        $Data = $Request->only(['account', 'password']);
 
         //檢查資料
         $Error = $this->CheckLogin($Data);
@@ -69,19 +69,10 @@ class LoginController extends Controller
             return back()->withErrors($Error)->withInput();
         }
 
-        // print_r($this->Level);
-        // exit;
-        //判斷是否為管理者
-        // $Level = $this->CheckLevel( $Data);
-        // $View = '';
-        // $Message = '';
-        // $Url = '';
-        // $UrlName = '';
 
-        // $Account = $request->account;
 
-        $request->session()->put('account',$this->Account);
-        $request->session()->put('level', $this->Level);
+        $Request->session()->put('account',$this->Account);
+        $Request->session()->put('level', $this->Level);
 
         // return redirect('/index');
         return redirect('/success')->with([
@@ -111,11 +102,11 @@ class LoginController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $Request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $Request, $id)
     {
         //
     }
@@ -249,13 +240,12 @@ class LoginController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  array  $data
      * @return \Illuminate\Http\Response
      */
-    public function logout(Request $request)
+    public function logout(Request $Request)
     {
         //清除session
-        $request->session()->flush();
+        $Request->session()->flush();
 
         return redirect('/');
 

@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
+
 @section('content')
+
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-10">
@@ -12,12 +15,6 @@
                         @csrf
 
                         <div class="form-group row">
-                            {{-- <label for="account" class="col-md-4 col-form-label text-md-right">{{ ('帳號') }}</label> --}}
-                            {{-- @php --}}
-                                {{-- dd({{$User}});    --}}
-                            {{-- @endphp --}}
-                            
-                           
                             <div class="col-md-12">
                                 <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border="1"> 
                                     <tr>
@@ -47,7 +44,6 @@
                                             <td>
                                                 <button type="button" class="btn btn-primary" onclick="OpenWindow({{$user['uid']}})">
                                                     {{ ('修改') }}
-                                                    {{-- <a href="/admin/{{$user['uid']}}" style="text-decoration: none; color: seashell;">{{ ('修改') }}</a> --}}
                                                 </button>
                                             </td>     
                                             <td>

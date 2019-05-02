@@ -16,18 +16,15 @@ class MemberCenterController extends Controller
      */
     public function index()
     {
-        //
-        // dd(session('account'));
+
         //列出帳號
         $User = login::
             select('uid', 'account', 'freeze', 'level', 'name', 'created_at', 'updated_at')
             ->where('account', session('account'))
             ->get();
-            // print_r($User);
-            // exit;
+
         return view( 'membercenter', ['User' => $User->makeHidden('attribute')->toArray()]);
-        // echo "HELLO WORLD";
-        // exit;
+
     }
 
     /**
@@ -43,10 +40,10 @@ class MemberCenterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $Request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $Request)
     {
         //
     }
@@ -76,15 +73,15 @@ class MemberCenterController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $Request
      * @return \Illuminate\Http\Response
      */
-    public function updateuser(Request $request)
+    public function updateuser(Request $Request)
     {
         //
         $Msg = new MessageBag;
 
-        $Data = $request->only('uid','name');
+        $Data = $Request->only('uid','name');
 
         //
         //檢查資料
@@ -96,9 +93,7 @@ class MemberCenterController extends Controller
         }
 
         $Reult = login::where('uid', $Data['uid'])
-            // ->update(['votes' => 1]);
             ->update(['name' => $Data['name']]);
-            // ->first();
 
         if(!$Reult){
             $Msg->add('messages', '修改失敗');
@@ -107,10 +102,7 @@ class MemberCenterController extends Controller
         }
 
         return redirect('memberCenter')->withErrors($Msg);
-        // print_r($Data['name']);
-        // exit;
-        // echo "AAAA";
-        // exit;
+
     }
 
     /**

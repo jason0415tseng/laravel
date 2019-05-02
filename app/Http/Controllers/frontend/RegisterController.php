@@ -27,10 +27,10 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $Request)
     {
         //資料
-        $Data = $request->all();
+        $Data = $Request->all();
     
         //檢查資料
         $Error = $this->checkUser($Data);
@@ -56,16 +56,16 @@ class RegisterController extends Controller
         //註冊
         $Register = new register;
 
-        $Register->account = $request->account;
-        $Register->password = base64_encode($request->password);
-        $Register->name = $request->name;
+        $Register->account = $Request->account;
+        $Register->password = base64_encode( $Request->password);
+        $Register->name = $Request->name;
 
 
         $Register->save();
 
         //註冊完登入
-        $request->session()->put('account', $Register->account);
-        $request->session()->put('level', '3');
+        $Request->session()->put('account', $Register->account);
+        $Request->session()->put('level', '3');
 
         return redirect('/success');
 
@@ -74,10 +74,10 @@ class RegisterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $Request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $Request)
     {
         //
     }
@@ -107,11 +107,11 @@ class RegisterController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $Request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $Request, $id)
     {
         //
     }

@@ -396,7 +396,7 @@ h6 {
     margin-bottom: .5rem;
     font-family: inherit;
     font-weight: 500;
-    line-height: 1.2;
+    /* line-height: 1.2; */
     color: inherit
 }
 
@@ -3930,7 +3930,7 @@ input[type=submit].btn-block {
 
 .navbar {
     position: relative;
-    padding: .5rem 1rem
+    /* padding: .5rem 1rem */
 }
 
 .navbar,
@@ -3942,7 +3942,8 @@ input[type=submit].btn-block {
     justify-content: space-between
 }
 
-.navbar-brand {
+
+/* .navbar-brand {
     display: inline-block;
     padding-top: .32rem;
     padding-bottom: .32rem;
@@ -3950,7 +3951,7 @@ input[type=submit].btn-block {
     font-size: 1.125rem;
     line-height: inherit;
     white-space: nowrap
-}
+} */
 
 .navbar-brand:focus,
 .navbar-brand:hover {
@@ -4200,11 +4201,11 @@ input[type=submit].btn-block {
 .navbar-light .navbar-brand,
 .navbar-light .navbar-brand:focus,
 .navbar-light .navbar-brand:hover {
-    color: rgba(0, 0, 0, .9)
+    color: #f8f9fa
 }
 
 .navbar-light .navbar-nav .nav-link {
-    color: rgba(0, 0, 0, 1)
+    color: #f8f9fa
 }
 
 .navbar-light .navbar-nav .nav-link:focus,

@@ -21,14 +21,14 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    <h1>{{ config('app.name', 'Laravel') }}</h1>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -39,26 +39,58 @@
                     <ul class="navbar-nav mr-auto">
 
                     </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                         @if (session('account'))
-                            <li class="nav-item">
-                                <div class="nav-link">{{ session('account') }}</div>
-                            </li>
-                            
-                            <a href="/logout" style="text-decoration:none;color:seashell">
-                                        <button type="button" class="btn btn-primary">{{ ('登出') }}</button>
-                            </a>
-                        @else
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">{{ __('註冊') }}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('登入') }}</a>
-                            </li>
-                        @endif
-                    </ul>
+                    <div class="menu">
+                        <!-- Right Side Of Navbar -->
+                        <ul class="nav nav-tabs" role="tablist">
+							@if (session('account'))
+                                @if (session('level') < 3)
+                                    <li role="presentation">
+                                        <a class="nav-link" href="{{ route('register') }}">{{ __('電影管理') }}</a>
+                                	</li>
+                                    <li role="presentation">
+                                    	<a class="nav-link" href="{{ route('register') }}">{{ __('時刻管理') }}</a>
+                                	</li>
+                                    <li role="presentation">
+                                        <a class="nav-link" href="{{ route('admin') }}">{{ __('管理帳號') }}</a>
+									</li>
+									<li role="presentation">
+                                        <a class="nav-link" href="">{{ session('account') }}</a>
+                                    </li>
+                                    <li role="presentation">
+										<a class="nav-link" href="/logout">{{ ('登出') }}</a>
+                                    </li>
+                                @else
+                                    <li role="presentation">
+                                        <a class="nav-link" href="{{ route('movielist') }}">{{ __('電影介紹') }}</a>
+                                	</li>
+                                    <li role="presentation">
+                                    	<a class="nav-link" href="{{ route('movietime') }}">{{ __('時刻查詢') }}</a>
+                                	</li>
+                                    <li role="presentation">
+                                        <a class="nav-link" href="{{ route('memberCenter') }}">{{ __('訂購資訊') }}</a>
+								    </li>
+									<li role="presentation">
+                                        <a class="nav-link" href="{{ route('memberCenter') }}">{{ session('account') }}</a>
+                        			</li>
+                                        <li role="presentation">
+										    <a class="nav-link" href="/logout">{{ ('登出') }}</a>
+                                        </li>
+								@endif
+                            @else
+                                    <li role="presentation">
+                                		<a class="nav-link" href="{{ route('movielist') }}">{{ __('電影介紹') }}</a>
+                        			</li>
+                                    <li role="presentation">
+                                		<a class="nav-link" href="{{ route('movietime') }}">{{ __('時刻查詢') }}</a>
+                        			</li>
+									<li role="presentation">
+                                		<a class="nav-link" href="{{ route('register') }}">{{ __('註冊') }}</a>
+                        			</li>
+                        			<li role="presentation">
+                            	    	<a class="nav-link" href="{{ route('login') }}">{{ __('登入') }}</a>
+                        			</li>
+                            @endif 
+                        </ul>
                 </div>
             </div>
         </nav>

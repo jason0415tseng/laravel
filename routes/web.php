@@ -64,10 +64,15 @@ Route::post('/register', 'frontend\RegisterController@create');
 
 //會員中心
 Route::get('/memberCenter', 'frontend\MemberCenterController@index')->name('memberCenter');
-// MemberCentre
 
 //會員修改
 Route::post('/memberCenter/update', 'frontend\MemberCenterController@updateuser')->name('memberCenter.user');
+
+//電影介紹
+Route::get('/movielist', 'frontend\MovieListController@index')->name('movielist');
+
+//電影時刻查詢
+Route::get('/movietime', 'frontend\MovieTimeController@index')->name('movietime');
 
 //管理者
 Route::get('/admin', 'backend\AdminController@index')->name('admin');

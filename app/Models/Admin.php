@@ -14,6 +14,6 @@ class Admin extends Model
     protected $primarykey = 'Uid';
 
     protected $fillable = [
-        'uid' , 'level',  'account', 'name', 'freeze' , 'created_at', 'updated_at'
+        'uid', 'level', 'account', 'name', 'freeze', 'created_at', 'updated_at'
     ];
 }

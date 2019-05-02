@@ -1,11 +1,3 @@
-{{-- @extends 命令來為子視圖指定應該「繼承」的佈局 --}}
-{{-- @extends('layouts.app') --}}
-
-{{-- @section 定義一個內容區塊 --}}
-{{-- @section('content')
-<div class="container">
-    <h1>register</h1>
-</div> --}}
 @extends('layouts.app')
 
 

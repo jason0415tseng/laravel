@@ -17,13 +17,13 @@ class AdminController extends Controller
      */
     public function index()
     {
+        $Account = session('account');
         //列出帳號
         $User = Admin::select('uid', 'account', 'freeze', 'level', 'name', 'created_at', 'updated_at')
             ->where('level', '>', '0')
+            ->where('account', '<>', $Account)
             ->get();
-        // print_r($User);
-        // exit;
-        // dd($User);
+  
         return view('backend.admin', ['User' => $User->makeHidden('attribute')->toArray()]);
     }
 
@@ -60,78 +60,49 @@ class AdminController extends Controller
         $User = Admin::select('uid', 'account', 'freeze', 'level', 'name')
             ->where('uid', $id)
             ->first();
-        // print_r($User->makeHidden('attribute')->toArray());
-        // exit;
+
         return view('backend.account', ['User' => $User->makeHidden('attribute')->toArray()]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function editaccount(Request $request)
+    public function editaccount(Request $Request)
     {
-        // $Errors = new MessageBag;
 
-        $User = $request->only(['uid', 'level', 'freeze']);
-        // print_r($User);
-        // exit;
+
+        $User = $Request->only(['uid', 'level', 'freeze']);
+
         $User = Admin::where('uid', $User['uid'])
-            // ->update(['votes' => 1]);
+
             ->update(['level' => $User['level'], 'freeze' => $User['freeze']]);
 
-        // ->where('password', $Password )
-
-        // ->get();
         if ($User) {
-            // return view('backend.admin');
-            // $this->index();
+ 
             return response()->json([
                 'error' => false,
             ]);
         } else {
-            //     echo "AAAA";
-            //     exit;
+
             return response()->json([
                 'error'    => true,
                 'messages' => '修改失敗',
-                // $Errors->add( 'messages', '修改失敗'),
+
             ]);
         }
-        // print_r($User);
-        // exit;
-        // return response()->json(['success'=>'Got Simple Ajax Request.']);
 
-        // return view('backend.admin');
-        //資料
-        // print_r($request->only(['uid','level', 'freeze']));
-        // exit;
-        // $Data = $request->only(['uid','level', 'freeze']);
-        // print_r($Data);
-        // exit;
-        // $User = Admin::
-        //             // ->update(['votes' => 1]);
-
-        //             where('uid', $Data['uid'])
-        //             // ->where('password', $Password )
-        //             // update('level', $Data['level'],'freeze', $Data['freeze'])
-        //             ->first();
-        // print_r($User);
-        // exit;
-        // echo $request;
-        // exit;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $Request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $Request, $id)
     {
         //
     }
@@ -139,36 +110,24 @@ class AdminController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $Request
      * @return \Illuminate\Http\Response
      */
-    public function deleteaccount(Request $request)
+    public function deleteaccount(Request $Request)
     {
         $Errors = new MessageBag;
-        //
-        $User = Admin::where('uid',$request->uid)->delete();
-        if($User){
-            // return response()->json([
-            //     'error' => false,
-            // ]);
-            // return view('backend.admin');
-            // return $this->index();
+
+        $User = Admin::where('uid', $Request->uid)->delete();
+        if ($User) {
+
             return redirect('admin');
         } else {
-            //     echo "AAAA";
-            //     exit;
-            // return response()->json([
-            //     'error'    => true,
-            //     'messages' => '刪除失敗',
-            $Errors->add( 'messages', '修改失敗');
-            // ]);
+
+            $Errors->add('messages', '修改失敗');
+
             return back()->withErrors($Errors)->withInput();
-            // return back()->$Errors->add( 'messages', '刪除失敗');
+
         }
-        // print_r($User);
-        // exit;
-        // $Data = $request->all();
-        // print_r($Data);
-        // exit;
+
     }
 }

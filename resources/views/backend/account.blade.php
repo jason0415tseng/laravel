@@ -22,106 +22,54 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     
 </head>
-    <body>
+<body>
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">{{ ('修改資訊') }}</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('admin') }}">
-                        @csrf
-                        <div class="form-group row">
-
-                            <div class="col-md-12">
-                                <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border='1'> 
-                                    {{-- @if ($User) --}}
-                                    <tr colspan="2">
-                                        <td>帳號</td>
-                                        <td colspan="2">{{$User['account']}}</td>
-                                    </tr>
-                                    <tr> 
-                                        <td>Level</td>
-                                        <td colspan="2" style="width: 200px;">
-                                            <input id="uid" name="uid" value="{{$User['uid']}}" style="display:none">
-                                            <!-- <input id="level" type="text" class="form-control{{ $errors->has('level') ? ' is-invalid' : '' }}" name="level" style="text-align:center" value = "{{$User['level']}}"> -->
-                                            <select id="level" name="level"  class="form-control" style="text-align:center;text-align-last:center;"> 
-                                                <option value="1" @if($User['level']=='1') selected @endif >1</option> 
-                                                <option value="2" @if($User['level']=='2') selected @endif >2</option> 
-                                                <option value="3" @if($User['level']=='3') selected @endif >3</option> 
-                                            </select>
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>啟用/凍結</td>
-                                        <td colspan="2">
-                                            <!-- <input id="freeze" type="text" class="form-control{{ $errors->has('freeze') ? ' is-invalid' : '' }}" name="freeze" style="text-align:center" value = "{{$User['freeze']}}"> -->
-                                            <select id="freeze" name="freeze"  class="form-control" style="text-align:center;text-align-last:center;"> 
-                                                <option value="Y" @if($User['freeze']=='Y') selected @endif >Y</option> 
-                                                <option value="N" @if($User['freeze']=='N') selected @endif >N</option> 
-                                            </select>
-                                        </td> 
-                                    </tr>
-
-                                    <tr>
-                                        {{-- <td>操作</td> --}}
-                                        <td  colspan="2">
-                                            {{-- <a href="/admin/{{$User['uid']}}" style="text-decoration: none; color: seashell;"> --}}
-                                                <button type="submit" class="btn btn-primary" onclick="Update({{$User['uid']}})">{{ ('確認') }}</button>
-                                            {{-- </a> --}}
-                                        
-                                            
-                                                <button type="button" class="btn btn-primary" onclick="CloseWindow()">{{ ('取消') }}</button>
-                                            
+                    <div class="card-body">
+                        <form method="POST" action="{{ route('admin') }}">
+                            @csrf
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border='1'> 
+                                        <tr colspan="2">
+                                            <td>帳號</td>
+                                            <td colspan="2">{{$User['account']}}</td>
+                                        </tr>
+                                        <tr> 
+                                            <td>Level</td>
+                                            <td colspan="2" style="width: 200px;">
+                                                <input id="uid" name="uid" value="{{$User['uid']}}" style="display:none">
+                                                <select id="level" name="level"  class="form-control" style="text-align:center;text-align-last:center;"> 
+                                                    <option value="1" @if($User['level']=='1') selected @endif >1</option> 
+                                                    <option value="2" @if($User['level']=='2') selected @endif >2</option> 
+                                                    <option value="3" @if($User['level']=='3') selected @endif >3</option> 
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>啟用/凍結</td>
+                                            <td colspan="2">
+                                                <select id="freeze" name="freeze"  class="form-control" style="text-align:center;text-align-last:center;"> 
+                                                    <option value="Y" @if($User['freeze']=='Y') selected @endif >Y</option> 
+                                                    <option value="N" @if($User['freeze']=='N') selected @endif >N</option> 
+                                                </select>
                                             </td> 
-                                            
-                                    </tr>
-                                    
-
-
-                                    {{-- @endif --}}
-                                </table>
-                            </div>    
-                            {{-- @endforeach --}}
-                            {{-- <div class="col-md-4">
-                                <input id="account" type="text" class="form-control{{ $errors->has('account') ? ' is-invalid' : '' }}" name="account" value="{{ old('account') }}" maxlength="6" pattern="^[A-Za-z\d\.]{6,}$" placeholder="請輸入帳號" required autofocus>
-                                @if ($errors->has('account'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('account') }}</strong>
-                                        </span>
-                                @endif
-                            </div> --}}
-                        </div>
-
-                        {{-- <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ ('密碼') }}</label>
-
-                            <div class="col-md-4">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" maxlength="8" placeholder="請輸入密碼" required>
-                                @if ($errors->has('password'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('password') }}</strong>
-                                        </span>
-                                @endif
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <button type="submit" class="btn btn-primary" onclick="Update({{$User['uid']}})">{{ ('確認') }}</button>
+                                                <button type="button" class="btn btn-primary" onclick="CloseWindow()">{{ ('取消') }}</button>        
+                                            </td> 
+                                         </tr>
+                                    </table>
+                                </div>    
                             </div>
-                        </div> --}}
-
-
-                        {{-- <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ ('登入') }}
-                                </button>
-                                <button type="button" class="btn btn-primary"  onclick="CloseWindow()">
-                                    {{ ('取消') }}
-                                </button>
-                            </div>
-                        </div> --}}
-                    </form>
-                </div>
+                        </form>
+                    </div>
             </div>
         </div>
     </div>

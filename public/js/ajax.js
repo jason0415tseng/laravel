@@ -2,11 +2,11 @@ function OpenWindow(id) {
     var url = "admin/" + id;
     var screenWidth = $(window).width();
     var screenHeight = $(window).height();
-    // var scrolltop = $(document).scrollTop();//獲取當前視窗距離頁面頂部高度
+
     var Left = (screenWidth - 360) / 4;
     var Top = (screenHeight - 360) / 4;
 
-    window.open(url, 'mywin', "width=360, height=360 , left=" + Left + " , top=" + Top + "");
+    window.open(url, 'mywin', "width=560, height=360 , left=" + Left + " , top=" + Top + "");
 }
 
 
@@ -26,15 +26,9 @@ function CloseWindow() {
 
 
 function Update() {
-    // var uid = id;
-    // console.log(id);
-    // $.ajaxSetup({
-    //     headers: {
-    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //     }
-    // });
+
     $.ajax({
-        // var uid : 'id'
+
         type: 'POST',
         url: '/admin/update',
         headers: {

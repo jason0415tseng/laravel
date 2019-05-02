@@ -35,13 +35,13 @@ class ForgotPasswordController extends Controller
 
     /**
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $Request
      * @return \Illuminate\Http\Response
      */
-    public function resetaccount(Request $request)
+    public function resetaccount(Request $Request)
     {
         $Errors = new MessageBag;
-        $Data = $request->only('account','name');
+        $Data = $Request->only('account','name');
         $User = forgot::
                     select('uid','account','name','freeze')
                     ->where('account',$Data['account'])
@@ -84,13 +84,13 @@ class ForgotPasswordController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $Request
      * @return \Illuminate\Http\Response
      */
-    public function reset(Request $request)
+    public function reset(Request $Request)
     {
         //
-        $Data = $request->only('uid','account','password', 'password_confirmation');
+        $Data = $Request->only('uid','account','password', 'password_confirmation');
 
         //原生檢查的方式 == S ==
         $Auth = new Auth;
@@ -117,7 +117,7 @@ class ForgotPasswordController extends Controller
                     ->where('password', $Password )
                     ->first();
 
-        $request->session()->put(['account' => $User['account'], 'level' => $User['level']]);
+        $Request->session()->put(['account' => $User['account'], 'level' => $User['level']]);
 
         return redirect('/success')->with([
             //跳轉資訊

@@ -1,10 +1,9 @@
-{{-- @section('content')
-<div class="container">
-    <h1>login</h1>
-</div> --}}
 @extends('layouts.app')
 
+
 @section('content')
+
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -38,9 +37,9 @@
                             <div class="col-md-4">
                                 <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" maxlength="8" placeholder="請輸入密碼" required>
                                 @if ($errors->has('password'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('password') }}</strong>
-                                        </span>
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
                                 @endif
                             </div>
                         </div>
@@ -51,8 +50,8 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ ('登入') }}
                                 </button>
-                                <a href="/"  style="text-decoration:none;color:seashell">
-                                        <button type="button" class="btn btn-primary">{{ ('返回') }}</button>
+                                <a href="/" style="text-decoration:none;color:seashell">
+                                    <button type="button" class="btn btn-primary">{{ ('返回') }}</button>
                                 </a>
                                 <a href="{{ route('password.forgot') }}">忘記密碼</a>
                             </div>
