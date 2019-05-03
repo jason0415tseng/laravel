@@ -85,3 +85,12 @@ Route::post('/admin/update', 'backend\AdminController@editaccount')->middleware(
 
 //管理者->刪除帳號資料
 Route::post('/admin/delete', 'backend\AdminController@deleteaccount')->name('admin.delete');
+
+//管理者->電影管理介面
+Route::get('/moviemanager', 'backend\MovieManagerController@index')->name('moviemanager');
+
+//管理者->新增電影介面
+Route::get('/moviemanager/movieadd', 'backend\MovieManagerController@add');
+
+//管理者->新增電影
+Route::post('/moviemanager/movieadd', 'backend\MovieManagerController@movieadd')->name('moive.movieadd');;

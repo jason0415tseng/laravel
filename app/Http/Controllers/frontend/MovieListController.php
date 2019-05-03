@@ -14,7 +14,7 @@ class MovieListController extends Controller
      */
     public function index()
     {
-        //
+        return view('frontend.movielist');
     }
 
     /**

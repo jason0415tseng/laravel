@@ -45,7 +45,7 @@
 							@if (session('account'))
                                 @if (session('level') < 3)
                                     <li role="presentation">
-                                        <a class="nav-link" href="{{ route('register') }}">{{ __('電影管理') }}</a>
+                                        <a class="nav-link" href="{{ route('moviemanager') }}">{{ __('電影管理') }}</a>
                                 	</li>
                                     <li role="presentation">
                                     	<a class="nav-link" href="{{ route('register') }}">{{ __('時刻管理') }}</a>
