@@ -20,28 +20,33 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ ('Movie List') }}</div>
-
+                @foreach ($User as $user)
+                @php
+                // dd($User)
+                @endphp
                 <div class="card-body">
                     <div data-movieid="196" class="film-item slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide16" style="width: 284px;">
                         <div class="groupMask">
-                            <div class="movie-date">上映日期:2019-04-24</div> 
-                            <div class="movie-name">復仇者聯盟：終局之戰</div> 
+                            <div class="movie-date"><h3>上映日期:{{$user['Ondate']}}</h3></div> 
+                            <div class="movie-name"><h2>{{$user['Name']}}</h2></div> 
                             <div class="movie-grading">
-                                <div class="text">
+                                {{-- <div class="text">
                                     <span>3D數位 - 英語</span>
-                                </div> 
+                                </div>  --}}
                                 <span>
-                                    <img src="{{ asset('img/grade_6.jpg') }}"  width="80" height="80" alt="" class="img-item">
+                                    <img src="{{ asset('img') }}/{{$user['Grade']}}.jpg"  width="80" height="80" alt="" class="img-item">
                                 </span>
                             </div>
                         </div> 
                         <div class="centerBtn">
-                            <a href=""film_detail.aspx?TheaterId=15&amp;TheaterName=in89taichung&amp;select_movie=復仇者聯盟：終局之戰-3D數位-英語&amp;movie_id=196"" title="電影介紹" tabindex="0">電影介紹</a> 
-                            <a href="#" data-movieid="196" data-selectedmovie="復仇者聯盟：終局之戰-3D數位-英語" title="立即訂票" class="order_now" tabindex="0">立即訂票</a>
+                            <a href="" title="電影介紹" tabindex="0">電影介紹</a> 
+                            <a href="#" data-movieid="196" title="立即訂票" class="order_now" tabindex="0">立即訂票</a>
                         </div> 
                         <div class="movie-move">
-                            <a href="film_detail.aspx?TheaterId=15&amp;TheaterName=in89taichung&amp;select_movie=復仇者聯盟：終局之戰-3D數位-英語&amp;movie_id=196" class="cover" tabindex="0">
-                                <img src="{{ asset('img/256_big.jpg') }}" alt="" width="253" height="361">
+                            <a href="" class="cover" tabindex="0">
+                                <img src="{{ asset('/img/') }}/{{$user['Poster']}}" alt="" width="253" height="361">
+                                {{-- <img src="{{$user['Poster']}}" alt="" width="253" height="361"> --}}
+                                {{-- /storage/app/img/20190506/ laravel\storage\app\img\20190506\20190506145249_276_big.jpg--}}
                             </a>
                         </div>
                     </div>
@@ -104,6 +109,7 @@
                         </div> 
                     </form> --}}
                 </div>
+                @endforeach
             </div>
         </div>
     </div>

@@ -58,6 +58,24 @@ class Auth extends FormRequest
         ];
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function picrules()
+    {
+        return [
+            'poster' => [
+                'required',
+                'image',
+                // 'mimes:jpeg,png,jpg,gif,svg',
+                'mimes:jpg',
+                'max:2048',
+            ],
+        ];
+    }
+
     public function messages()
     {
         return [
@@ -69,6 +87,8 @@ class Auth extends FormRequest
             'name.regex' => '格式錯誤' ,
             'password.required' => '請輸入密碼' ,
             'password.confirmed' => '密碼需相同',
+            'poster.mimes' => '請上傳JPG、PNG、JPEG、GIF格式的文件',
+            'poster.max' => '上傳的圖片大於2M',
         ];
     }
 }

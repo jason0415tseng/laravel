@@ -131,7 +131,7 @@
                                 <label for="grade" class="col-md-4 col-form-label text-md-right">{{ ('分級') }}</label>
                                 <div class="col-md-4">
                                     {{-- <input id="grade" type="text" class="form-control{{ $errors->has('grade') ? ' is-invalid' : '' }}" name="grade" value="{{ old('grade') }}" placeholder="分級" required> --}}
-                                    <select id="level" name="level"  class="form-control" style="text-align:center;text-align-last:center;"> 
+                                    <select id="grade" name="grade"  class="form-control" style="text-align:center;text-align-last:center;"> 
                                                     <option value="grade_0">普通級</option> 
                                                     <option value="grade_6">保護級</option> 
                                                     <option value="grade_12">輔12級</option> 
@@ -159,7 +159,7 @@
                         <div class="form-group row">
                             <label for="actor" class="col-md-4 col-form-label text-md-right">{{ ('演員') }}</label>
                             <div class="col-md-4">
-                                <input id="actor" type="text" class="form-control{{ $errors->has('actor') ? ' is-invalid' : '' }}" name="actor" placeholder="演員" required>
+                                <input id="actor" type="text" class="form-control{{ $errors->has('actor') ? ' is-invalid' : '' }}" name="actor" value="{{ old('actor') }}"  placeholder="演員" required>
                                     @if ($errors->has('actor'))
                                     
                                         <span class="invalid-feedback" role="alert">
@@ -171,8 +171,17 @@
                         <div class="form-group row">
                             <label for="poster" class="col-md-4 col-form-label text-md-right">{{ ('海報') }}</label>
                             <div class="col-md-4">
-                                <input id="poster" type="file" class="form-control" name="poster" placeholder="海報"  onchange="readURL(this)" targetID="preview_poster_img" accept="image/gif,image/jpeg,image/png" required>
+                                <input id="poster" type="file" class="form-control{{ $errors->has('poster') ? ' is-invalid' : '' }}" name="poster" placeholder="海報"  onchange="readURL(this)" targetID="preview_poster_img" accept="image/gif,image/jpeg,image/png" required>
                                  <img id="preview_poster_img" src="#" width="80" height="80" style="display: none;"/>
+                                 
+                                    @if ($errors->has('poster'))
+                                    {{-- @php
+                                    dd($errors);
+                                    @endphp --}}
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('poster') }}</strong>
+                                        </span>
+                                    @endif  
                             </div>
                         </div>
                         <div class="form-group row">
