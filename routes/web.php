@@ -71,6 +71,9 @@ Route::post('/memberCenter/update', 'frontend\MemberCenterController@updateuser'
 //電影介紹
 Route::get('/movielist', 'frontend\MovieListController@index')->name('movielist');
 
+//電影介紹->電影詳細內容
+Route::get('/movielist/detail/{id}', 'frontend\MovieListController@detail')->name('movielist.detail');
+
 //電影時刻查詢
 Route::get('/movietime', 'frontend\MovieTimeController@index')->name('movietime');
 
@@ -93,4 +96,13 @@ Route::get('/moviemanager', 'backend\MovieManagerController@index')->name('movie
 Route::get('/moviemanager/movieadd', 'backend\MovieManagerController@add');
 
 //管理者->新增電影
-Route::post('/moviemanager/movieadd', 'backend\MovieManagerController@movieadd')->name('moive.movieadd');;
+Route::post('/moviemanager/movieadd', 'backend\MovieManagerController@movieadd')->name('moive.movieadd');
+
+//管理者->取電影資料
+Route::get('/moviemanager/movieedit/{id}', 'backend\MovieManagerController@getmovie')->name('moive.movieedit');
+
+//管理者->修改電影資料
+Route::post('/moviemanager/update/{id}', 'backend\MovieManagerController@movieedit')->name('moive.movieupdate');
+
+//管理者->刪除電影資料
+Route::get('/moviemanager/delete/{id}', 'backend\MovieManagerController@moviedelete')->name('movie.moviedelete');

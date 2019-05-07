@@ -4,6 +4,7 @@ namespace App\Http\Controllers\frontend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\movies;
 
 class MovieListController extends Controller
 {
@@ -14,7 +15,13 @@ class MovieListController extends Controller
      */
     public function index()
     {
-        return view('frontend.movielist');
+        //列出資料
+        $Data = movies::select('*')
+            ->where('display', '1')
+            ->orderBy('ondate', 'ASC')
+            ->get();
+
+        return view('frontend.movielist', ['Data' => $Data->makeHidden('attribute')->toArray()]);
     }
 
     /**
@@ -44,9 +51,14 @@ class MovieListController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function detail($id)
     {
         //
+        $Data = movies::select('*')
+            ->where('id', $id)
+            ->get();
+
+        return view('frontend.moviedetail', ['Data' => $Data->makeHidden('attribute')->toArray()]);
     }
 
     /**

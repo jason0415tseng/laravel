@@ -82,3 +82,35 @@
     background-color: #65AAF0;
     border-color: #65AAF0;
 }
+
+
+/* movie */
+
+.movie_badge {
+    font-size: 14px;
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 20px;
+    float: left;
+    margin: 0 0 20px 0;
+}
+
+.level_g {
+    background-color: #5BB430;
+}
+
+.level_p {
+    background-color: #00a0ea;
+}
+
+.level_pg12 {
+    background-color: #ffcc00;
+}
+
+.level_pg15 {
+    background-color: #ef7a00;
+}
+
+.level_r {
+    background-color: #e60010;
+}
