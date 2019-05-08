@@ -14,7 +14,7 @@ class CreateMoviesTable extends Migration
     public function up()
     {
         Schema::create('movies', function (Blueprint $table) {
-            $table->bigIncrements('Id');
+            $table->bigIncrements('Mid')->comment("電影ID");
             $table->string('Name', 64)->comment("片名");
             $table->string('Name_en', 64)->comment("英文片名");
             $table->date('Ondate')->comment("上映時間");

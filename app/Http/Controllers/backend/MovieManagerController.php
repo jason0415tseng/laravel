@@ -153,7 +153,7 @@ class MovieManagerController extends Controller
         //
         //列出資料
         $Data = movies::select('*')
-            ->where('id', $id)
+            ->where('Mid', $id)
             // ->where('account', '<>', $Account)
             ->get();
 
@@ -189,7 +189,7 @@ class MovieManagerController extends Controller
 
             //刪除舊圖
             $Poster = movies::select('poster')
-                ->where('id', $id)
+                ->where('Mid', $id)
                 ->first();
             // print_r($Path['poster']);
             // ==== 刪除圖片 ====
@@ -211,7 +211,7 @@ class MovieManagerController extends Controller
             // === 上傳圖片 === 
 
             //更新
-            $Result = movies::where('id', $id)
+            $Result = movies::where('Mid', $id)
                 ->update([
                     'name' => $Data['name'],
                     'name_en' => $Data['name_en'],
@@ -229,7 +229,7 @@ class MovieManagerController extends Controller
         }
         // dd($File);
         //更新
-        $Result = movies::where('id', $id)
+        $Result = movies::where('Mid', $id)
             ->update([
                 'name' => $Data['name'],
                 'name_en' => $Data['name_en'],
@@ -261,7 +261,7 @@ class MovieManagerController extends Controller
         // echo "AAAAAAA";
         // exit;
 
-        $Result = movies::where('id', $id)
+        $Result = movies::where('Mid', $id)
             ->update(['display' => '0']);
         // print_r($id);
         // dd($Data);

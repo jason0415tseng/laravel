@@ -78,31 +78,43 @@ Route::get('/movielist/detail/{id}', 'frontend\MovieListController@detail')->nam
 Route::get('/movietime', 'frontend\MovieTimeController@index')->name('movietime');
 
 //管理者
-Route::get('/admin', 'backend\AdminController@index')->name('admin');
+Route::get('/admin', 'backend\AdminController@index')->middleware('CheckManager')->name('admin');
 
 //管理者->取帳號資料
-Route::get('/admin/{user}', 'backend\AdminController@getaccount')->name('admin.account');
+Route::get('/admin/{user}', 'backend\AdminController@getaccount')->middleware('CheckManager')->name('admin.account');
 
 //管理者->修改帳號資料
-Route::post('/admin/update', 'backend\AdminController@editaccount')->middleware('CheckAdmin');
+Route::post('/admin/update', 'backend\AdminController@editaccount')->middleware('CheckManager')->middleware('CheckAdmin');
 
 //管理者->刪除帳號資料
-Route::post('/admin/delete', 'backend\AdminController@deleteaccount')->name('admin.delete');
+Route::post('/admin/delete', 'backend\AdminController@deleteaccount')->middleware('CheckManager')->name('admin.delete');
 
 //管理者->電影管理介面
-Route::get('/moviemanager', 'backend\MovieManagerController@index')->name('moviemanager');
+Route::get('/moviemanager', 'backend\MovieManagerController@index')->middleware('CheckManager')->name('moviemanager');
 
 //管理者->新增電影介面
-Route::get('/moviemanager/movieadd', 'backend\MovieManagerController@add');
+Route::get('/moviemanager/movieadd', 'backend\MovieManagerController@add')->middleware('CheckManager');
 
 //管理者->新增電影
-Route::post('/moviemanager/movieadd', 'backend\MovieManagerController@movieadd')->name('moive.movieadd');
+Route::post('/moviemanager/movieadd', 'backend\MovieManagerController@movieadd')->middleware('CheckManager')->name('moive.movieadd');
 
 //管理者->取電影資料
-Route::get('/moviemanager/movieedit/{id}', 'backend\MovieManagerController@getmovie')->name('moive.movieedit');
+Route::get('/moviemanager/movieedit/{id}', 'backend\MovieManagerController@getmovie')->middleware('CheckManager')->name('moive.movieedit');
 
 //管理者->修改電影資料
-Route::post('/moviemanager/update/{id}', 'backend\MovieManagerController@movieedit')->name('moive.movieupdate');
+Route::post('/moviemanager/update/{id}', 'backend\MovieManagerController@movieedit')->middleware('CheckManager')->name('moive.movieupdate');
 
 //管理者->刪除電影資料
-Route::get('/moviemanager/delete/{id}', 'backend\MovieManagerController@moviedelete')->name('movie.moviedelete');
+Route::get('/moviemanager/delete/{id}', 'backend\MovieManagerController@moviedelete')->middleware('CheckManager')->name('movie.moviedelete');
+
+//管理者->時刻管理介面
+Route::get('/timemanager', 'backend\TimeManagerController@index')->middleware('CheckManager')->name('timemanager');
+
+//管理者->新增時刻介面
+Route::get('/timemanager/timeadd/{id}', 'backend\timeManagerController@add')->middleware('CheckManager');
+
+//管理者->新增時刻介面
+Route::post('/timemanager/timeadd/{id}', 'backend\timeManagerController@timeadd')->middleware('CheckManager')->name('time.timeadd');
+
+//管理者->取電影時刻資料
+Route::get('/timemanager/timeedit/{id}', 'backend\TimeManagerController@getmovietime')->middleware('CheckManager')->name('time.timeedit');

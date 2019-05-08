@@ -22,6 +22,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 </head>
 <body>
     <div id="app">
@@ -48,7 +49,7 @@
                                         <a class="nav-link" href="{{ route('moviemanager') }}">{{ __('電影管理') }}</a>
                                 	</li>
                                     <li role="presentation">
-                                    	<a class="nav-link" href="{{ route('register') }}">{{ __('時刻管理') }}</a>
+                                    	<a class="nav-link" href="{{ route('timemanager') }}">{{ __('時刻管理') }}</a>
                                 	</li>
                                     <li role="presentation">
                                         <a class="nav-link" href="{{ route('admin') }}">{{ __('管理帳號') }}</a>

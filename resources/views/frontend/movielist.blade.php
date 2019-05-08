@@ -49,10 +49,10 @@
                                 @default      
                             @endswitch
                             <div class="centerBtn" style="clear:both;">
-                            <a href="/movielist/detail/{{$data['Id']}}" title="電影介紹" tabindex="0">
+                            <a href="/movielist/detail/{{$data['Mid']}}" title="電影介紹" tabindex="0">
                                     <button type="button" class="btn btn-primary">電影介紹</button>
                                 </a>
-                                <a href="/movielist/time/{{$data['Id']}}" data-movieid="196" title="時刻查詢" class="order_now" tabindex="0">
+                                <a href="/movielist/time/{{$data['Mid']}}" data-movieid="196" title="時刻查詢" class="order_now" tabindex="0">
                                     <button type="button" class="btn btn-primary">時刻查詢</button>
                                 </a>
                             </div>

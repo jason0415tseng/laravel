@@ -2,21 +2,14 @@
 
 
 @section('content')
-{{-- <div class="col-md-6 offset-md-4">
-    <button type="submit" class="btn btn-primary">
-        {{ ('新增') }}
-    </button>
-    <a href="/"  style="text-decoration:none;color:seashell">
-        <button type="button" class="btn btn-primary">{{ ('返回') }}</button>
-    </a>
-</div> --}}
+
 
 <div class="container">
     <h1>{{ ('Movie Editor') }}</h1>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ ('修改電影') }}</div>
+                <div class="card-header">{{ ('修改時刻') }}</div>
                 @foreach ($Data as $data)
                 <div class="card-body">
                     <form method="POST" action="{{ route('moive.movieupdate' , ['Mid'=> $data['Mid']]) }}" enctype="multipart/form-data">
@@ -34,34 +27,34 @@
                             </div>    
                         </div>
                         <div class="form-group row">
-                            <label for="name_en" class="col-md-4 col-form-label text-md-right">{{ ('英文片名') }}</label>
+                            <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('廳別') }}</label>
                             <div class="col-md-4">
-                                <input id="name_en" type="text" class="form-control{{ $errors->has('name_en') ? ' is-invalid' : '' }}" name="name_en" value="{{ $data['Name_en'] ? $data['Name_en'] : old('name_en') }}" placeholder="英文片名" required>                            
-                                    @if ($errors->has('name_en'))
+                                <input id="hall" type="text" class="form-control{{ $errors->has('hall') ? ' is-invalid' : '' }}" name="hall" value="{{ $data['hall'] ? $data['hall'] : old('hall') }}" placeholder="英文片名" required>                            
+                                    @if ($errors->has('hall'))
                                         <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('name_en') }}</strong>
+                                            <strong>{{ $errors->first('hall') }}</strong>
                                         </span>
                                     @endif                          
                             </div>    
                         </div>
                         <div class="form-group row">
-                            <label for="ondate" class="col-md-4 col-form-label text-md-right">{{ ('上映時間') }}</label>
+                            <label for="date" class="col-md-4 col-form-label text-md-right">{{ ('時刻') }}</label>
                             <div class="col-md-4">
-                                <input id="ondate" type="date" class="form-control{{ $errors->has('ondate') ? ' is-invalid' : '' }}" name="ondate" value="{{ $data['Ondate'] ? $data['Ondate'] : old('ondate') }}" placeholder="上映時間" required>                            
-                                    @if ($errors->has('ondate'))
+                                <input id="date" type="text" class="form-control{{ $errors->has('date') ? ' is-invalid' : '' }}" name="date" value="{{ $data['date'] ? $data['date'] : old('date') }}" placeholder="上映時間" required>                            
+                                    @if ($errors->has('date'))
                                         <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('ondate') }}</strong>
+                                            <strong>{{ $errors->first('date') }}</strong>
                                         </span>
                                     @endif                          
                             </div>    
                         </div>
                         <div class="form-group row">
-                            <label for="type" class="col-md-4 col-form-label text-md-right">{{ ('類型') }}</label>
+                            <label for="seat" class="col-md-4 col-form-label text-md-right">{{ ('席位') }}</label>
                             <div class="col-md-4">
-                                <input id="type" type="text" class="form-control{{ $errors->has('type') ? ' is-invalid' : '' }}" name="type" value="{{ $data['Type'] ? $data['Type'] : old('type') }}" maxlength="6" placeholder="類型" required>                            
-                                    @if ($errors->has('type'))
+                                <input id="seat" type="text" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ $data['seat'] ? $data['seat'] : old('seat') }}" maxlength="6" placeholder="類型" required>                            
+                                    @if ($errors->has('seat'))
                                         <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('type') }}</strong>
+                                            <strong>{{ $errors->first('seat') }}</strong>
                                         </span>
                                     @endif                          
                             </div>    

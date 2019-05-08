@@ -55,10 +55,15 @@ class MovieListController extends Controller
     {
         //
         $Data = movies::select('*')
-            ->where('id', $id)
+            ->join('time', 'movies.mid', '=', 'time.mid')
+            ->where('movies.Mid', $id)
             ->get();
+        // dd($Data->toArray());
+        $Data = $Data->toArray();
+        $Data[0]['Date'] = explode(',', $Data[0]['Date']);
+        // dd($Data[0]['Date']);
 
-        return view('frontend.moviedetail', ['Data' => $Data->makeHidden('attribute')->toArray()]);
+        return view('frontend.moviedetail', ['Data' => $Data]);
     }
 
     /**

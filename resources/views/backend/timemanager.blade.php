@@ -6,9 +6,11 @@
 
 <div class="container">
     <h1>{{ ('Movie List') }}</h1>
-
     <div class="row content-center">
         @foreach ($Data as $data)
+        @php
+        //  dd($data)   
+        @endphp
             <ul class="nav nav-tabs" role="tablist">
                 <li data-movieid="196" class="film-item slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide16" style="width: 284px;margin-top: 15px;">
                     <div class="movie-move">
@@ -39,22 +41,20 @@
                             @default      
                         @endswitch
                         <div class="centerBtn" style="clear:both;">
-                            <a href="/moviemanager/movieedit/{{$data['Mid']}}" title="修改" tabindex="0">
+                            <a href="/timemanager/timeadd/{{$data['Mid']}}" title="修改" tabindex="0">
                                 <button type="button" class="btn btn-primary">修改</button>
                             </a>
-                            <a href="/moviemanager/delete/{{$data['Mid']}}" data-movieid="196" title="刪除" class="order_now" tabindex="0">
+                            {{-- <a href="/timemanager/timeedit/{{$data['Mid']}}" title="修改" tabindex="0">
+                                <button type="button" class="btn btn-primary">修改</button>
+                            </a> --}}
+                            {{-- <a href="/timemanager/delete/{{$data['Mid']}}" data-movieid="196" title="刪除" class="order_now" tabindex="0">
                                 <button type="button" class="btn btn-primary" onclick="return confirm('是否確認刪除這筆資料');">刪除</button>
-                            </a>
+                            </a> --}}
                         </div>
                     </div> 
                 </li>
             </ul>
         @endforeach
-            <a href="/moviemanager/movieadd"  style="text-decoration:none;color:seashell">
-                <div style="width:253px;height:361px;background-color:#b1b5bd;margin-top:15px;padding-top:6.5rem;text-align:center;">
-                    <i class="fas fa-plus-circle fa-9x" style="color:#FFF;"></i>
-                </div>
-            </a>
     </div>
 </div>
 @endsection

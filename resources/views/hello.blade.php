@@ -66,7 +66,7 @@
                                                 <a class="nav-link" href="{{ route('moviemanager') }}">{{ __('電影管理') }}</a>
                                 	        </li>
                                             <li role="presentation">
-                                    	        <a class="nav-link" href="{{ route('register') }}">{{ __('時刻管理') }}</a>
+                                    	        <a class="nav-link" href="{{ route('timemanager') }}">{{ __('時刻管理') }}</a>
                                 	        </li>
                                             <li role="presentation">
                                                 <a class="nav-link" href="{{ route('admin') }}">{{ __('管理帳號') }}</a>
