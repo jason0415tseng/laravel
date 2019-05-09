@@ -15,7 +15,7 @@ class CreateOrderTable extends Migration
     {
         Schema::create('order', function (Blueprint $table) {
             $table->bigIncrements('Oid')->comment("訂票ID");;
-            $table->integer('OrderNumber')->comment("訂票編號");
+            $table->string('OrderNumber', 64)->comment("訂票編號");
             $table->integer('OrderMid')->comment("訂票電影ID");
             $table->string('OrderHall', 64)->comment("訂票廳別");
             $table->string('OrderDate', 64)->comment("訂票時刻");

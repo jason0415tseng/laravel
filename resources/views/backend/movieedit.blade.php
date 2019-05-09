@@ -2,14 +2,7 @@
 
 
 @section('content')
-{{-- <div class="col-md-6 offset-md-4">
-    <button type="submit" class="btn btn-primary">
-        {{ ('新增') }}
-    </button>
-    <a href="/"  style="text-decoration:none;color:seashell">
-        <button type="button" class="btn btn-primary">{{ ('返回') }}</button>
-    </a>
-</div> --}}
+
 
 <div class="container">
     <h1>{{ ('Movie Editor') }}</h1>
@@ -78,7 +71,7 @@
                             </div>    
                         </div>
                         <div class="form-group row">
-                                <label for="grade" class="col-md-4 col-form-label text-md-right">{{ ('分級') }}</label>
+                            <label for="grade" class="col-md-4 col-form-label text-md-right">{{ ('分級') }}</label>
                                 <div class="col-md-4">
                                     {{-- <input id="grade" type="text" class="form-control{{ $errors->has('grade') ? ' is-invalid' : '' }}" name="grade" value="{{ old('grade') }}" placeholder="分級" required> --}}
                                     <select id="grade" name="grade"  class="form-control" style="text-align:center;text-align-last:center;"> 
@@ -121,14 +114,8 @@
                         <div class="form-group row">
                             <label for="poster" class="col-md-4 col-form-label text-md-right">{{ ('海報') }}</label>
                             <div class="col-md-4" style="position: relative;">
-                                {{-- @php
-                                dd($data)
-                                @endphp --}}
                                 <input id="poster" type="file" class="form-control{{ $errors->has('poster') ? ' is-invalid' : '' }}" name="poster" placeholder="海報"  onchange="readURL(this)" targetID="preview_poster_img" accept="image/gif,image/jpeg,image/png">                                
                                     @if ($errors->has('poster'))
-                                    {{-- @php
-                                    dd($errors);
-                                    @endphp --}}
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('poster') }}</strong>
                                         </span>
@@ -152,12 +139,12 @@
                         </div>
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ ('確定') }}
-                                    </button>
-                                    <a href="/moviemanager"  style="text-decoration:none;color:seashell">
-                                        <button type="button" class="btn btn-primary">{{ ('取消') }}</button>
-                                    </a>
+                                <button type="submit" class="btn btn-primary">
+                                    {{ ('確定') }}
+                                </button>
+                                <a href="/moviemanager"  style="text-decoration:none;color:seashell">
+                                    <button type="button" class="btn btn-primary">{{ ('取消') }}</button>
+                                </a>
                             </div>
                         </div>
                     </form>

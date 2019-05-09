@@ -8,13 +8,10 @@
     <h1>{{ ('Movie List') }}</h1>
     <div class="row content-center">
         @foreach ($Data as $data)
-        @php
-        //  dd($data)   
-        @endphp
             <ul class="nav nav-tabs" role="tablist">
                 <li data-movieid="196" class="film-item slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide16" style="width: 284px;margin-top: 15px;">
                     <div class="movie-move">
-                        <a href="" class="cover" tabindex="0">
+                        <a href="/timemanager/timeadd/{{$data['Mid']}}" class="cover" tabindex="0">
                             <img src="{{ asset('/img/'.$data['Poster'])}}" alt="" width="253" height="361">
                         </a>
                     </div>
@@ -44,12 +41,6 @@
                             <a href="/timemanager/timeadd/{{$data['Mid']}}" title="修改" tabindex="0">
                                 <button type="button" class="btn btn-primary">修改</button>
                             </a>
-                            {{-- <a href="/timemanager/timeedit/{{$data['Mid']}}" title="修改" tabindex="0">
-                                <button type="button" class="btn btn-primary">修改</button>
-                            </a> --}}
-                            {{-- <a href="/timemanager/delete/{{$data['Mid']}}" data-movieid="196" title="刪除" class="order_now" tabindex="0">
-                                <button type="button" class="btn btn-primary" onclick="return confirm('是否確認刪除這筆資料');">刪除</button>
-                            </a> --}}
                         </div>
                     </div> 
                 </li>

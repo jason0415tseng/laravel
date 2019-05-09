@@ -5,6 +5,7 @@ namespace App\Http\Controllers\frontend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\login;
+use App\Models\order;
 use Illuminate\Support\MessageBag;
 
 class MemberCenterController extends Controller
@@ -18,13 +19,30 @@ class MemberCenterController extends Controller
     {
 
         //列出帳號
-        $User = login::
-            select('uid', 'account', 'freeze', 'level', 'name', 'created_at', 'updated_at')
+        $User = login::select('uid', 'account', 'freeze', 'level', 'name', 'created_at', 'updated_at')
             ->where('account', session('account'))
             ->get();
 
-        return view( 'membercenter', ['User' => $User->makeHidden('attribute')->toArray()]);
+        return view('membercenter', ['User' => $User->makeHidden('attribute')->toArray()]);
+    }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getorder()
+    {
+
+        //列出帳號
+        $Order = order::select('movies.name', 'order.ordernumber', 'time.hall', 'time.date', 'order.orderseat', 'order.orderaccount', 'order.ordername', 'order.created_at', 'order.updated_at')
+            ->join('movies', 'movies.mid', '=', 'order.ordermid')
+            ->join('time', 'time.mid', '=', 'order.ordermid')
+            // ->join('order', 'order.ordermid', '=', 'time.mid')
+            ->where('orderaccount', session('account'))
+            ->get();
+
+        return view('frontend.orderinfo', ['Order' => $Order->makeHidden('attribute')->toArray()]);
     }
 
     /**
@@ -81,7 +99,7 @@ class MemberCenterController extends Controller
         //
         $Msg = new MessageBag;
 
-        $Data = $Request->only('uid','name');
+        $Data = $Request->only('uid', 'name');
 
         //
         //檢查資料
@@ -95,14 +113,13 @@ class MemberCenterController extends Controller
         $Reult = login::where('uid', $Data['uid'])
             ->update(['name' => $Data['name']]);
 
-        if(!$Reult){
+        if (!$Reult) {
             $Msg->add('messages', '修改失敗');
-        }else{
+        } else {
             $Msg->add('messages', '修改成功');
         }
 
         return redirect('memberCenter')->withErrors($Msg);
-
     }
 
     /**
@@ -138,7 +155,7 @@ class MemberCenterController extends Controller
         if ($User['Name']) {
 
             $Errors->add('name', '名稱已存在');
-        } 
+        }
 
         return $Errors;
     }

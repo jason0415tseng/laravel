@@ -68,7 +68,7 @@
                                     	<a class="nav-link" href="{{ route('movietime') }}">{{ __('時刻查詢') }}</a>
                                 	</li>
                                     <li role="presentation">
-                                        <a class="nav-link" href="{{ route('memberCenter') }}">{{ __('訂購資訊') }}</a>
+                                        <a class="nav-link" href="{{ route('orderinfo') }}">{{ __('訂購資訊') }}</a>
 								    </li>
 									<li role="presentation">
                                         <a class="nav-link" href="{{ route('memberCenter') }}">{{ session('account') }}</a>

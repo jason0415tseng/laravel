@@ -37,11 +37,8 @@ class MovieManagerController extends Controller
         $Data = movies::select('*')
             ->where('display', '1')
             ->orderBy('ondate', 'ASC')
-            // ->where('level', '>', '0')
-            // ->where('account', '<>', $Account)
             ->get();
 
-        // return view('backend.admin', ['User' => $User->makeHidden('attribute')->toArray()]);
         return view('backend.moviemanager', ['Data' => $Data->makeHidden('attribute')->toArray()]);
     }
 
@@ -60,24 +57,13 @@ class MovieManagerController extends Controller
 
         //檢查圖片
         $Error = $this->checkPic($File);
-        // exit;
-        // dd( $Error->any());
+
         //判斷是否有錯誤訊息
         if ($Error->any()) {
             return back()->withErrors($Error)->withInput();
         }
-        // dd($Data);
+
         $FileName = $File->getClientOriginalName();
-
-        // $PathTime = date('Ymd');
-        // $FileTime = date('YmdHis');
-
-
-        // ==== 刪除圖片 ====
-        // $path = '../storage/app/img' . $time .'/' . $filename;
-        // $url = unlink($path);
-        // dd($url);
-        // ==== 刪除圖片 ====
 
         // === 上傳圖片 === 
         $Path = '../public/img/' . $this->PathTime;
@@ -87,30 +73,6 @@ class MovieManagerController extends Controller
         }
         $request->file('poster')->move($Path, $NewFileName);
         // === 上傳圖片 === 
-
-
-        // ==== Storage刪除圖片 ====
-        // $new_file = $time . '_' . $filename;
-        // $path = 'img/' . $time . '/' . $new_file;
-        // $bool = Storage::delete($path);
-        // dd($bool);
-        // ==== Storage刪除圖片 ====
-        // dd($Data);
-
-        // $data = $request->except('_token');
-        // if ($request->file('photo')->isValid()) {
-        //     //
-        //     echo "失敗";
-        //     exit;
-        // }else{
-        //     echo "成功";
-        //     exit;
-        // }
-        // $size = $request->file('poster');
-        // $size = $request->hasFile('poster');
-        // dd( $file);
-        // print_r($Data);
-        // exit;
 
         //新增
         $Movies = new movies;
@@ -154,7 +116,6 @@ class MovieManagerController extends Controller
         //列出資料
         $Data = movies::select('*')
             ->where('Mid', $id)
-            // ->where('account', '<>', $Account)
             ->get();
 
         return view('backend.movieedit', ['Data' => $Data->makeHidden('attribute')->toArray()]);
@@ -170,9 +131,7 @@ class MovieManagerController extends Controller
     public function movieedit(Request $request, $id)
     {
         $Data = $request->all();
-        // print_r($Data);
-        // print_r($id);
-        // exit;
+
         //圖片
         $File = $request->file('poster');
 
@@ -191,12 +150,10 @@ class MovieManagerController extends Controller
             $Poster = movies::select('poster')
                 ->where('Mid', $id)
                 ->first();
-            // print_r($Path['poster']);
+
             // ==== 刪除圖片 ====
             $Path = '../public/img/' . $Poster['poster'];
             unlink($Path);
-            // $url = unlink($Path);
-            // dd($url);
             // ==== 刪除圖片 ====
 
             //上傳新圖
@@ -227,7 +184,7 @@ class MovieManagerController extends Controller
 
             return redirect('moviemanager');
         }
-        // dd($File);
+
         //更新
         $Result = movies::where('Mid', $id)
             ->update([
@@ -242,11 +199,6 @@ class MovieManagerController extends Controller
                 'introduction' => $Data['introduction'],
             ]);
 
-        // if (!$Result) {
-        //     $Msg = ('messages', '修改失敗');
-        // } else {
-        //     $Msg = ('messages', '修改成功');
-        // }
         return redirect('moviemanager');
     }
 
@@ -257,14 +209,10 @@ class MovieManagerController extends Controller
      */
     public function moviedelete($id)
     {
-        //
-        // echo "AAAAAAA";
-        // exit;
 
         $Result = movies::where('Mid', $id)
             ->update(['display' => '0']);
-        // print_r($id);
-        // dd($Data);
+
         return redirect('moviemanager');
     }
 
@@ -319,24 +267,5 @@ class MovieManagerController extends Controller
         }
 
         return $Errors;
-
-
-        // echo 'File Name: ' . $Data->getClientOriginalName();
-        // echo '<br>';
-        // //Display File Extension
-        // echo 'File Extension: ' . $Data->getClientOriginalExtension();
-        // echo '<br>';
-
-        // //Display File Real Path
-        // echo 'File Real Path: ' . $Data->getRealPath();
-        // echo '<br>';
-
-        // //Display File Size
-        // echo 'File Size: ' . $Data->getSize();
-        // echo '<br>';
-
-        // //Display File Mime Type
-        // echo 'File Mime Type: ' . $Data->getMimeType();
-        // exit;
     }
 }

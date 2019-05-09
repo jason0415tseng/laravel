@@ -12,7 +12,7 @@
             <ul class="nav nav-tabs" role="tablist">
                 <li data-movieid="196" class="film-item slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide16" style="width: 284px;margin-top: 15px;">
                     <div class="movie-move">
-                        <a href="" class="cover" tabindex="0">
+                        <a href="/moviemanager/movieedit/{{$data['Mid']}}" class="cover" tabindex="0">
                             <img src="{{ asset('/img/'.$data['Poster'])}}" alt="" width="253" height="361">
                         </a>
                     </div>

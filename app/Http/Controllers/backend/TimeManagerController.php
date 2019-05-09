@@ -18,7 +18,6 @@ class TimeManagerController extends Controller
     {
         //列出資料
         $Data = movies::select('*')
-            // ->join('time', 'movies.mid', '=', 'time.mid')
             ->where('display', '1')
             ->orderBy('ondate', 'ASC')
             ->get();
@@ -58,7 +57,6 @@ class TimeManagerController extends Controller
         //列出資料
         $Data = movies::select('Mid', 'name')
             ->where('Mid', $id)
-            // ->where('account', '<>', $Account)
             ->get();
 
         return view('backend.timeedit', ['Data' => $Data->makeHidden('attribute')->toArray()]);
@@ -99,22 +97,18 @@ class TimeManagerController extends Controller
         $Data = movies::select('movies.Mid', 'movies.Name', 'time.Hall', 'time.Date', 'time.Seat')
             ->join('time', 'movies.mid', '=', 'time.mid')
             ->where('movies.Mid', $id)
-            // ->where('account', '<>', $Account)
             ->get();
+
         //列出資料
-        // $Data = movies::select('*')
-        //     ->join('time', 'movies.mid', '=', 'time.mid')
-        //     ->where('movies.Mid', $id)
-        //     // ->where('account', '<>', $Account)
-        //     ->get();
         if ($Data->toArray()) {
-            // echo "ASD";
-            // exit;
+
             return view('backend.timeadd', ['Data' => $Data->makeHidden('attribute')->toArray()]);
         } else {
+
             $Data = movies::select('Mid', 'Name')
                 ->where('Mid', $id)
                 ->get();
+
             return view('backend.timeadd', ['Data' => $Data->makeHidden('attribute')->toArray()]);
         }
         // return view('backend.movieedit', ['Data' => $Data->makeHidden('attribute')->toArray()]);
@@ -130,58 +124,48 @@ class TimeManagerController extends Controller
      */
     public function timeadd(Request $request, $id)
     {
-        //
-        // $Data = $request->all();
-        // print_r($Data);
-        // print_r("\n");
-        // print_r($id);
-        // exit;
+        //資料
+        $Data = $request->all();
 
+        //確認是否有資料
+        $Movie = time::select('*')
+            ->where('Mid', $id)
+            ->first();
 
+        if ($Movie) {
 
-        // $data = $request->except('_token');
-        // if ($request->file('photo')->isValid()) {
-        //     //
-        //     echo "失敗";
-        //     exit;
-        // }else{
-        //     echo "成功";
-        //     exit;
-        // }
-        // $size = $request->file('poster');
-        // $size = $request->hasFile('poster');
-        // dd( $file);
-        // print_r($Data);
-        // exit;
+            //更新
+            $Result = time::where('Mid', $id)
+                ->update([
+                    'hall' => $Data['hall'],
+                    'date' => $Data['date'],
+                    'seat' => $Data['seat'],
+                ]);
+        } else {
 
-        //新增
-        $Time = new time;
+            //新增
+            $Time = new time;
 
-        $Time->mid = $id;
-        // print_r($Time->mid);
-        // exit;
-        $Time->hall = $request->hall;
-        $Time->date = [
-            $request->date_1,
-            $request->date_2,
-            $request->date_3,
-            $request->date_4,
-            $request->date_5,
-            $request->date_6,
-        ];
+            $Time->mid = $id;
+            $Time->hall = $request->hall;
+            // $Time->date = [
+            //     $request->date_1,
+            //     $request->date_2,
+            //     $request->date_3,
+            //     $request->date_4,
+            //     $request->date_5,
+            //     $request->date_6,
+            // ];
+            $Time->date = $request->date;
+            //轉換
+            $Date = $Time->date;
 
-        //轉換
-        $date = $Time->date;
-        // print_r($date);
-        $Time->date = implode(',', $date);
-        // print_r($Time->date);
-        // exit;
-        // dd($Time->date);
-        // exit;
-        $Time->seat = $request->seat;
+            // $Time->date = implode(',', $Date);
 
+            $Time->seat = $request->seat;
 
-        $Time->save();
+            $Time->save();
+        }
 
         return redirect('/timemanager');
     }

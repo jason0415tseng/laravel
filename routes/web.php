@@ -65,6 +65,9 @@ Route::post('/register', 'frontend\RegisterController@create');
 //會員中心
 Route::get('/memberCenter', 'frontend\MemberCenterController@index')->name('memberCenter');
 
+//訂購資訊
+Route::get('/orderinfo', 'frontend\MemberCenterController@getorder')->name('orderinfo');
+
 //會員修改
 Route::post('/memberCenter/update', 'frontend\MemberCenterController@updateuser')->name('memberCenter.user');
 
@@ -73,6 +76,12 @@ Route::get('/movielist', 'frontend\MovieListController@index')->name('movielist'
 
 //電影介紹->電影詳細內容
 Route::get('/movielist/detail/{id}', 'frontend\MovieListController@detail')->name('movielist.detail');
+
+//電影介紹->電影訂票介面
+Route::get('/movielist/order/{id}', 'frontend\MovieListController@order')->middleware('CheckLogin')->name('movielist.order');
+
+//電影介紹->電影訂票
+Route::post('/movielist/order/{id}', 'frontend\MovieListController@orderadd')->middleware('CheckLogin')->name('movielist.orderadd');
 
 //電影時刻查詢
 Route::get('/movietime', 'frontend\MovieTimeController@index')->name('movietime');
