@@ -67,7 +67,7 @@
                         <div class="form-group row">
                             <label for="introduction" class="col-md-4 col-form-label text-md-right" style="font-size:18px;">{{ ('廳別') }}</label>
                             <div class="col-md-4 col-form-label text-md-left" style="font-size:18px;">
-                                <span>{{$data['Hall']+1 . ('廳')}}</span>                        
+                                <span>{{$data['Hall'] . ('廳')}}</span>                        
                             </div>    
                         </div>
                         <div class="form-group row">

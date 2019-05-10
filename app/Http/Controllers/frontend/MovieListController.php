@@ -132,18 +132,6 @@ class MovieListController extends Controller
             $Errors->add('seat', '席位數超過數量');
             return back()->withErrors($Errors)->withInput();
         }
-        // if (preg_match('/[1-4]/', $Data['seat'])) {
-        //     echo "YES";
-        //     exit;
-        // } else {
-        //     echo "NO";
-        //     exit;
-        // }
-        // dd($Data);
-        // if ($Data['seat'] > 2) {
-        //     $Errors->add('seat', '席位數超過數量');
-        //     return back()->withErrors($Errors)->withInput();
-        // }
 
         $Account = session('account');
         $Level = session('level');
@@ -153,65 +141,21 @@ class MovieListController extends Controller
             ->where('level', $Level)
             ->first()->toArray();
 
-
-        $Order = order::select('*')
+        $OrderSeat = order::select('*')
             ->where('orderuid', $User['Uid'])
             ->where('ordermid', $id)
-            ->first();
-        // dd($Order['OrderSeat']);
-        if ($Order) {
-            //判斷人數
-            if ((($Order['OrderSeat']) - ($Data['seat'])) >= 0) {
-                switch ((($Order['OrderSeat']) - ($Data['seat']))) {
-                    case '1':
-                        $Errors->add('seat', '席位數僅剩3位');
-                        return back()->withErrors($Errors)->withInput();
-                        break;
-                    case '2':
-                        $Errors->add('seat', '席位數僅剩2位');
-                        return back()->withErrors($Errors)->withInput();
-                        break;
-                    case '3':
-                        $Errors->add('seat', '席位數僅剩1位');
-                        return back()->withErrors($Errors)->withInput();
-                        break;
-                    case '0':
-                        $Errors->add('seat', '席位已達上限');
-                        return back()->withErrors($Errors)->withInput();
-                        break;
-                    default:
-                        break;
-                }
-            }
-            // switch (abs(($Data['seat']) - ($Order['OrderSeat']))) {
-            switch ($Order['OrderSeat']) {
-                case '1':
-                    $Errors->add('seat', '席位數僅剩3位');
-                    return back()->withErrors($Errors)->withInput();
-                    break;
-                case '2':
-                    $Errors->add('seat', '席位數僅剩2位');
-                    return back()->withErrors($Errors)->withInput();
-                    break;
-                case '3':
-                    $Errors->add('seat', '席位數僅剩1位');
-                    return back()->withErrors($Errors)->withInput();
-                    break;
-                case '4':
-                    $Errors->add('seat', '席位已達上限');
-                    return back()->withErrors($Errors)->withInput();
-                    break;
-                default:
-                    break;
-            }
+            ->sum('OrderSeat');
 
-            // if ($Order['OrderSeat'] = 1) {
-            //     $Errors->add('seat', '席位數僅剩1位');
-            //     return back()->withErrors($Errors)->withInput();
-            // } else {
-            //     $Errors->add('seat', '席位數已達上限');
-            //     return back()->withErrors($Errors)->withInput();
-            // }
+        if ($OrderSeat == 4) {
+
+            $Errors->add('seat', '席位數已達上限');
+            return back()->withErrors($Errors)->withInput();
+
+            //判斷數量
+        } elseif (4 - $OrderSeat < $Data['seat']) {
+
+            $Errors->add('seat', '席位數僅剩' . (4 - $OrderSeat) . '位');
+            return back()->withErrors($Errors)->withInput();
         }
 
         //新增
@@ -238,7 +182,6 @@ class MovieListController extends Controller
         } else {
             //成功後更新DB
             $Reuslt = time::where('Mid', $id)
-                // ->update(['seat' => ('seat-' . ($Order->orderseat))]);
                 ->decrement('seat', $Order->orderseat);
         }
 

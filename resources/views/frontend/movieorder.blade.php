@@ -25,7 +25,7 @@
                                 <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('廳別') }}</label>
                                 <div class="col-md-4 col-form-label text-md-left">
                                 <input id="hall" type="text" name="hall" value="{{ $data['Hall'] }}" placeholder="時刻" required style="display:none"> 
-                                    {{$data['Hall']+1 . ('廳')}}
+                                    {{$data['Hall'] . ('廳')}}
                                     <!-- <select id="hall" name="hall"  class="form-control" style="text-align:center;text-align-last:center;"> 
                                                     <option value="0" @if((count($data)>2)&&($data['Hall']=='0')) selected @else  @endif>1廳</option> 
                                                     <option value="1" @if((count($data)>2)&&($data['Hall']=='1')) selected @else  @endif>2廳</option> 
@@ -84,7 +84,7 @@
                             <label for="seat" class="col-md-4 col-form-label text-md-right">{{ ('席位') }}</label>
                             <div class="col-md-4">
                                 
-                                    <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ old('seat') }}" maxlength="3" max="2" placeholder="席位" required>                            
+                                    <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ old('seat') }}" maxlength="3" max="4" placeholder="席位" required>                            
                                 
                                     @if ($errors->has('seat'))
                                         <span class="invalid-feedback" role="alert">

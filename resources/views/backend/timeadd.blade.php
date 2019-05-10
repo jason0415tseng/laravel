@@ -11,7 +11,6 @@
             <div class="card">
                 <div class="card-header">{{ ('新增時刻') }}</div>
                 @foreach ($Data as $data)
-
                 <div class="card-body">
                     <form method="POST" action="{{ route('time.timeadd' , ['Mid'=> $data['Mid']]) }}" enctype="multipart/form-data">
                         @csrf
@@ -30,13 +29,20 @@
                         <div class="form-group row">
                                 <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('廳別') }}</label>
                                 <div class="col-md-4">
-                                    <select id="hall" name="hall"  class="form-control" style="text-align:center;text-align-last:center;"> 
-                                                    <option value="0" @if((count($data)>2)&&($data['Hall']=='0')) selected @else  @endif>1廳</option> 
-                                                    <option value="1" @if((count($data)>2)&&($data['Hall']=='1')) selected @else  @endif>2廳</option> 
-                                                    <option value="2" @if((count($data)>2)&&($data['Hall']=='2')) selected @else  @endif>3廳</option> 
-                                                    <option value="3" @if((count($data)>2)&&($data['Hall']=='3')) selected @else  @endif>4廳</option> 
-                                                    <option value="4" @if((count($data)>2)&&($data['Hall']=='4')) selected @else  @endif>5廳</option> 
-                                                </select>
+                                    {{-- <select id="hall" name="hall"  class="form-control" style="text-align:center;text-align-last:center;"> 
+                                                    <option value="0" @if($Hall == '0') hidden @else @if((count($data)>2)&&($data['Hall']=='0')) selected @else  @endif @endif>1廳</option> 
+                                                    <option value="1" @if($Hall == '1') hidden @else @if((count($data)>2)&&($data['Hall']=='1')) selected @else  @endif @endif>2廳</option> 
+                                                    <option value="2" @if($Hall == '2') hidden @else @if((count($data)>2)&&($data['Hall']=='2')) selected @else  @endif @endif>3廳</option> 
+                                                    <option value="3" @if($Hall == '3') hidden @else @if((count($data)>2)&&($data['Hall']=='3')) selected @else  @endif @endif>4廳</option> 
+                                                    <option value="4" @if($Hall == '4') hidden @else @if((count($data)>2)&&($data['Hall']=='4')) selected @else  @endif @endif>5廳</option>
+                                                    <option value="5" @if($Hall == '5') hidden @else @if((count($data)>2)&&($data['Hall']=='5')) selected @else  @endif @endif>6廳</option>
+                                                    <option value="6" @if($Hall == '6') hidden @else @if((count($data)>2)&&($data['Hall']=='6')) selected @else  @endif @endif>7廳</option> 
+                                    </select> --}}
+                                    <select id="hall" name="hall"  class="form-control{{ $errors->has('hall') ? ' is-invalid' : '' }}" style="text-align:center;text-align-last:center;"> 
+                                        @foreach ($Hall as $hall)
+                                            <option value={{$hall}} @if((count($data)>2)&&($data['Hall']==$hall)) selected @else  @endif >{{$hall . ('廳')}}</option> 
+                                        @endforeach         
+                                    </select>
                                         @if ($errors->has('hall'))
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $errors->first('hall') }}</strong>
@@ -100,6 +106,7 @@
                     </form>
                 </div>
                 @endforeach
+                {{-- @endforeach --}}
             </div>
         </div>
     </div>

@@ -62,7 +62,8 @@
                         <div class="form-group row">
                             <label for="length" class="col-md-4 col-form-label text-md-right">{{ ('片長') }}</label>
                             <div class="col-md-4">
-                                <input id="length" type="text" class="form-control{{ $errors->has('length') ? ' is-invalid' : '' }}" name="length" value="{{ $data['Length'] ? $data['Length'] : old('length') }}" maxlength="6" placeholder="片長" required>                            
+                                <input id="length" type="number" class="form-control{{ $errors->has('length') ? ' is-invalid' : '' }}" name="length" value="{{ $data['Length'] ? $data['Length'] : old('length') }}" maxlength="6" placeholder="片長" required>
+                                <div style="width: 50px;position: absolute;margin: -30px 0px 0px 215px;">{{('單位:分')}}</div>
                                     @if ($errors->has('length'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('length') }}</strong>

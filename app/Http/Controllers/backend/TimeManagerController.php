@@ -6,9 +6,22 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\movies;
 use App\Models\time;
+use Illuminate\Support\MessageBag;
 
 class TimeManagerController extends Controller
 {
+    protected $HallList;
+
+    /**
+     *
+     * @param  UserRepository  $users
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->HallList = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -94,22 +107,41 @@ class TimeManagerController extends Controller
     public function add($id)
     {
         //列出資料
-        $Data = movies::select('movies.Mid', 'movies.Name', 'time.Hall', 'time.Date', 'time.Seat')
+        $Data = movies::select('movies.Mid', 'movies.Name', 'movies.Length', 'time.Hall', 'time.Date', 'time.Seat')
             ->join('time', 'movies.mid', '=', 'time.mid')
             ->where('movies.Mid', $id)
+            // ->orwhere('time.Mid', '<>', $id)
             ->get();
+
+        $Hall = time::select('Hall')
+            ->where('Mid', '<>', $id)
+            ->get()->toArray();
+
+        $NewHall = array();
+
+        $Hall = array_column($Hall, 'Hall');
+
+        $Hall = array_diff($this->HallList, $Hall);
+
+        // print_r($Hall);
+        // print($hall);
+
+        foreach ($Hall as $key => $value) {
+
+            $NewHall[] = $value;
+        }
 
         //列出資料
         if ($Data->toArray()) {
 
-            return view('backend.timeadd', ['Data' => $Data->makeHidden('attribute')->toArray()]);
+            return view('backend.timeadd', ['Data' => $Data->makeHidden('attribute')->toArray(), 'Hall' => $NewHall]);
         } else {
 
             $Data = movies::select('Mid', 'Name')
                 ->where('Mid', $id)
-                ->get();
+                ->get()->toArray();
 
-            return view('backend.timeadd', ['Data' => $Data->makeHidden('attribute')->toArray()]);
+            return view('backend.timeadd', ['Data' => $Data, 'Hall' => $Hall]);
         }
         // return view('backend.movieedit', ['Data' => $Data->makeHidden('attribute')->toArray()]);
         // /
@@ -124,8 +156,21 @@ class TimeManagerController extends Controller
      */
     public function timeadd(Request $request, $id)
     {
+        $Errors = new MessageBag;
+
         //資料
         $Data = $request->all();
+
+        //確認廳別
+        $Result = time::select('*')
+            ->where('Hall', $Data['hall'])
+            ->first();
+
+        if ($Result) {
+
+            $Errors->add('hall', '廳別錯誤');
+            return back()->withErrors($Errors)->withInput();
+        }
 
         //確認是否有資料
         $Movie = time::select('*')
