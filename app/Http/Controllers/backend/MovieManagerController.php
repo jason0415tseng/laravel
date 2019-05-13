@@ -130,7 +130,15 @@ class MovieManagerController extends Controller
      */
     public function movieedit(Request $request, $id)
     {
+        $Errors = new MessageBag;
+
         $Data = $request->all();
+
+        //判斷片長
+        if (($Data['length'] < 60) || ($Data['length'] > 240)) {
+            $Errors->add('length', '片長錯誤，範圍(60~240)');
+            return back()->withErrors($Errors)->withInput();
+        }
 
         //圖片
         $File = $request->file('poster');

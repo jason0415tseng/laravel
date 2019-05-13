@@ -10,20 +10,18 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ ('新增時刻') }}</div>
-                @foreach ($Data as $data)
+                {{-- @foreach ($Data as $data) --}}
                 <div class="card-body">
-                    <form method="POST" action="{{ route('time.timeadd' , ['Mid'=> $data['Mid']]) }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('time.timeadd' , ['Mid'=> $Data['Mid']]) }}" enctype="multipart/form-data">
                         @csrf
-
+                                {{-- @php
+                                 dd($Data)   
+                                @endphp --}}
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ ('片名') }}</label>
                             <div class="col-md-4">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ $data['Name'] ? $data['Name'] : old('name') }}" placeholder="片名" required autofocus>                            
-                                    @if ($errors->has('name'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('name') }}</strong>
-                                        </span>
-                                    @endif                          
+                                <span class="form-control" style="border: 1px;">{{$Data['Name']}}</span>
+                                {{-- <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ $Data['Name'] ? $Data['Name'] : old('name') }}" placeholder="片名" required autofocus>                           --}}
                             </div>    
                         </div>
                         <div class="form-group row">
@@ -40,7 +38,7 @@
                                     </select> --}}
                                     <select id="hall" name="hall"  class="form-control{{ $errors->has('hall') ? ' is-invalid' : '' }}" style="text-align:center;text-align-last:center;"> 
                                         @foreach ($Hall as $hall)
-                                            <option value={{$hall}} @if((count($data)>2)&&($data['Hall']==$hall)) selected @else  @endif >{{$hall . ('廳')}}</option> 
+                                            <option value={{$hall}} @if((count($Data)>3)&&($Data['Hall']==$hall)) selected @else  @endif >{{$hall . ('廳')}}</option> 
                                         @endforeach         
                                     </select>
                                         @if ($errors->has('hall'))
@@ -64,8 +62,15 @@
                         <div class="form-group row">
                             <label for="date" class="col-md-4 col-form-label text-md-right">{{ ('時刻') }}</label>
                             <div style="width:180px;margin-left:15px">
-                            <input type="checkbox" value="1" checked id="date" name="date">
-                            <label for="date">10:00</label>
+                            @foreach ($Time as $key => $time)
+                                    {{-- @php
+                                     dd($time)   
+                                    @endphp --}}
+                            <input type="checkbox" value={{$time}} id="{{('date') . $key}}" name="date[]" checked>
+                            <label for="date">{{$time}}</label>
+                            {{-- <input type="checkbox" value="1" checked id="date" name="date">
+                            <label for="date">10:00</label> --}}
+                            @endforeach
                             {{-- <input type="checkbox" value="2" checked id="date_2" name="date_2">
                             <label for="date">14:20</label>
                             <input type="checkbox" value="3" checked id="date_3" name="date_3">
@@ -81,10 +86,13 @@
                         <div class="form-group row">
                             <label for="seat" class="col-md-4 col-form-label text-md-right">{{ ('席位') }}</label>
                             <div class="col-md-4">
-                                @if(count($data)>2)
-                                    <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ $data['Seat'] ? $data['Seat'] : old('seat') }}" maxlength="6" placeholder="席位" required>                            
+                                @if(count($Data)>3)
+                                {{-- @php
+                                 dd($data)   
+                                @endphp --}}
+                                    <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ $Data['Seat'] ? $Data['Seat'] : old('seat') }}" placeholder="席位" required>                            
                                 @else
-                                    <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ old('seat') }}" maxlength="6" placeholder="席位" required>                            
+                                    <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ old('seat') }}" placeholder="席位" required>                            
                                 @endif
                                     @if ($errors->has('seat'))
                                         <span class="invalid-feedback" role="alert">
@@ -105,7 +113,7 @@
                         </div>
                     </form>
                 </div>
-                @endforeach
+                {{-- @endforeach --}}
                 {{-- @endforeach --}}
             </div>
         </div>

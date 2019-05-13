@@ -39,14 +39,18 @@
                                                     {{$order['name']}}
                                                 </td>
                                                 <td>
-                                                    {{$order['hall'] . ('廳')}}
+                                                    {{$order['orderhall'] . ('廳')}}
                                                 </td>
                                                 <td>
-                                                    @if($order['date'] == '1')
+                                                {{-- @php
+                                                dd($Order)    
+                                                @endphp --}}
+                                                {{$order['orderdate']}}
+                                                    {{-- @if($order['orderdate'] == '1')
                                                         <div class="" ><span>10:00</span></div>
                                                     @elseif($value == '2')
                                                         <div class="col-md-4 col-form-label text-md-left" style="font-size:18px;"><span>12:20</span></div>
-                                                    @endif
+                                                    @endif --}}
                                                 </td>
                                                 <td>
                                                     {{$order['orderseat']}}

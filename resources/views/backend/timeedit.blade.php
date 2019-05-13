@@ -49,7 +49,7 @@
                             </div>    
                         </div>
                         <div class="form-group row">
-                            <label for="seat" class="col-md-4 col-form-label text-md-right">{{ ('席位') }}</label>
+                            <label for="seat" class="col-md-4 col-form-label text-md-right">{{ ('張數') }}</label>
                             <div class="col-md-4">
                                 <input id="seat" type="text" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ $data['seat'] ? $data['seat'] : old('seat') }}" maxlength="6" placeholder="類型" required>                            
                                     @if ($errors->has('seat'))

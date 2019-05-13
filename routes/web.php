@@ -80,6 +80,9 @@ Route::get('/movielist/detail/{id}', 'frontend\MovieListController@detail')->nam
 //電影介紹->電影訂票介面
 Route::get('/movielist/order/{id}', 'frontend\MovieListController@order')->middleware('CheckLogin')->name('movielist.order');
 
+//電影介紹->電影選位介面
+Route::post('/movielist/orderseat/{id}', 'frontend\MovieListController@orderseat')->middleware('CheckLogin')->name('movielist.orderseat');
+
 //電影介紹->電影訂票
 Route::post('/movielist/order/{id}', 'frontend\MovieListController@orderadd')->middleware('CheckLogin')->name('movielist.orderadd');
 

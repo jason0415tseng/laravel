@@ -73,14 +73,16 @@
                         <div class="form-group row">
                             <label for="introduction" class="col-md-4 col-form-label text-md-right" style="font-size:18px;">{{ ('時刻') }}</label>
                                 @foreach ($data['Date'] as $dd => $value)
-
-                                {{-- <div class="col-md-4"><span>{{$data['Date']}}</span>  --}}
-                                {{-- </div>    --}}
-                                @if($value == '1')
+{{-- @php
+ dd($dd);   
+@endphp --}}
+                                <div class="col-md-1 col-form-label text-md-left" style="font-size:18px;"><span>{{$value}}</span> 
+                                </div>   
+                                {{-- @if($value == '1')
                                     <div class="col-md-4 col-form-label text-md-left" style="font-size:18px;"><span>10:00</span></div>
                                 @elseif($value == '2')
                                     <div class="col-md-4 col-form-label text-md-left" style="font-size:18px;"><span>12:20</span></div>
-                                @endif
+                                @endif --}}
                                 <!-- @switch($value)
                                         @case(0)
                                             <div class="movie_badge level_g">普通級</div>

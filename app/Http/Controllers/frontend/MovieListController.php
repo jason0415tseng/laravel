@@ -102,10 +102,45 @@ class MovieListController extends Controller
             ->get();
 
         $Data = $Data->toArray();
+
         $Data[0]['Date'] = explode(',', $Data[0]['Date']);
 
 
         return view('frontend.movieorder', ['Data' => $Data]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function orderseat(Request $request, $id)
+    {
+        $Data = $request->all();
+
+        // echo "AAAAA";
+
+        $Reuslt = movies::select('Name')
+            // ->join('time', 'movies.mid', '=', 'time.mid')
+            ->where('Mid', $id)
+            ->first();
+        $Data['name'] = $Reuslt->Name;
+
+        $Data['mid'] = $id;
+
+        for ($i = 1; $i <= 20; $i++) {
+            $Seat[] = $i;
+        }
+        // print_r($Data);
+        // exit;
+        // $Data = $Data->toArray();
+
+        // $Data[0]['Date'] = explode(',', $Data[0]['Date']);
+
+
+        return view('frontend.movieorderseat', ['Data' => $Data, 'Seat' => $Seat]);
     }
 
     /**
@@ -121,15 +156,15 @@ class MovieListController extends Controller
 
         $Data = $request->all();
 
-        //判斷席位數
+        //判斷數量
         if ($Data['seat'] < 0) {
 
-            $Errors->add('seat', '席位數字錯誤');
+            $Errors->add('seat', '數字錯誤');
             return back()->withErrors($Errors)->withInput();
         } elseif (!(preg_match('/[1-4]/', $Data['seat']))) {
 
             //判斷範圍
-            $Errors->add('seat', '席位數超過數量');
+            $Errors->add('seat', '超過數量');
             return back()->withErrors($Errors)->withInput();
         }
 
@@ -148,13 +183,13 @@ class MovieListController extends Controller
 
         if ($OrderSeat == 4) {
 
-            $Errors->add('seat', '席位數已達上限');
+            $Errors->add('seat', '數量已達上限');
             return back()->withErrors($Errors)->withInput();
 
             //判斷數量
         } elseif (4 - $OrderSeat < $Data['seat']) {
 
-            $Errors->add('seat', '席位數僅剩' . (4 - $OrderSeat) . '位');
+            $Errors->add('seat', '張數僅剩' . (4 - $OrderSeat) . '位');
             return back()->withErrors($Errors)->withInput();
         }
 

@@ -11,6 +11,7 @@ use Illuminate\Support\MessageBag;
 class TimeManagerController extends Controller
 {
     protected $HallList;
+    protected $TimeList;
 
     /**
      *
@@ -111,11 +112,16 @@ class TimeManagerController extends Controller
             ->join('time', 'movies.mid', '=', 'time.mid')
             ->where('movies.Mid', $id)
             // ->orwhere('time.Mid', '<>', $id)
-            ->get();
-
+            ->first();
+        // dd($Data);
         $Hall = time::select('Hall')
             ->where('Mid', '<>', $id)
             ->get()->toArray();
+
+        $StartTime = strtotime('10:00');
+
+        $EndTime = strtotime('24:00');
+
 
         $NewHall = array();
 
@@ -123,25 +129,36 @@ class TimeManagerController extends Controller
 
         $Hall = array_diff($this->HallList, $Hall);
 
-        // print_r($Hall);
-        // print($hall);
-
         foreach ($Hall as $key => $value) {
 
             $NewHall[] = $value;
         }
 
         //列出資料
-        if ($Data->toArray()) {
+        if ($Data) {
 
-            return view('backend.timeadd', ['Data' => $Data->makeHidden('attribute')->toArray(), 'Hall' => $NewHall]);
+            $LengthTime = ((($Data['Length']) + 20) * 60);
+
+            for ($i = $StartTime; ($i +  $LengthTime) <= $EndTime; ($i += $LengthTime)) {
+
+                $this->TimeList[] .= date("H:i", ($i));
+            };
+
+            return view('backend.timeadd', ['Data' => $Data->makeHidden('attribute')->toArray(), 'Hall' => $NewHall, 'Time' => $this->TimeList]);
         } else {
 
-            $Data = movies::select('Mid', 'Name')
+            $Data = movies::select('Mid', 'Name', 'Length')
                 ->where('Mid', $id)
-                ->get()->toArray();
+                ->first()->toArray();
 
-            return view('backend.timeadd', ['Data' => $Data, 'Hall' => $Hall]);
+            $LengthTime = ((($Data['Length']) + 20) * 60);
+
+            for ($i = $StartTime; ($i +  $LengthTime) <= $EndTime; ($i += $LengthTime)) {
+
+                $this->TimeList[] .= date("H:i", ($i));
+            };
+
+            return view('backend.timeadd', ['Data' => $Data, 'Hall' => $Hall, 'Time' => $this->TimeList]);
         }
         // return view('backend.movieedit', ['Data' => $Data->makeHidden('attribute')->toArray()]);
         // /
@@ -161,14 +178,9 @@ class TimeManagerController extends Controller
         //資料
         $Data = $request->all();
 
-        //確認廳別
-        $Result = time::select('*')
-            ->where('Hall', $Data['hall'])
-            ->first();
-
-        if ($Result) {
-
-            $Errors->add('hall', '廳別錯誤');
+        //判斷張數
+        if (($Data['seat'] < 100) || ($Data['seat'] > 999)) {
+            $Errors->add('seat', '數量錯誤，範圍(100~999)');
             return back()->withErrors($Errors)->withInput();
         }
 
@@ -176,9 +188,50 @@ class TimeManagerController extends Controller
         $Movie = time::select('*')
             ->where('Mid', $id)
             ->first();
+        // dd($Data['date']);
+        if ($Movie) {
+            //確認廳別
+            $Result = time::select('*')
+                ->where('Hall', $Data['hall'])
+                ->where('Mid', '<>', $id)
+                ->first();
+            // dd($Result);
+        } else {
+            //確認廳別
+            $Result = time::select('*')
+                ->where('Hall', $Data['hall'])
+                ->first();
+        }
+
+        // //確認廳別
+        // $Result = time::select('*')
+        //     ->where('Hall', $Data['hall'])
+        //     ->first();
+
+        if ($Result) {
+
+            $Errors->add('hall', '廳別錯誤');
+            return back()->withErrors($Errors)->withInput();
+        }
+
+
 
         if ($Movie) {
+            // $request->date;
+            // $Time->date = [
+            //     $request->date_1,
+            //     $request->date_2,
+            //     $request->date_3,
+            //     $request->date_4,
+            //     $request->date_5,
+            //     $request->date_6,
+            // // ];
+            // $Time->date = $request->date;
+            //轉換
+            $Date = $Data['date'];
 
+            $Data['date'] = implode(',', $Date);
+            // dd($Data['date']);
             //更新
             $Result = time::where('Mid', $id)
                 ->update([
@@ -205,7 +258,7 @@ class TimeManagerController extends Controller
             //轉換
             $Date = $Time->date;
 
-            // $Time->date = implode(',', $Date);
+            $Time->date = implode(',', $Date);
 
             $Time->seat = $request->seat;
 
