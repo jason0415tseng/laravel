@@ -35,7 +35,7 @@ class MemberCenterController extends Controller
     {
 
         //列出帳號
-        $Order = order::select('movies.name', 'order.ordernumber', 'order.orderhall', 'order.orderdate', 'order.orderseat', 'order.orderaccount', 'order.ordername', 'order.created_at', 'order.updated_at')
+        $Order = order::select('movies.name', 'order.ordernumber', 'order.orderhall', 'order.orderdate', 'order.orderticket', 'order.orderseat', 'order.orderaccount', 'order.ordername', 'order.created_at', 'order.updated_at')
             ->join('movies', 'movies.mid', '=', 'order.ordermid')
             ->join('time', 'time.mid', '=', 'order.ordermid')
             // ->join('order', 'order.ordermid', '=', 'time.mid')

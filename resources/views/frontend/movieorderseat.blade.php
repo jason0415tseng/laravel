@@ -17,70 +17,38 @@
 
                         <div class="form-group row">
                                 <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('票名') }}</label>
-                                <div class="col-md-4 col-form-label text-md-left">
+                                <div id="name" name="name" value="{{$Data['name']}}" class="col-md-4 col-form-label text-md-left">
                                     {{$Data['name']}}
                                 </div>
                         </div>
                         <div class="form-group row">
                                 <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('廳別') }}</label>
-                                <div class="col-md-4 col-form-label text-md-left">
-                                <input id="hall" type="text" name="hall" value="{{ $Data['hall'] }}" placeholder="時刻" required style="display:none"> 
+                                <div id="hall" name="hall" value="{{ $Data['hall'] }}" class="col-md-4 col-form-label text-md-left">
                                     {{$Data['hall'] . ('廳')}}
-                                    
                                 </div>
                         </div>
                         <div class="form-group row">
                             <label for="date" class="col-md-4 col-form-label text-md-right"><i class="far fa-clock"></i></label>
-                            <!-- <div class="col-md-4"> -->
-                                <!-- <input id="date" type="text" class="form-control{{ $errors->has('date') ? ' is-invalid' : '' }}" name="date" value="{{ old('date') }}" placeholder="時刻" required>                            
-                                    @if ($errors->has('date'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('date') }}</strong>
-                                        </span>
-                                    @endif                           -->
-                                    {{-- @foreach ($data['Date'] as $key => $value) --}}
+                                <div  id="date" name="date" value="{{$Data['date']}}" class="col-md-1 col-form-label">
+                                   {{$Data['date']}}
+                                </div>
+                        </div>
 
-                                <div class="col-md-1 col-form-label">
-                                    <div type="text" id='date' name='date' value="{{$Data['date']}}">{{$Data['date']}}</div> 
-                                </div>   
-                                {{-- @if($value == '1')
-                                <input id="date" type="text" name="date" value="{{ $value }}" placeholder="時刻" required style="display:none"> 
-                                    <div class="col-md-4 col-form-label text-md-left" style="font-size:18px;"><span>10:00</span></div>
-                                @elseif($value == '2')
-                                <input id="date" type="text" name="date" value="{{ $value }}" placeholder="時刻" required style="display:none"> 
-                                    <div class="col-md-4 col-form-label text-md-left" style="font-size:18px;"><span>12:20</span></div>
-                                @endif --}}
-                                {{-- @endforeach --}}
-                            <!-- </div>     -->
-                        </div>
-                        <!-- <div class="form-group row">
-                            <label for="date" class="col-md-4 col-form-label text-md-right">{{ ('時刻') }}</label>
-                            <div style="width:180px;margin-left:15px">
-                            <input type="checkbox" value="1" checked id="date_1" name="date_1">
-                            <label for="date">10:00</label>
-                            {{-- <input type="checkbox" value="2" checked id="date_2" name="date_2">
-                            <label for="date">14:20</label>
-                            <input type="checkbox" value="3" checked id="date_3" name="date_3">
-                            <label for="date">16:40</label>
-                            <input type="checkbox" value="4" checked id="date_4" name="date_4">
-                            <label for="date">19:00</label>
-                            <input type="checkbox" value="5" checked id="date_5" name="date_5">
-                            <label for="date">21:20</label>
-                            <input type="checkbox" value="6" checked id="date_6" name="date_6">
-                            <label for="date">23:40</label> --}}
-                            </div>  
-                        </div> -->
                         <div class="form-group row">
-                            <label for="seat" class="col-md-4 col-form-label text-md-right">{{ ('數量') }}</label>
-                            <div class="col-md-4">
-                                
-                                <div class="col-md-1 col-form-label">
-                                    <div type="text" id='seat' name='seat' value="{{$Data['seat']}}">{{$Data['seat']}}</div> 
-                                </div> 
-                                                         
-                            </div>    
+                            <label for="ticket" class="col-md-4 col-form-label text-md-right">{{ ('數量') }}</label>
+                                <div id="ticket" name="ticket" value="{{ $Data['ticket'] }}" class="col-md-1 col-form-label">
+                                    {{$Data['ticket']}}
+                                </div>
                         </div>
-                        
+                        <div class="form-group row">
+                            <label for="seat" class="col-md-4 col-form-label text-md-right">{{ ('已選座位') }}</label>
+                            <div class="col-md-1 col-form-label">
+                                    <div class="selectseat">
+                                        0
+                                    </div>{{('張票')}}
+
+                            </div>
+                        </div>
                     </form>
                 </div>
                 {{-- @endforeach --}}
@@ -88,52 +56,82 @@
         </div>
         <div class="col-md-12">
             <div class="card">
-                <div class="col-md-4 col-form-label">
-                    <table style="margin: 0 auto;border-collapse: separate !important;border-spacing: 5px !important;">
+                <div class="col-md-12 col-form-label">
+                    {{-- <table  id="1" class="Seating-Area" data-area-number="1" cellspacing="0" cellpadding="0" style="width:90%;margin: 0 auto;border-collapse: separate !important;border-spacing: 5px !important; cellpadding:8"> --}}
+                    <table id="1" class="Seating-Area" data-area-number="1" cellspacing="0" cellpadding="0" style="left:0%;top:0%;width:100%;height:100%;">
                         <tbody>
-                @foreach ($Seat as $seat)
+                {{-- @foreach ($Seat as $seat) --}}
                 {{-- @php
-                 dd($Seat)   
+                 dd($Seat)
                 @endphp     --}}
                 {{-- <div class="col-md-1 col-form-label">
-                    <input type="radio" id='date' name='date' value="{{$value}}">{{$value}}</input> 
+                    <input type="radio" id='date' name='date' value="{{$value}}">{{$value}}</input>
                 </div>   --}}
                 {{-- <div class="col-md-4 col-form-label"> --}}
-                    @if($seat>5)
+                    {{-- @if($seat>5) --}}
                     {{-- @php
                     dd($seat>5)
                     @endphp --}}
                     <tr>
-                        {{-- <td style="background-color:#f7597b;"><input type="checkbox" name="seat[]" value={{$seat}}> --}}
-                        <td style="text-align: center;min-width: 25px !important;height: 22px;color: #FFF;font-size: 0.8em;line-height: 22px !important;background: #ccc;border-radius: 3px;cursor: pointer;">
-                            {{-- <input type="checkbox" name="seat[]" value={{$seat}}> --}}
-                            <div class="ng-binding ng-scope">{{$seat}}</div>
-                            {{-- {{('AA')}} --}}
+                        <td colspan="1"></td>
+                        <td colspan="25" class="screen" style="font-size: 1em;border: 1px #CCC solid;color: #999;height: 27px;line-height: 27px !important;-webkit-border-radius: 20px;-moz-border-radius: 20px;border-radius: 20px;text-align: center;">
+                            {{('螢幕')}}
                         </td>
                     </tr>
-                    @else
-                    {{-- <tr> --}}
-                        <td style="text-align: center;min-width: 25px !important;height: 22px;color: #FFF;font-size: 0.8em;line-height: 22px !important;background: #ccc;border-radius: 3px;cursor: pointer;">
+                    <tr>
+                            <td colspan="26" style="height: 30px;"></td>
+
+                        </tr>
+                    @for ($i=1;$i<=5;$i++)
+
+
+                    <tr>
+
+                            <td style="text-align: center;font-size: 0.8em;cursor: pointer;">
+                                    {{$i.('排')}}
+                            </td>
+                        @for ($j=1;$j<=4;$j++)
+
+                        {{-- <td style="background-color:#f7597b;"><input type="checkbox" name="seat[]" value={{$seat}}> --}}
+                        {{-- <td style="text-align: center;min-width: 25px !important;height: 22px;color: #FFF;font-size: 0.8em;line-height: 22px !important;background: #3f9ae5;border-radius: 3px;cursor: pointer;"> --}}
+                            <td class="" data-type="Empty" data-name="{{$i}}" data-col="{{$j}}" data-seatnum="8" data-status="5" data-areanum="1" >
                             {{-- <input type="checkbox" name="seat[]" value={{$seat}}> --}}
-                            <div class="ng-binding ng-scope">{{$seat}}</div>
+                            <div id="{{$i.('_').$j}}" name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
+                                {{-- <input type="checkbox" name="selectseat[]" class="selectseat" value="{{$j.('號')}}"> --}}
+                                {{$j.('號')}}
+                            </div>
                             {{-- {{('AA')}} --}}
                         </td>
+
+                    @endfor
+
+                    </tr>
+
+                @endfor
+                    {{-- @else --}}
+                    {{-- <tr> --}}
+                        {{-- <td style="text-align: center;min-width: 25px !important;height: 22px;color: #FFF;font-size: 0.8em;line-height: 22px !important;background: #ccc;border-radius: 3px;cursor: pointer;"> --}}
+                            {{-- <input type="checkbox" name="seat[]" value={{$seat}}> --}}
+                            {{-- <div class="ng-binding ng-scope">{{$seat}}</div> --}}
+                            {{-- {{('AA')}} --}}
+                        {{-- </td> --}}
                         {{-- <td style="background-color:#2799dd;"> <input type="checkbox" name="seat[]" value={{$seat}}>
                             {{('BB')}}
                         </td> --}}
                     {{-- </tr> --}}
-                    @endif
+                    {{-- @endif --}}
                 {{-- </div> --}}
-                @endforeach
+                {{-- @endforeach --}}
                 </tbody>
                 </table>
                 </div>
-             <div class="card-body">asdadsasd</div>
+             {{-- <div class="card-body">asdadsasd</div> --}}
             </div>
         </div>
         <div class="form-group row mb-0">
             <div class="col-md-6 offset-md-4">
-                <button type="submit" class="btn btn-primary">
+                {{-- <button type="submit" class="btn btn-primary" onclick="Update({{$User['uid']}})">{{ ('確認') }}</button> --}}
+                <button type="submit" class="btn btn-primary" onclick="Order({{$Data['mid']}})">
                     {{ ('確定') }}
                 </button>
                 {{-- <a href="/movielist"  style="text-decoration:none;color:seashell"> --}}

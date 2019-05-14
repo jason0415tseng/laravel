@@ -114,3 +114,70 @@
 .level_r {
     background-color: #e60010;
 }
+
+.Seating-Area {
+    /* position: absolute; */
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    /* border-collapse: collapse; */
+    border-collapse: separate;
+    border-spacing: 5px;
+}
+
+.Seating-Area tr,
+.Seating-Area td {
+    padding: 0px;
+    margin: 0px;
+    border: 0;
+}
+
+.Seating-Area div {
+    text-align: center;
+    min-width: 25px !important;
+    height: 22px;
+    color: rgb(255, 255, 255);
+    font-size: 0.8em;
+    line-height: 22px !important;
+    background: #2799dd;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.Seating-Area .Select {
+    text-align: center;
+    min-width: 25px !important;
+    height: 22px;
+    color: rgb(255, 255, 255);
+    font-size: 0.8em;
+    line-height: 22px !important;
+    background: #f7597b;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+
+/* .Seating-Area p {
+    font-family: Verdana, Arial, Helvetica, sans-serif, "MS sans serif";
+    position: absolute;
+    z-index: 1;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    font-size: 11px;
+    color: #000000;
+    display: table-cell;
+    cursor: pointer;
+} */
+
+.Seating-Area p {
+    text-align: center;
+    min-width: 25px !important;
+    height: 22px;
+    color: rgb(255, 255, 255);
+    font-size: 0.8em;
+    line-height: 22px !important;
+    background: #2799dd;
+    border-radius: 3px;
+    cursor: pointer;
+}

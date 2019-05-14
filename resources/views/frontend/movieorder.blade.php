@@ -82,14 +82,14 @@
                             </div>  
                         </div> -->
                         <div class="form-group row">
-                            <label for="seat" class="col-md-4 col-form-label text-md-right">{{ ('數量') }}</label>
+                            <label for="ticket" class="col-md-4 col-form-label text-md-right">{{ ('數量') }}</label>
                             <div class="col-md-4">
                                 
-                                    <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ old('seat') }}" maxlength="3" max="4" placeholder="數量" required>                            
+                                    <input id="ticket" type="number" class="form-control{{ $errors->has('ticket') ? ' is-invalid' : '' }}" name="ticket" value="{{ old('ticket') }}" maxlength="3" max="4" placeholder="數量" required>                            
                                 
-                                    @if ($errors->has('seat'))
+                                    @if ($errors->has('ticket'))
                                         <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('seat') }}</strong>
+                                            <strong>{{ $errors->first('ticket') }}</strong>
                                         </span>
                                     @endif                          
                             </div>    
