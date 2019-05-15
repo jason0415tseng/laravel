@@ -83,7 +83,10 @@
                                 			</li>
                                             <li role="presentation">
                                         		<a class="nav-link" href="{{ route('movietime') }}">{{ __('時刻查詢') }}</a>
-                                			</li>
+                                            </li>
+                                            <li role="presentation">
+                                		        <a class="nav-link" href="{{ route('activity') }}">{{ __('活動') }}</a>
+                        			        </li>
                                             <li role="presentation">
                                                 <a class="nav-link" href="{{ route('orderinfo') }}">{{ __('訂購資訊') }}</a>
 							    		    </li>
@@ -100,7 +103,10 @@
                                 			</li>
                                             <li role="presentation">
                                         		<a class="nav-link" href="{{ route('movietime') }}">{{ __('時刻查詢') }}</a>
-                                			</li>
+                                            </li>
+                                            <li role="presentation">
+                                		        <a class="nav-link" href="{{ route('activity') }}">{{ __('活動') }}</a>
+                        			        </li>
 							    			<li role="presentation">
                                         		<a class="nav-link" href="{{ route('register') }}">{{ __('註冊') }}</a>
                                 			</li>

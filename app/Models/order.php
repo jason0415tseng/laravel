@@ -12,6 +12,6 @@ class order extends Model
     protected $primarykey = 'oid';
 
     protected $fillable = [
-        'oid', 'ordernumber',  'ordermid',  'orderhall',  'orderdate',  'orderseat',  'orderuid', 'orderaccount', 'ordername', 'created_at', 'updated_at'
+        'oid', 'ordernumber', 'ordermid', 'orderhall', 'orderdate', 'orderseat', 'orderuid', 'orderaccount', 'ordername', 'created_at', 'updated_at'
     ];
 }

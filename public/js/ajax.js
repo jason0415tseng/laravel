@@ -63,42 +63,47 @@ function seat(_this) {
     var SeatLimit = $('#ticket').attr('value');
     var SelectSeat = _this;
     var Seat = $(SelectSeat).attr('value');
+    var Type = $(SelectSeat).data('type');
 
-    if (!($(SelectSeat).hasClass('Select'))) {
+    if (Type == 'Sold') {
 
-        if (Selected == SeatLimit) {
+        alert("提醒您, 此座位不可選");
 
-            alert("已達可選上限");
-
-        } else {
-
-            $(SelectSeat).addClass('Select');
-            Selected++;
-            Count++;
-
-            //加至陣列
-            SeatData.push(Seat);
-        }
     } else {
 
-        $(SelectSeat).removeClass('Select');
+        if (!($(SelectSeat).hasClass('Select'))) {
 
-        Count = 0;
-        Selected--;
-        // SeatData.pop($(SelectSeat).attr('value'));
-        SeatData = _.without(SeatData, Seat);
+            if (Selected == SeatLimit) {
+
+                alert("已達可選上限");
+
+            } else {
+
+                $(SelectSeat).addClass('Select');
+                Selected++;
+                Count++;
+
+                //加至陣列
+                SeatData.push(Seat);
+            }
+        } else {
+
+            $(SelectSeat).removeClass('Select');
+
+            Count = 0;
+            Selected--;
+
+            //移除陣列值
+            SeatData = _.without(SeatData, Seat);
+        }
     }
+
+
 
     $(".selectseat").text(Selected);
 
     return SeatData;
-    console.log(Count);
-    console.log(Selected);
-    console.log(Seat);
-    console.log(SeatData);
-    // console.log(_.without(SeatData,Seat));
-    // alert(SeatData);
-    // console.log(SeatData);
+
 }
 
 function Order(id) {
@@ -130,16 +135,45 @@ function Order(id) {
         success: function(data) {
             // var errors = data.responseJSON;
             // console.log(errors.message);
-            if (data.error) alert(data.messages);
-            // opener.window.location.reload();
-            // self.close();
-            // window.close();
+            if (data.error) {
+                alert(data.messages);
+            } else {
+                alert(data.messages)
+                window.location.href = '/movielist';
+            }
+
         },
         error: function(data) {
             var errors = data.responseJSON;
             alert(errors.message);
-            window.close();
         }
     });
 
+}
+
+
+var max = 2; //maximum input boxes allowed
+var wrapper = $("#activitylist"); //Fields wrapper
+var add_button = $("#acadd"); //Add button ID
+
+var x = 1; //initlal text box count
+
+function activityadd() {
+    console.log(x);
+    // $(add_button).click(function(e) { //on add input button click
+    // e.preventDefault();
+    if (x <= max) { //max input box allowed
+        x++; //text box increment
+        // $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
+        $(wrapper).append('<div class="col-md-4 col-form-label" style="margin-left: 239px;"><input id="name_en" type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required><a href="#" class="remove_field">移除</a></div>'); //add input box
+    } else {
+        alert('已達新增上限');
+    }
+    // });
+
+    $(wrapper).on("click", ".remove_field", function(e) { //user click on remove text
+        // e.preventDefault();
+        $(this).parent('div').remove();
+        x--;
+    })
 }

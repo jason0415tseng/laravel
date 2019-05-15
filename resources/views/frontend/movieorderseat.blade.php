@@ -12,36 +12,36 @@
                 <div class="card-header">{{ ('選位') }}</div>
                 {{-- @foreach ($Data as $data) --}}
                 <div class="card-body">
-                    <form method="POST" action="{{ route('movielist.orderadd' , ['Mid'=> $Data['mid']]) }}" enctype="multipart/form-data">
+                    {{-- <form method="POST" action="{{ route('movielist.orderadd' , ['Mid'=> $Data['mid']]) }}" enctype="multipart/form-data"> --}}
                         @csrf
 
                         <div class="form-group row">
-                                <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('票名') }}</label>
+                                <label for="hall" class="col-md-5 col-form-label text-md-right">{{ ('票名') }}</label>
                                 <div id="name" name="name" value="{{$Data['name']}}" class="col-md-4 col-form-label text-md-left">
                                     {{$Data['name']}}
                                 </div>
                         </div>
                         <div class="form-group row">
-                                <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('廳別') }}</label>
+                                <label for="hall" class="col-md-5 col-form-label text-md-right">{{ ('廳別') }}</label>
                                 <div id="hall" name="hall" value="{{ $Data['hall'] }}" class="col-md-4 col-form-label text-md-left">
                                     {{$Data['hall'] . ('廳')}}
                                 </div>
                         </div>
                         <div class="form-group row">
-                            <label for="date" class="col-md-4 col-form-label text-md-right"><i class="far fa-clock"></i></label>
+                            <label for="date" class="col-md-5 col-form-label text-md-right"><i class="far fa-clock"></i></label>
                                 <div  id="date" name="date" value="{{$Data['date']}}" class="col-md-1 col-form-label">
                                    {{$Data['date']}}
                                 </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="ticket" class="col-md-4 col-form-label text-md-right">{{ ('數量') }}</label>
+                            <label for="ticket" class="col-md-5 col-form-label text-md-right">{{ ('數量') }}</label>
                                 <div id="ticket" name="ticket" value="{{ $Data['ticket'] }}" class="col-md-1 col-form-label">
                                     {{$Data['ticket']}}
                                 </div>
                         </div>
                         <div class="form-group row">
-                            <label for="seat" class="col-md-4 col-form-label text-md-right">{{ ('已選座位') }}</label>
+                            <label for="seat" class="col-md-5 col-form-label text-md-right">{{ ('已選座位') }}</label>
                             <div class="col-md-1 col-form-label">
                                     <div class="selectseat">
                                         0
@@ -49,7 +49,7 @@
 
                             </div>
                         </div>
-                    </form>
+                    {{-- </form> --}}
                 </div>
                 {{-- @endforeach --}}
             </div>
@@ -73,7 +73,7 @@
                     dd($seat>5)
                     @endphp --}}
                     <tr>
-                        <td colspan="1"></td>
+                        <td colspan="1" style="width:50px;"></td>
                         <td colspan="25" class="screen" style="font-size: 1em;border: 1px #CCC solid;color: #999;height: 27px;line-height: 27px !important;-webkit-border-radius: 20px;-moz-border-radius: 20px;border-radius: 20px;text-align: center;">
                             {{('螢幕')}}
                         </td>
@@ -87,7 +87,7 @@
 
                     <tr>
 
-                            <td style="text-align: center;font-size: 0.8em;cursor: pointer;">
+                            <td style="text-align: left;font-size: 0.8em;cursor: pointer;">
                                     {{$i.('排')}}
                             </td>
                         @for ($j=1;$j<=4;$j++)
@@ -96,11 +96,30 @@
                         {{-- <td style="text-align: center;min-width: 25px !important;height: 22px;color: #FFF;font-size: 0.8em;line-height: 22px !important;background: #3f9ae5;border-radius: 3px;cursor: pointer;"> --}}
                             <td class="" data-type="Empty" data-name="{{$i}}" data-col="{{$j}}" data-seatnum="8" data-status="5" data-areanum="1" >
                             {{-- <input type="checkbox" name="seat[]" value={{$seat}}> --}}
-                            <div id="{{$i.('_').$j}}" name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
-                                {{-- <input type="checkbox" name="selectseat[]" class="selectseat" value="{{$j.('號')}}"> --}}
-                                {{$j.('號')}}
-                            </div>
-                            {{-- {{('AA')}} --}}
+                            
+                            @if(isset($OrderSeat))
+
+                                @if(in_array(($i.('_').$j), $OrderSeat))
+                            
+                                    <div id="{{$i.('_').$j}}" data-type='Sold' class="Select" name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
+                                        {{$j.('號')}}
+                                    </div>
+
+                                @else
+                                
+                                    <div id="{{$i.('_').$j}}" data-type='Empty' name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
+                                        {{$j.('號')}}
+                                    </div>
+
+                                @endif
+                            @else
+
+                                <div id="{{$i.('_').$j}}" data-type='Empty' name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
+                                    {{$j.('號')}}
+                                </div>
+
+                            @endif
+ 
                         </td>
 
                     @endfor
@@ -127,18 +146,19 @@
                 </div>
              {{-- <div class="card-body">asdadsasd</div> --}}
             </div>
-        </div>
-        <div class="form-group row mb-0">
-            <div class="col-md-6 offset-md-4">
-                {{-- <button type="submit" class="btn btn-primary" onclick="Update({{$User['uid']}})">{{ ('確認') }}</button> --}}
-                <button type="submit" class="btn btn-primary" onclick="Order({{$Data['mid']}})">
-                    {{ ('確定') }}
-                </button>
-                {{-- <a href="/movielist"  style="text-decoration:none;color:seashell"> --}}
-                    <button type="button" class="btn btn-primary" onclick="window.history.go(-1)">{{ ('回上一頁') }}</button>
-                {{-- </a> --}}
+            <div class="form-group row mb-0">
+                    <div class="col-md-6 offset-md-4">
+                        {{-- <button type="submit" class="btn btn-primary" onclick="Update({{$User['uid']}})">{{ ('確認') }}</button> --}}
+                        <button type="submit" class="btn btn-primary" onclick="Order({{$Data['mid']}})">
+                            {{ ('確定') }}
+                        </button>
+                        {{-- <a href="/movielist"  style="text-decoration:none;color:seashell"> --}}
+                            <button type="button" class="btn btn-primary" onclick="window.history.go(-1)">{{ ('回上一頁') }}</button>
+                        {{-- </a> --}}
+                    </div>
             </div>
         </div>
+
     </div>
 </div>
 <!-- JavaScript part -->

@@ -115,11 +115,7 @@
                             @endphp --}}
                             <label for="introduction" class="col-md-4 col-form-label text-md-right" style="font-size:18px;">{{ ('席位') }}</label>
                             <div class="col-md-4 col-form-label text-md-left" style="font-size:18px;">
-                                @if(count($data)>18)
-                                    <span>{{$data['Seat'] - $data['OrderSeat']}}</span>
-                                @else
-                                    <span>{{$data['Seat']}}</span>
-                                @endif
+                                <span>{{$data['Seat']}}</span>
                             </div>    
                         </div>
                         <div class="form-group row mb-0">

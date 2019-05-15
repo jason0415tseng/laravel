@@ -41,8 +41,32 @@ class MemberCenterController extends Controller
             // ->join('order', 'order.ordermid', '=', 'time.mid')
             ->where('orderaccount', session('account'))
             ->get();
+        $Order = $Order->toArray();
+
+        $Count = count($Order);
+
+        for ($i = 0; $i < $Count; $i++) {
+            $Order[$i]['orderseat'] .= ',';
+            // $Order[$i]['orderseat'] = explode(',', $Order[$i]['orderseat']);
+            $Order[$i]['orderseat'] = str_replace(['_', ','], ['排', '號</br>'], $Order[$i]['orderseat']);
+            // $Order[$i]['orderseat'] = str_replace(',','號</br>',$Order[$i]['orderseat']);
+            // foreach($Order[$i]['orderseat'] as $Seat){
+            // $OrderSeat[] = explode('_',$Seat);
+            // foreach($OrderSeat as $List){
+            //     $SeatList[] = $List;
+            // }
+            // explode('_',$Seat);
+            // print_r($Seat);
+            // print_r($Order[$i]['orderseat']);
+            // print_r("\n");
+            // }
+        }
         // dd($Order);
-        return view('frontend.orderinfo', ['Order' => $Order->makeHidden('attribute')->toArray()]);
+        // print_r($OrderSeat);
+        // exit;
+        // print_r($SeatList);
+        // return view('frontend.orderinfo', ['Order' => $Order ,'OrderSeat' => $OrderSeat]);
+        return view('frontend.orderinfo', ['Order' => $Order]);
     }
 
     /**

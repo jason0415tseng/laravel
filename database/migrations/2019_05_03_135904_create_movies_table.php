@@ -25,7 +25,7 @@ class CreateMoviesTable extends Migration
             $table->text('Actor')->comment("演員");
             $table->text('Poster')->comment("海報");
             $table->text('Introduction')->comment("劇情簡介");
-            $table->integer('Display')->comment("前台顯示");
+            $table->integer('Display')->comment("前台顯示")->default(1);
             $table->timestamps();
         });
     }

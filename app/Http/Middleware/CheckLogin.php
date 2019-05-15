@@ -22,7 +22,7 @@ class CheckLogin
         // $Path = $request->path();
         $Path = explode('/', $request->path());
         // dd($Path);
-        if (count($Path) > 2) {
+        if (count($Path) >= 2) {
 
             if (!$Value) {
                 //  dd($Value);

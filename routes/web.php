@@ -89,6 +89,15 @@ Route::post('/movielist/order/{id}', 'frontend\MovieListController@orderadd')->m
 //電影時刻查詢
 Route::get('/movietime', 'frontend\MovieTimeController@index')->name('movietime');
 
+//活動
+Route::get('/activity', 'frontend\ActivityController@index')->name('activity');
+
+//活動新增介面
+Route::get('/activity/activityadd', 'frontend\ActivityController@add');
+
+//活動新增
+Route::post('/activity/activityadd', 'frontend\ActivityController@activityadd')->middleware('CheckLogin')->name('activity.activityadd');
+
 //管理者
 Route::get('/admin', 'backend\AdminController@index')->middleware('CheckManager')->name('admin');
 

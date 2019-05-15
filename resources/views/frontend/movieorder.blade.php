@@ -85,7 +85,7 @@
                             <label for="ticket" class="col-md-4 col-form-label text-md-right">{{ ('數量') }}</label>
                             <div class="col-md-4">
                                 
-                                    <input id="ticket" type="number" class="form-control{{ $errors->has('ticket') ? ' is-invalid' : '' }}" name="ticket" value="{{ old('ticket') }}" maxlength="3" max="4" placeholder="數量" required>                            
+                                    <input id="ticket" type="number" class="form-control{{ $errors->has('ticket') ? ' is-invalid' : '' }}" name="ticket" value="{{ old('ticket') }}" maxlength="3" min="0" max="4" placeholder="數量" required>                            
                                 
                                     @if ($errors->has('ticket'))
                                         <span class="invalid-feedback" role="alert">
