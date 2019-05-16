@@ -9,11 +9,9 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">{{ ('訂購資訊') }}</div>
-
                     <div class="card-body">
                     <form method="POST" action="{{ route('memberCenter.user') }}">
                         @csrf
-
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border="1">
@@ -43,44 +41,13 @@
                                                     {{$order['orderhall'] . ('廳')}}
                                                 </td>
                                                 <td>
-                                                {{-- @php
-                                                dd($order['orderticket'])
-                                                @endphp --}}
-                                                {{$order['orderdate']}}
-                                                    {{-- @if($order['orderdate'] == '1')
-                                                        <div class="" ><span>10:00</span></div>
-                                                    @elseif($value == '2')
-                                                        <div class="col-md-4 col-form-label text-md-left" style="font-size:18px;"><span>12:20</span></div>
-                                                    @endif --}}
+                                                    {{$order['orderdate']}}
                                                 </td>
                                                 <td>
                                                     {{$order['orderticket']}}
                                                 </td>
                                                 <td>
-                                                    {{-- @php
-                                                print_r($OrderSeat)
-                                                @endphp --}}
-                                                        {{-- @foreach(explode(',', $data->facings) as $info)
-                                                        <option>{{$info}}</option>
-                                                      @endforeach --}}
-                                                    {{-- @foreach ($OrderSeat as $seat) --}}
-                                                        {{-- @foreach ($seat as $list)
-                                                    @php
-                                                print_r($list)
-                                                @endphp --}}
-                                                    {{-- @php
-                                                    // explode($seat)
-                                                    // $seat = explode('_',$seat);
-                                                print_r($seat)
-                                                @endphp --}}
-                                                        {{-- {{$seat}} --}}
-                                                        {{-- @endforeach --}}
-                                                    {{-- @endforeach --}}
-                                                    {{-- @foreach ($order['orderseat'] as $seat) --}}
-                                                        {{-- {{$seat}} --}}
-                                                    {{-- @endforeach --}}
                                                     {!!$order['orderseat']!!}
-
                                                 </td>
                                                 <td>
                                                     {{$order['orderaccount']}}

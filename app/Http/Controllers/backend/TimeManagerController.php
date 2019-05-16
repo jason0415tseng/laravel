@@ -111,9 +111,8 @@ class TimeManagerController extends Controller
         $Data = movies::select('movies.Mid', 'movies.Name', 'movies.Length', 'time.Hall', 'time.Date', 'time.Seat')
             ->join('time', 'movies.mid', '=', 'time.mid')
             ->where('movies.Mid', $id)
-            // ->orwhere('time.Mid', '<>', $id)
             ->first();
-        // dd($Data);
+
         $Hall = time::select('Hall')
             ->where('Mid', '<>', $id)
             ->get()->toArray();
@@ -160,8 +159,6 @@ class TimeManagerController extends Controller
 
             return view('backend.timeadd', ['Data' => $Data, 'Hall' => $Hall, 'Time' => $this->TimeList]);
         }
-        // return view('backend.movieedit', ['Data' => $Data->makeHidden('attribute')->toArray()]);
-        // /
     }
 
     /**
@@ -188,25 +185,19 @@ class TimeManagerController extends Controller
         $Movie = time::select('*')
             ->where('Mid', $id)
             ->first();
-        // dd($Data['date']);
+
         if ($Movie) {
             //確認廳別
             $Result = time::select('*')
                 ->where('Hall', $Data['hall'])
                 ->where('Mid', '<>', $id)
                 ->first();
-            // dd($Result);
         } else {
             //確認廳別
             $Result = time::select('*')
                 ->where('Hall', $Data['hall'])
                 ->first();
         }
-
-        // //確認廳別
-        // $Result = time::select('*')
-        //     ->where('Hall', $Data['hall'])
-        //     ->first();
 
         if ($Result) {
 
@@ -217,21 +208,12 @@ class TimeManagerController extends Controller
 
 
         if ($Movie) {
-            // $request->date;
-            // $Time->date = [
-            //     $request->date_1,
-            //     $request->date_2,
-            //     $request->date_3,
-            //     $request->date_4,
-            //     $request->date_5,
-            //     $request->date_6,
-            // // ];
-            // $Time->date = $request->date;
+
             //轉換
             $Date = $Data['date'];
 
             $Data['date'] = implode(',', $Date);
-            // dd($Data['date']);
+
             //更新
             $Result = time::where('Mid', $id)
                 ->update([
@@ -246,14 +228,6 @@ class TimeManagerController extends Controller
 
             $Time->mid = $id;
             $Time->hall = $request->hall;
-            // $Time->date = [
-            //     $request->date_1,
-            //     $request->date_2,
-            //     $request->date_3,
-            //     $request->date_4,
-            //     $request->date_5,
-            //     $request->date_6,
-            // ];
             $Time->date = $request->date;
             //轉換
             $Date = $Time->date;

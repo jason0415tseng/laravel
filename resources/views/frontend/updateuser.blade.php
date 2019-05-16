@@ -22,21 +22,19 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     
 </head>
-    <body>
+<body>
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">{{ ('修改資訊') }}</div>
-
                 <div class="card-body">
                     <form method="POST" action="{{ route('admin') }}">
                         @csrf
                         <div class="form-group row">
-
                             <div class="col-md-12">
-                                <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border='1'> 
+                                <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border='1'>
                                     <tr colspan="2">
                                         <td>帳號</td>
                                         <td colspan="2">{{$User['account']}}</td>
@@ -45,7 +43,7 @@
                                         <td>名稱</td>
                                         <td colspan="2">
                                             <input id="uid" name="uid" value="{{$User['uid']}}" style="display:none">
-                                            <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{  $user['account'] ? $user['account'] : old('name') }}" maxlength="6" required autofocus>                                
+                                            <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{  $user['account'] ? $user['account'] : old('name') }}" maxlength="6" required autofocus>
                                             @if ($errors->has('name'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('name') }}</strong>
@@ -55,12 +53,12 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            <button type="submit" class="btn btn-primary" onclick="Update({{$User['uid']}})">{{ ('確認') }}</button>                                      
-                                            <button type="button" class="btn btn-primary" onclick="CloseWindow()">{{ ('取消') }}</button>    
-                                        </td>         
+                                            <button type="submit" class="btn btn-primary" onclick="Update({{$User['uid']}})">{{ ('確認') }}</button>
+                                            <button type="button" class="btn btn-primary" onclick="CloseWindow()">{{ ('取消') }}</button>
+                                        </td>
                                     </tr>
                                 </table>
-                            </div>    
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -68,6 +66,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>

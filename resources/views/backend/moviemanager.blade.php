@@ -6,7 +6,6 @@
 
 <div class="container">
     <h1>{{ ('Movie List') }}</h1>
-
     <div class="row content-center">
         @foreach ($Data as $data)
             <ul class="nav nav-tabs" role="tablist">
@@ -17,9 +16,9 @@
                         </a>
                     </div>
                     <div class="groupMask">
-                        <div class="movie-name" style="font-size: 18px;clear: left;padding-top: 10px;font-weight: 400;"><h2>{{$data['Name']}}</h2></div> 
-                        <div class="movie-name" style="color: #888;"><h3>{{$data['Name_en']}}</h3></div> 
-                        <div class="movie-date"><time>{{$data['Ondate']}}</time></div> 
+                        <div class="movie-name" style="font-size: 18px;clear: left;padding-top: 10px;font-weight: 400;"><h2>{{$data['Name']}}</h2></div>
+                        <div class="movie-name" style="color: #888;"><h3>{{$data['Name_en']}}</h3></div>
+                        <div class="movie-date"><time>{{$data['Ondate']}}</time></div>
                         @switch($data['Grade'])
                             @case(0)
                                 <div class="movie_badge level_g">普通級</div>

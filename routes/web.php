@@ -95,6 +95,15 @@ Route::get('/activity', 'frontend\ActivityController@index')->name('activity');
 //活動新增介面
 Route::get('/activity/activityadd', 'frontend\ActivityController@add');
 
+//活動->活動詳細內容
+Route::get('/activity/detail/{id}', 'frontend\ActivityController@detail')->name('activity.detail');
+
+//活動->投票
+Route::post('/activity/vote/{id}', 'frontend\ActivityController@vote')->middleware('CheckLogin')->name('activity.vote');
+
+//活動->投票結果
+Route::get('/activity/voteresult/{id}', 'frontend\ActivityController@voteresult')->name('activity.result');
+
 //活動新增
 Route::post('/activity/activityadd', 'frontend\ActivityController@activityadd')->middleware('CheckLogin')->name('activity.activityadd');
 

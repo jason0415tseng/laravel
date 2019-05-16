@@ -16,7 +16,7 @@
 
                         <div class="form-group row">
                             <div class="col-md-12">
-                                <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border="1"> 
+                                <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border="1">
                                     <tr>
                                         <td>帳號</td>
                                         <td>等級</td>
@@ -40,19 +40,19 @@
                                                 @endif
                                             </td>
                                             <td>{{$user['created_at']}}</td>
-                                            <td>{{$user['updated_at']}}</td>     
+                                            <td>{{$user['updated_at']}}</td>
                                             <td>
                                                 <button type="button" class="btn btn-primary" onclick="OpenWindow({{$user['uid']}})">
                                                     {{ ('修改') }}
                                                 </button>
-                                            </td>     
+                                            </td>
                                             <td>
                                                 <button type="submit" class="btn btn-primary" onclick="return confirm('是否確認刪除這筆資料');">{{ ('刪除') }}</button>
-                                            </td>                                        
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </table>
-                            </div>    
+                            </div>
                         </div>
                     </form>
                 </div> 

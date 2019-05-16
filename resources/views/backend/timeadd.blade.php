@@ -10,89 +10,49 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ ('新增時刻') }}</div>
-                {{-- @foreach ($Data as $data) --}}
                 <div class="card-body">
                     <form method="POST" action="{{ route('time.timeadd' , ['Mid'=> $Data['Mid']]) }}" enctype="multipart/form-data">
                         @csrf
-                                {{-- @php
-                                 dd($Data)   
-                                @endphp --}}
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ ('片名') }}</label>
                             <div class="col-md-4">
                                 <span class="form-control" style="border: 1px;">{{$Data['Name']}}</span>
-                                {{-- <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ $Data['Name'] ? $Data['Name'] : old('name') }}" placeholder="片名" required autofocus>                           --}}
                             </div>    
                         </div>
+
                         <div class="form-group row">
-                                <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('廳別') }}</label>
-                                <div class="col-md-4">
-                                    {{-- <select id="hall" name="hall"  class="form-control" style="text-align:center;text-align-last:center;"> 
-                                                    <option value="0" @if($Hall == '0') hidden @else @if((count($data)>2)&&($data['Hall']=='0')) selected @else  @endif @endif>1廳</option> 
-                                                    <option value="1" @if($Hall == '1') hidden @else @if((count($data)>2)&&($data['Hall']=='1')) selected @else  @endif @endif>2廳</option> 
-                                                    <option value="2" @if($Hall == '2') hidden @else @if((count($data)>2)&&($data['Hall']=='2')) selected @else  @endif @endif>3廳</option> 
-                                                    <option value="3" @if($Hall == '3') hidden @else @if((count($data)>2)&&($data['Hall']=='3')) selected @else  @endif @endif>4廳</option> 
-                                                    <option value="4" @if($Hall == '4') hidden @else @if((count($data)>2)&&($data['Hall']=='4')) selected @else  @endif @endif>5廳</option>
-                                                    <option value="5" @if($Hall == '5') hidden @else @if((count($data)>2)&&($data['Hall']=='5')) selected @else  @endif @endif>6廳</option>
-                                                    <option value="6" @if($Hall == '6') hidden @else @if((count($data)>2)&&($data['Hall']=='6')) selected @else  @endif @endif>7廳</option> 
-                                    </select> --}}
-                                    <select id="hall" name="hall"  class="form-control{{ $errors->has('hall') ? ' is-invalid' : '' }}" style="text-align:center;text-align-last:center;"> 
-                                        @foreach ($Hall as $hall)
-                                            <option value={{$hall}} @if((count($Data)>3)&&($Data['Hall']==$hall)) selected @else  @endif >{{$hall . ('廳')}}</option> 
-                                        @endforeach         
-                                    </select>
-                                        @if ($errors->has('hall'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('hall') }}</strong>
-                                            </span>
-                                        @endif
-                                </div>
-                        </div>
-                        {{-- <div class="form-group row">
-                            <label for="date" class="col-md-4 col-form-label text-md-right">{{ ('時刻') }}</label>
+                            <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('廳別') }}</label>
                             <div class="col-md-4">
-                                <input id="date" type="text" class="form-control{{ $errors->has('date') ? ' is-invalid' : '' }}" name="date" value="{{ old('date') }}" placeholder="時刻" required>                            
-                                    @if ($errors->has('date'))
+                                <select id="hall" name="hall"  class="form-control{{ $errors->has('hall') ? ' is-invalid' : '' }}" style="text-align:center;text-align-last:center;">
+                                    @foreach ($Hall as $hall)
+                                        <option value={{$hall}} @if((count($Data)>3)&&($Data['Hall']==$hall)) selected @else  @endif >{{$hall . ('廳')}}</option>
+                                    @endforeach         
+                                </select>
+                                    @if ($errors->has('hall'))
                                         <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('date') }}</strong>
+                                            <strong>{{ $errors->first('hall') }}</strong>
                                         </span>
-                                    @endif                          
-                            </div>    
-                        </div> --}}
+                                    @endif
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <label for="date" class="col-md-4 col-form-label text-md-right">{{ ('時刻') }}</label>
                             <div style="width:180px;margin-left:15px">
-                            @foreach ($Time as $key => $time)
-                                    {{-- @php
-                                     dd($time)   
-                                    @endphp --}}
-                            <input type="checkbox" value={{$time}} id="{{('date') . $key}}" name="date[]" checked>
-                            <label for="date">{{$time}}</label>
-                            {{-- <input type="checkbox" value="1" checked id="date" name="date">
-                            <label for="date">10:00</label> --}}
-                            @endforeach
-                            {{-- <input type="checkbox" value="2" checked id="date_2" name="date_2">
-                            <label for="date">14:20</label>
-                            <input type="checkbox" value="3" checked id="date_3" name="date_3">
-                            <label for="date">16:40</label>
-                            <input type="checkbox" value="4" checked id="date_4" name="date_4">
-                            <label for="date">19:00</label>
-                            <input type="checkbox" value="5" checked id="date_5" name="date_5">
-                            <label for="date">21:20</label>
-                            <input type="checkbox" value="6" checked id="date_6" name="date_6">
-                            <label for="date">23:40</label> --}}
+                                @foreach ($Time as $key => $time)
+                                    <input type="checkbox" value={{$time}} id="{{('date') . $key}}" name="date[]" checked>
+                                    <label for="date">{{$time}}</label>
+                                @endforeach
                             </div>  
                         </div>
+
                         <div class="form-group row">
                             <label for="seat" class="col-md-4 col-form-label text-md-right">{{ ('席位') }}</label>
                             <div class="col-md-4">
                                 @if(count($Data)>3)
-                                {{-- @php
-                                 dd($data)   
-                                @endphp --}}
-                                    <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ $Data['Seat'] ? $Data['Seat'] : old('seat') }}" placeholder="席位" required>                            
+                                    <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ $Data['Seat'] ? $Data['Seat'] : old('seat') }}" placeholder="席位" required>
                                 @else
-                                    <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ old('seat') }}" placeholder="席位" required>                            
+                                    <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ old('seat') }}" placeholder="席位" required>
                                 @endif
                                     @if ($errors->has('seat'))
                                         <span class="invalid-feedback" role="alert">
@@ -101,6 +61,7 @@
                                     @endif                          
                             </div>    
                         </div>
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
@@ -113,8 +74,6 @@
                         </div>
                     </form>
                 </div>
-                {{-- @endforeach --}}
-                {{-- @endforeach --}}
             </div>
         </div>
     </div>

@@ -63,17 +63,7 @@ class MovieListController extends Controller
         $Order = order::select('*')
             ->where('ordermid', $id)
             ->first();
-        // dd($Order);
-        // if ($Order) {
-        //     $Data = movies::select('*')
-        //         ->join('order', 'movies.mid', '=', 'ordermid')
-        //         ->join('time', 'movies.mid', '=', 'time.mid')
-        //         ->where('movies.Mid', $id)
-        //         ->get()->toArray();
 
-        //     $Data[0]['Date'] = explode(',', $Data[0]['Date']);
-        //     // dd($Data);
-        // } else {
         $Data = movies::select('*')
             ->join('time', 'movies.mid', '=', 'time.mid')
             ->where('movies.Mid', $id)
@@ -81,8 +71,6 @@ class MovieListController extends Controller
 
         $Data = $Data->toArray();
         $Data[0]['Date'] = explode(',', $Data[0]['Date']);
-        // }
-
 
         return view('frontend.moviedetail', ['Data' => $Data]);
     }
@@ -118,12 +106,24 @@ class MovieListController extends Controller
      */
     public function orderseat(Request $request, $id)
     {
+        $Errors = new MessageBag;
+
         $Data = $request->all();
 
-        // echo "AAAAA";
+        //判斷數量
+        if ($Data['ticket'] < 0) {
+
+            $Errors->add('ticket', '數字錯誤');
+            return back()->withErrors($Errors)->withInput();
+        } elseif (!(in_array($Data['ticket'], ['1', '2', '3', '4']))) {
+
+            //判斷範圍
+            $Errors->add('ticket', '數量錯誤');
+            return back()->withErrors($Errors)->withInput();
+        }
 
         $Reuslt = movies::select('Name')
-            // ->join('time', 'movies.mid', '=', 'time.mid')
+
             ->where('Mid', $id)
             ->first();
 
@@ -132,47 +132,30 @@ class MovieListController extends Controller
             ->where('OrderDate', $Data['date'])
             ->get()->toArray();
 
-
+        // print_r($OrderSeat);
+        // exit;
         $Count = count($OrderSeat);
 
         for ($i = 0; $i < $Count; $i++) {
-            // $Order[$i]['orderseat'] .= ',';
-            $OrderSeat[$i]['OrderSeat'] = explode(',', $OrderSeat[$i]['OrderSeat']);
-            // $Order[$i]['orderseat'] = str_replace(['_', ','], ['排', '號</br>'], $Order[$i]['orderseat']);
-            // $Order[$i]['orderseat'] = str_replace(',','號</br>',$Order[$i]['orderseat']);
-            foreach ($OrderSeat[$i]['OrderSeat'] as $List) {
-                // $OrderSeat[] = explode('_',$Seat);
-                $SeatList[] = $List;
-                // foreach($OrderSeat as $List){
-                //     $SeatList[] = $List;
-            }
-            // explode('_',$Seat);
-            // print_r($Seat);
-            // print_r($Order[$i]['orderseat']);
-            // print_r("\n");
-            // }
-        }
 
-        // dd($SeatList);
+            $OrderSeat[$i]['OrderSeat'] = explode(',', $OrderSeat[$i]['OrderSeat']);
+
+            foreach ($OrderSeat[$i]['OrderSeat'] as $List) {
+
+                $SeatList[] = $List;
+            }
+        }
+        print_r($OrderSeat);
+        exit;
         $Data['name'] = $Reuslt->Name;
 
         $Data['mid'] = $id;
 
-        // for ($i = 1; $i <= 20; $i++) {
-        //     $Seat[] = $i;
-        // }
-        // print_r($Data);
-        // exit;
-        // $Data = $Data->toArray();
-
-        // $Data[0]['Date'] = explode(',', $Data[0]['Date']);
         if ($OrderSeat) {
             return view('frontend.movieorderseat', ['Data' => $Data, 'OrderSeat' => $SeatList]);
         } else {
             return view('frontend.movieorderseat', ['Data' => $Data]);
         }
-
-        // return view('frontend.movieorderseat', ['Data' => $Data, 'OrderSeat' => $SeatList]);
     }
 
     /**
@@ -202,7 +185,7 @@ class MovieListController extends Controller
 
             $Errors->add('ticket', '數字錯誤');
             return back()->withErrors($Errors)->withInput();
-        } elseif (!(preg_match('/[1-4]/', $Data['ticket']))) {
+        } elseif (!(in_array($Data['ticket'], ['1', '2', '3', '4']))) {
 
             //判斷範圍
             $Errors->add('ticket', '超過數量');
@@ -224,8 +207,6 @@ class MovieListController extends Controller
 
         if ($OrderSeat == 4) {
 
-            // $Errors->add('seat', '數量已達上限');
-            // return back()->withErrors($Errors)->withInput();
             return response()->json([
                 'error'    => true,
                 'messages' => '數量已達上限',
@@ -234,10 +215,7 @@ class MovieListController extends Controller
 
             //判斷數量
         } elseif (4 - $OrderSeat < $Data['ticket']) {
-            // print_r("AAA");
-            // exit;
-            // $Errors->add('seat', '張數僅剩' . (4 - $OrderSeat) . '位');
-            // return back()->withErrors($Errors)->withInput();
+
             return response()->json([
                 'error'    => true,
                 'messages' => '張數僅剩' . (4 - $OrderSeat) . '位',
@@ -268,8 +246,6 @@ class MovieListController extends Controller
         //判斷是否訂票成功
         if ($Order->save() === false) {
             //失敗
-            // $Errors->add('seat', '訂票失敗');
-            // return back()->withErrors($Errors)->withInput();
             return response()->json([
                 'error'    => true,
                 'messages' => "訂票失敗",
@@ -286,8 +262,6 @@ class MovieListController extends Controller
 
             ]);
         }
-
-        // return redirect('/movielist');
     }
 
     /**

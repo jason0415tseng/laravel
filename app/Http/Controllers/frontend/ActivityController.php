@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\activity;
 use App\Models\activitycontent;
+use App\Models\vote;
 use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\DB;
 
 class ActivityController extends Controller
 {
@@ -18,17 +20,30 @@ class ActivityController extends Controller
     public function index()
     {
         //列出資料
-        // $Data = activity::select('activity.title', 'activity.author', 'activity.startdate', 'activity.enddate', activity::raw('SUM(activitycontent.votenumber)as votenumber'))
-        $Data = activity::select('activity.title', 'activity.author', 'activity.startdate', 'activity.enddate')
-            ->join('activitycontent', 'activitycontent.Aid', '=', 'activity.Aid')
-            ->sum('activitycontent.votenumber');
-        // ->sum('activitycontent.votenumber');
-        // ->where('display', '1')
-        // ->orderBy('ondate', 'ASC')
-        // ->get();
-        dd($Data);
+        $Data = activity::select('Aid', 'title', 'author', 'startdate', 'enddate')
+            ->get()->toArray();
 
-        return view('frontend.activity', ['Data' => $Data->makeHidden('attribute')->toArray()]);
+        //是否有投票
+        $Voted = vote::select('voteaid', 'voteaccount')
+            ->where('voteaccount', session('account'))
+            ->get();
+
+        //日期
+        $Time = time();
+        $NowTime = date('Y-m-d', $Time);
+
+        foreach ($Data as $key => $value) {
+
+            $Data[$key]['votenumber'] = DB::table('activitycontent')
+                ->where('Aid', $value['Aid'])
+                ->sum('votenumber');
+        }
+
+        if ($Voted) {
+            return view('frontend.activity', ['Data' => $Data, 'Voted' => $Voted, 'NowTime' => $NowTime]);
+        } else {
+            return view('frontend.activity', ['Data' => $Data, 'NowTime' => $NowTime]);
+        }
     }
 
     /**
@@ -53,7 +68,7 @@ class ActivityController extends Controller
         $Errors = new MessageBag;
 
         $Data = $request->all();
-        // dd($Data['title']);
+
         $Account = session('account');
 
         //判斷標題
@@ -87,7 +102,6 @@ class ActivityController extends Controller
                 ->where('title', $Data['title'])
                 ->where('author', $Account)
                 ->first();
-            // dd($Aid->aid);
 
             foreach ($Data['content'] as $content) {
 
@@ -100,9 +114,83 @@ class ActivityController extends Controller
                 $Activitycontent->save();
             }
 
-            return redirect('/');
-            // $Activitycontent->save();
+            return redirect('/activity');
         }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function detail($id)
+    {
+        //
+        $Title = activity::select('title', 'aid')
+            ->where('aid', $id)
+            ->first();
+
+        $Data = activitycontent::select('acid', 'content')
+            // ->join('activity','activity.aid','=','activitycontent.aid')
+            ->where('aid', $id)
+            ->get()->toArray();
+
+        return view('frontend.activitydetail', ['Data' => $Data, 'Title' => $Title->makeHidden('attribute')->toArray()]);
+    }
+
+    /**
+     * vote the form for creating a new resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function vote(Request $request, $id)
+    {
+        $Errors = new MessageBag;
+
+        $Data = $request->all();
+
+        $Account = session('account');
+
+        $Data = explode(',', $Data['acid']);
+        //         foreach($Data as $date){
+        //             $Data[] .= $date;
+        // print_r($date);
+        //         }
+        // dd($Data[0]);
+
+
+        $Content = activitycontent::select('*')
+            ->where('acid', $Data[0])
+            ->where('content', $Data[1])
+            ->first();
+        // dd($Content);
+        //判斷選項
+        if (!$Content) {
+            $Errors->add('content', '選項錯誤');
+            return back()->withErrors($Errors)->withInput();
+        }
+
+        //新增
+        $Vote = new vote;
+        $Vote->voteaid = $id;
+        $Vote->voteacid = $Data[0];
+        $Vote->voteaccount = $Account;
+        $Vote->voteip = $request->getClientIp();
+
+        $Vote->save();
+
+        //更新投票數
+        $UpdateVote = activitycontent::where('acid', $Data[0])
+            ->increment('votenumber', '1');
+
+        //         DB::table('posts')
+        // ->where('id',1)
+        // ->increment('words', 1);
+
+        return redirect('/activity');
     }
 
     /**
@@ -132,9 +220,26 @@ class ActivityController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function voteresult($id)
     {
-        //
+        $Title = activity::select('title', 'aid')
+            ->where('aid', $id)
+            ->first();
+
+        $Data = activitycontent::select('acid', 'content', 'votenumber')
+            // ->join('activity','activity.aid','=','activitycontent.aid')
+            ->where('aid', $id)
+            ->get()->toArray();
+
+        $Total = DB::table('activitycontent')
+            ->where('Aid', $id)
+            ->sum('votenumber');
+        // var_dump($Data[0]['votenumber']);
+        // $Result = vote::select('acid')
+        //     ->where('aid',$id)
+        //     ->get()->toArray();
+
+        return view('frontend.activityresult', ['Data' => $Data, 'Title' => $Title->makeHidden('attribute')->toArray(), 'Total' => $Total]);
     }
 
     /**

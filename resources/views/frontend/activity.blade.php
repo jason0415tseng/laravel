@@ -6,90 +6,80 @@
 
 <div class="container">
     <div class="row justify-content-center">
-    {{-- @foreach ($Data as $data) --}}
-        {{-- <div class="col-md-4">
-            <img id="preview_poster_img" src="{{ asset('/img/'.$data['Poster'])}}" height="500"/>
-        </div> --}}
         <div class="col-md-8">
-            {{-- <div class="movie-info"> --}}
-                {{-- <div class="title" style="font-size:30px;line-height:30px;">{{ ('AAAAA') }}</div> --}}
-                {{-- @foreach ($Data as $data) --}}
-                {{-- @php
-                dd($Data)
-                @endphp --}}
-                {{-- <div class="title" style="font-size:22px;line-height:22px;color:#888;padding-top:10px;">{{ $data['Title'] }}</div>
-                <p style="color: #777;font-size:18px;border-radius: 30px;margin-bottom: 10px;list-style-type: none;">{{ ('11:') }}</p>
-
-                <ul class="movie_info_item" style="clear: both;padding-left: 0px;">
-                    <li style="color: #777;font-size:18px;border-radius: 30px;margin-bottom: 10px;list-style-type: none;">
-                        <b style="display: block;color: #79b6ec;">{{ ('1') }}</b>
-                    </li>
-                    <li style="color: #777;font-size:18px;border-radius: 30px;margin-bottom: 10px;list-style-type: none;">
-                        <b style="display: block;color: #79b6ec;">{{ ('1') }}</b>
-                    </li>
-                    <li style="color: #777;font-size:18px;border-radius: 30px;margin-bottom: 10px;list-style-type: none;">
-                        <b style="display: block;color: #79b6ec;">{{ ('1') }}</b>
-                    </li>
-                    <li style="color: #777;font-size:18px;border-radius: 30px;margin-bottom: 10px;list-style-type: none;">
-                        <b style="display: block;color: #79b6ec;">{{ ('11') }}</b>
-                    </li>
-                    <li style="color: #777;font-size:18px;border-radius: 30px;margin-bottom: 10px;list-style-type: none;">
-                        <b style="display: block;color: #79b6ec;">{{ ('11') }}</b>
-                    </li>
-                </ul> --}}
-                {{-- @endforeach --}}
-                <!-- @foreach ($Data as $data) -->
-                
-                <!-- @endforeach -->
-            {{-- </div> --}}
             <div class="form-group row">
-                            <div class="col-md-12">
-                                <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border="1">
-                                    @if(count($Data)<1)
-                                        <h3>{{('無訂購資料')}}</h3>
-                                    @else
-                                        <tr>
-                                            <td>活動名稱</td>
-                                            <td>發起人</td>
-                                            <td>開始日</td>
-                                            <td>截止日</td>
-                                            <td>目前狀態</td>
-                                            <td>結果</td>
-                                        </tr>
-                                        @foreach ($Data as $data)
-                                        {{-- @php
-                                        dd($data)
-                                        @endphp --}}
-                                            <tr>
-                                                <td>
-                                                    {{$data['Title']}}
-                                                </td>
-                                                <td>
-                                                    {{$data['Author']}}
-                                                </td>
-                                                <td>
-                                                    {{$data['StartDate']}}
-                                                </td>
-                                                <td>
-                                                    {{$data['EndDate']}}
-                                                </td>
-                                                <td>
-                                                    {{('參加投票')}}
-                                                </td>
-                                                <td>
-                                                    {{$data['created_at']}}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endif
-                                </table>
-                            </div>
-                        </div>
+                <div class="col-md-12">
+                    <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border="1">
+                        @if(count($Data)<1)
+                            <h3>{{('無任何活動')}}</h3>
+                        @else
+                            <tr>
+                                <td>活動名稱</td>
+                                <td>發起人</td>
+                                <td>開始日</td>
+                                <td>截止日</td>
+                                <td>目前狀態</td>
+                                <td>結果</td>
+                            </tr>
+                            @foreach ($Data as $data)
+                                <tr>
+                                    <td>
+                                        {{$data['title']}}
+                                    </td>
+                                    <td>
+                                        {{$data['author']}}
+                                    </td>
+                                    <td>
+                                        {{$data['startdate']}}
+                                    </td>
+                                    <td>
+                                        {{$data['enddate']}}
+                                    </td>
+                                    <td>
+                                        @if($NowTime > $data['enddate'])
+                                            <div style="color:red;font-weight: bold;">{{ ('已截止') }}</div>
+                                        @else
+                                            @if(isset($Voted))                                                    
+                                            @php
+                                            // dd($NowTime)
+                                            @endphp
+                                            
+                                                @if($Voted->contains('voteaid',$data['Aid']))
+                                                    {{('已投票')}}
+                                                @else
+                                                    <a href="/activity/detail/{{$data['Aid']}}">
+                                                        {{('參加投票')}}
+                                                    </a>
+                                                @endif
+                                            @else
+                                                @if(session('account'))
+                                                    <a href="/activity/detail/{{$data['Aid']}}">
+                                                        {{('參加投票')}}
+                                                    </a>
+                                                @else
+                                                    {{('投票中')}}
+                                                @endif
+                                            @endif
+                                        @endif
+                                        
+                                    </td>
+                                    <td>
+                                        <a href="/activity/voteresult/{{$data['Aid']}}">
+                                            {{$data['votenumber']}}
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </table>
+                </div>
+            </div>
+
             <div class="form-group row mb-0">
                 <div class="col-md-6 offset-md-4">
                     @if(session('account'))
                     <a href="/activity/activityadd"  style="text-decoration:none;color:seashell">
-                        <button type="button" class="btn btn-primary">{{ ('新增') }}</button>
+                        <button type="button" class="btn btn-primary">{{ ('新增活動') }}</button>
                     </a>
                     @else
                     @endif

@@ -50,8 +50,6 @@ class MovieManagerController extends Controller
      */
     public function movieadd(Request $request)
     {
-        //
-        // $Data = $request->all();
         //圖片
         $File = $request->file('poster');
 

@@ -10,11 +10,9 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ ('新增活動') }}</div>
-
                 <div class="card-body">
                     <form method="POST" action="{{ route('activity.activityadd') }}">
                         @csrf
-
                         <div class="form-group row">
                             <label for="title" class="col-md-4 col-form-label text-md-right">{{ ('標題') }}</label>
                             <div class="col-md-4">
@@ -26,6 +24,7 @@
                                     @endif                          
                             </div>    
                         </div>
+
                         <div id="activitylist" class="form-group row">
                             <label for="name_en" class="col-md-4 col-form-label text-md-right">{{ ('選項內容') }}</label>
                             <div class="col-md-4 col-form-label">
@@ -39,6 +38,7 @@
                                 <input type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required>
                             </div> 
                         </div>
+
                         <div class="form-group row">
                             <label for="startdate" class="col-md-4 col-form-label text-md-right">{{ ('開始時間') }}</label>
                             <div class="col-md-4">
@@ -50,6 +50,7 @@
                                     @endif                          
                             </div>    
                         </div>
+
                         <div class="form-group row">
                             <label for="enddate" class="col-md-4 col-form-label text-md-right">{{ ('結束時間') }}</label>
                             <div class="col-md-4">
@@ -61,12 +62,13 @@
                                     @endif                          
                             </div>    
                         </div>
+                        
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                     {{ ('確定') }}
                                 </button>
-                                <a href="/moviemanager"  style="text-decoration:none;color:seashell">
+                                <a href="/activity"  style="text-decoration:none;color:seashell">
                                     <button type="button" class="btn btn-primary">{{ ('取消') }}</button>
                                 </a>
                             </div>

@@ -14,86 +14,42 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('movielist.orderseat' , ['Mid'=> $data['Mid']]) }}" enctype="multipart/form-data">
                         @csrf
+                        <div class="form-group row">
+                            <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('票名') }}</label>
+                            <div class="col-md-4 col-form-label text-md-left">
+                                {{$data['Name']}}
+                            </div>
+                        </div>
 
                         <div class="form-group row">
-                                <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('票名') }}</label>
-                                <div class="col-md-4 col-form-label text-md-left">
-                                    {{$data['Name']}}
-                                </div>
-                        </div>
-                        <div class="form-group row">
-                                <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('廳別') }}</label>
-                                <div class="col-md-4 col-form-label text-md-left">
-                                <input id="hall" type="text" name="hall" value="{{ $data['Hall'] }}" placeholder="時刻" required style="display:none"> 
+                            <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('廳別') }}</label>
+                            <div class="col-md-4 col-form-label text-md-left">
+                                <input id="hall" type="text" name="hall" value="{{ $data['Hall'] }}" placeholder="時刻" required style="display:none">
                                     {{$data['Hall'] . ('廳')}}
-                                    <!-- <select id="hall" name="hall"  class="form-control" style="text-align:center;text-align-last:center;"> 
-                                                    <option value="0" @if((count($data)>2)&&($data['Hall']=='0')) selected @else  @endif>1廳</option> 
-                                                    <option value="1" @if((count($data)>2)&&($data['Hall']=='1')) selected @else  @endif>2廳</option> 
-                                                    <option value="2" @if((count($data)>2)&&($data['Hall']=='2')) selected @else  @endif>3廳</option> 
-                                                    <option value="3" @if((count($data)>2)&&($data['Hall']=='3')) selected @else  @endif>4廳</option> 
-                                                    <option value="4" @if((count($data)>2)&&($data['Hall']=='4')) selected @else  @endif>5廳</option> 
-                                                </select>
-                                        @if ($errors->has('hall'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('hall') }}</strong>
-                                            </span>
-                                        @endif -->
-                                </div>
+                            </div>
                         </div>
+
                         <div class="form-group row">
                             <label for="date" class="col-md-4 col-form-label text-md-right">{{ ('時刻') }}</label>
-                            <!-- <div class="col-md-4"> -->
-                                <!-- <input id="date" type="text" class="form-control{{ $errors->has('date') ? ' is-invalid' : '' }}" name="date" value="{{ old('date') }}" placeholder="時刻" required>                            
-                                    @if ($errors->has('date'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('date') }}</strong>
-                                        </span>
-                                    @endif                           -->
-                                    @foreach ($data['Date'] as $key => $value)
-
-                                <div class="col-md-1 col-form-label">
-                                    <input type="radio" id='date' name='date' value="{{$value}}">{{$value}}</input> 
-                                </div>   
-                                {{-- @if($value == '1')
-                                <input id="date" type="text" name="date" value="{{ $value }}" placeholder="時刻" required style="display:none"> 
-                                    <div class="col-md-4 col-form-label text-md-left" style="font-size:18px;"><span>10:00</span></div>
-                                @elseif($value == '2')
-                                <input id="date" type="text" name="date" value="{{ $value }}" placeholder="時刻" required style="display:none"> 
-                                    <div class="col-md-4 col-form-label text-md-left" style="font-size:18px;"><span>12:20</span></div>
-                                @endif --}}
+                                @foreach ($data['Date'] as $key => $value)
+                                    <div class="col-md-1 col-form-label">
+                                        <input type="radio" id='date' name='date' value="{{$value}}" required>{{$value}}
+                                    </div>
                                 @endforeach
-                            <!-- </div>     -->
                         </div>
-                        <!-- <div class="form-group row">
-                            <label for="date" class="col-md-4 col-form-label text-md-right">{{ ('時刻') }}</label>
-                            <div style="width:180px;margin-left:15px">
-                            <input type="checkbox" value="1" checked id="date_1" name="date_1">
-                            <label for="date">10:00</label>
-                            {{-- <input type="checkbox" value="2" checked id="date_2" name="date_2">
-                            <label for="date">14:20</label>
-                            <input type="checkbox" value="3" checked id="date_3" name="date_3">
-                            <label for="date">16:40</label>
-                            <input type="checkbox" value="4" checked id="date_4" name="date_4">
-                            <label for="date">19:00</label>
-                            <input type="checkbox" value="5" checked id="date_5" name="date_5">
-                            <label for="date">21:20</label>
-                            <input type="checkbox" value="6" checked id="date_6" name="date_6">
-                            <label for="date">23:40</label> --}}
-                            </div>  
-                        </div> -->
+
                         <div class="form-group row">
                             <label for="ticket" class="col-md-4 col-form-label text-md-right">{{ ('數量') }}</label>
                             <div class="col-md-4">
-                                
-                                    <input id="ticket" type="number" class="form-control{{ $errors->has('ticket') ? ' is-invalid' : '' }}" name="ticket" value="{{ old('ticket') }}" maxlength="3" min="0" max="4" placeholder="數量" required>                            
-                                
+                                <input id="ticket" type="number" class="form-control{{ $errors->has('ticket') ? ' is-invalid' : '' }}" name="ticket" value="{{ old('ticket') }}" maxlength="3" min="0" max="4" placeholder="數量" required>
                                     @if ($errors->has('ticket'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('ticket') }}</strong>
                                         </span>
-                                    @endif                          
-                            </div>    
+                                    @endif
+                            </div>
                         </div>
+                        
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
