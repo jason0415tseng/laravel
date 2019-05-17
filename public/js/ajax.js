@@ -1,3 +1,4 @@
+//開啟視窗
 function OpenWindow(id) {
     var url = "admin/" + id;
     var screenWidth = $(window).width();
@@ -9,26 +10,14 @@ function OpenWindow(id) {
     window.open(url, 'mywin', "width=560, height=360 , left=" + Left + " , top=" + Top + "");
 }
 
-
-
-
-
-
 //關閉視窗
 function CloseWindow() {
     window.close();
 }
 
-
-
-
-
-
-
+//更新
 function Update() {
-
     $.ajax({
-
         type: 'POST',
         url: '/admin/update',
         headers: {
@@ -56,69 +45,59 @@ function Update() {
 
 var Count = 0;
 var Selected = 0;
-var SeatData = new Array;
+var SeatData = [];
+var SeatText = [];
 
 function seat(_this) {
-
     var SeatLimit = $('#ticket').attr('value');
     var SelectSeat = _this;
     var Seat = $(SelectSeat).attr('value');
     var Type = $(SelectSeat).data('type');
+    var Row = $(SelectSeat).data('row');
+    var Col = $(SelectSeat).data('col');
 
     if (Type == 'Sold') {
-
         alert("提醒您, 此座位不可選");
-
     } else {
-
-        if (!($(SelectSeat).hasClass('Select'))) {
-
+        if (!($(SelectSeat).hasClass('P'))) {
             if (Selected == SeatLimit) {
-
                 alert("已達可選上限");
-
             } else {
-
-                $(SelectSeat).addClass('Select');
+                $(SelectSeat).addClass('P');
                 Selected++;
                 Count++;
 
                 //加至陣列
+                SeatText.push(Row + '排' + Col + '號');
                 SeatData.push(Seat);
             }
         } else {
-
-            $(SelectSeat).removeClass('Select');
-
+            $(SelectSeat).removeClass('P');
             Count = 0;
             Selected--;
 
             //移除陣列值
             SeatData = _.without(SeatData, Seat);
+            SeatText = _.without(SeatText, Row + '排' + Col + '號');
         }
     }
 
+    $(".selectseat").text(SeatText);
+    $(".selectnumber").text(Selected);
 
-
-    $(".selectseat").text(Selected);
-
-    return SeatData;
-
+    return SeatData, Selected;
 }
 
 function Order(id) {
-
-    // var hall = $('#hall').attr('value');
-    // var date = $('#date').attr('value');
-    // var seat = $('#seat').attr('value');
-    // var name = $('#name').attr('value');
-    // var url = '/movielist/order/' + id;
-    // alert(seat);
-    // alert(hall);
-    // alert(date);
-    // return;
+    var ticket = $('#ticket').attr('value');
+    if (Selected == 0) {
+        alert("尚未選擇任何座位");
+        return false;
+    } else if (Selected != ticket) {
+        alert("請選擇剩餘座位");
+        return false;
+    }
     $.ajax({
-
         type: 'POST',
         url: '/movielist/order/' + id,
         headers: {
@@ -128,27 +107,31 @@ function Order(id) {
             id: id,
             hall: $('#hall').attr('value'),
             date: $('#date').attr('value'),
-            ticket: $('#ticket').attr('value'),
+            ticket: ticket,
             seat: SeatData,
         },
         dataType: 'json',
         success: function(data) {
-            // var errors = data.responseJSON;
-            // console.log(errors.message);
             if (data.error) {
-                alert(data.messages);
+                if (data.status == 1) {
+                    alert(data.messages);
+                    window.location.reload();
+                } else if (data.status == 2) {
+                    alert(data.messages);
+                    window.location.href = data.url;
+                } else {
+                    alert(data.messages);
+                }
             } else {
                 alert(data.messages)
                 window.location.href = '/movielist';
             }
-
         },
         error: function(data) {
             var errors = data.responseJSON;
             alert(errors.message);
         }
     });
-
 }
 
 
@@ -159,20 +142,14 @@ var add_button = $("#acadd"); //Add button ID
 var x = 1; //initlal text box count
 
 function activityadd() {
-    console.log(x);
-    // $(add_button).click(function(e) { //on add input button click
-    // e.preventDefault();
     if (x <= max) { //max input box allowed
         x++; //text box increment
-        // $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
         $(wrapper).append('<div class="col-md-4 col-form-label" style="margin-left: 239px;"><input id="name_en" type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required><a href="#" class="remove_field">移除</a></div>'); //add input box
     } else {
         alert('已達新增上限');
     }
-    // });
 
     $(wrapper).on("click", ".remove_field", function(e) { //user click on remove text
-        // e.preventDefault();
         $(this).parent('div').remove();
         x--;
     })

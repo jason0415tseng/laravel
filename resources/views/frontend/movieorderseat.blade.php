@@ -41,9 +41,18 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="seat" class="col-md-5 col-form-label text-md-right">{{ ('已選座位') }}</label>
-                            <div class="col-md-1 col-form-label">
+                            <label for="selectseat" class="col-md-5 col-form-label text-md-right">{{ ('已選座位') }}</label>
+                            <div class="col-md-4 col-form-label">
                                     <div class="selectseat">
+                                        0
+                                    </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="seat" class="col-md-5 col-form-label text-md-right">{{ ('已選票數') }}</label>
+                            <div class="col-md-4 col-form-label">
+                                    <div class="selectnumber">
                                         0
                                     </div>{{('張票')}}
                             </div>
@@ -70,23 +79,20 @@
                                     <td style="text-align: left;font-size: 0.8em;cursor: pointer;">
                                             {{$i.('排')}}
                                     </td>
-                                    @php
-                                    dd($OrderSeat)
-                                    @endphp
                                     @for ($j=1;$j<=4;$j++)
-                                        <td class="" data-type="Empty" data-name="{{$i}}" data-col="{{$j}}" data-seatnum="8" data-status="5" data-areanum="1" >
+                                        <td class="" data-type="Empty" data-rol="{{$i}}" data-col="{{$j}}" data-seatnum="8" data-status="5" data-areanum="1" >
                                             @if(isset($OrderSeat))
                                                 @if(in_array(($i.('_').$j), $OrderSeat))
-                                                    <div id="{{$i.('_').$j}}" data-type='Sold' class="Select" name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
+                                                    <div id="{{$i.('_').$j}}" data-type='Sold' data-row="{{$i}}" data-col="{{$j}}" class="Select" name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
                                                         {{$j.('號')}}
                                                     </div>
                                                 @else
-                                                    <div id="{{$i.('_').$j}}" data-type='Empty' name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
+                                                    <div id="{{$i.('_').$j}}" data-type='Empty' data-row="{{$i}}" data-col="{{$j}}" name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
                                                         {{$j.('號')}}
                                                     </div>
                                                 @endif
                                             @else
-                                                <div id="{{$i.('_').$j}}" data-type='Empty' name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
+                                                <div id="{{$i.('_').$j}}" data-type='Empty' data-row="{{$i}}" data-col="{{$j}}" name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
                                                     {{$j.('號')}}
                                                 </div>
                                             @endif

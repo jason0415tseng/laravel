@@ -16,8 +16,6 @@
 }
 
 .navbar-brand h1 {
-    /* margin-top: 9px;
-    padding-top: 5px; */
     float: left;
     font-size: 25px;
     color: #fff;
@@ -116,11 +114,9 @@
 }
 
 .Seating-Area {
-    /* position: absolute; */
     padding: 0px;
     margin: 0px;
     border: 0px;
-    /* border-collapse: collapse; */
     border-collapse: separate;
     border-spacing: 5px;
 }
@@ -136,19 +132,21 @@
     text-align: center;
     min-width: 25px !important;
     height: 22px;
-    color: rgb(255, 255, 255);
+    color: #000;
     font-size: 0.8em;
     line-height: 22px !important;
-    background: #2799dd;
+    background: white;
     border-radius: 3px;
     cursor: pointer;
+    border-style: solid;
+    border-width: 1px;
 }
 
 .Seating-Area .Select {
     text-align: center;
     min-width: 25px !important;
     height: 22px;
-    color: rgb(255, 255, 255);
+    color: #000;
     font-size: 0.8em;
     line-height: 22px !important;
     background: #f7597b;
@@ -156,28 +154,16 @@
     cursor: pointer;
 }
 
-
-/* .Seating-Area p {
-    font-family: Verdana, Arial, Helvetica, sans-serif, "MS sans serif";
-    position: absolute;
-    z-index: 1;
-    margin: 0px;
-    padding: 0px;
-    text-align: center;
-    font-size: 11px;
-    color: #000000;
-    display: table-cell;
-    cursor: pointer;
-} */
-
-.Seating-Area p {
+.Seating-Area .P {
     text-align: center;
     min-width: 25px !important;
     height: 22px;
-    color: rgb(255, 255, 255);
+    color: 000;
     font-size: 0.8em;
     line-height: 22px !important;
     background: #2799dd;
     border-radius: 3px;
     cursor: pointer;
+    border-style: solid;
+    border-width: 1px;
 }

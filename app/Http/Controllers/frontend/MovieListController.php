@@ -6,10 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\movies;
 use App\Models\order;
-use App\Models\forgot;
+use App\Models\login;
 use App\Models\time;
 use Illuminate\Support\MessageBag;
-use PhpParser\Node\Stmt\Switch_;
 
 class MovieListController extends Controller
 {
@@ -112,18 +111,16 @@ class MovieListController extends Controller
 
         //判斷數量
         if ($Data['ticket'] < 0) {
-
             $Errors->add('ticket', '數字錯誤');
             return back()->withErrors($Errors)->withInput();
-        } elseif (!(in_array($Data['ticket'], ['1', '2', '3', '4']))) {
-
+        }
+        if (!(in_array($Data['ticket'], ['1', '2', '3', '4']))) {
             //判斷範圍
             $Errors->add('ticket', '數量錯誤');
             return back()->withErrors($Errors)->withInput();
         }
 
         $Reuslt = movies::select('Name')
-
             ->where('Mid', $id)
             ->first();
 
@@ -132,21 +129,16 @@ class MovieListController extends Controller
             ->where('OrderDate', $Data['date'])
             ->get()->toArray();
 
-        // print_r($OrderSeat);
-        // exit;
         $Count = count($OrderSeat);
 
+        $SeatList = [];
+
         for ($i = 0; $i < $Count; $i++) {
-
             $OrderSeat[$i]['OrderSeat'] = explode(',', $OrderSeat[$i]['OrderSeat']);
-
-            foreach ($OrderSeat[$i]['OrderSeat'] as $List) {
-
-                $SeatList[] = $List;
-            }
         }
-        print_r($OrderSeat);
-        exit;
+
+        $SeatList = array_flatten($OrderSeat);
+
         $Data['name'] = $Reuslt->Name;
 
         $Data['mid'] = $id;
@@ -173,20 +165,19 @@ class MovieListController extends Controller
 
         //判斷數量是否與座位數相同
         if (count($Data['seat']) != $Data['ticket']) {
-
             return response()->json([
                 'error'    => true,
                 'messages' => '請選擇剩餘座位',
             ]);
         }
 
-        //判斷數量
+        //判斷訂票數量
         if ($Data['ticket'] < 0) {
-
             $Errors->add('ticket', '數字錯誤');
             return back()->withErrors($Errors)->withInput();
-        } elseif (!(in_array($Data['ticket'], ['1', '2', '3', '4']))) {
+        }
 
+        if (!(in_array($Data['ticket'], ['1', '2', '3', '4']))) {
             //判斷範圍
             $Errors->add('ticket', '超過數量');
             return back()->withErrors($Errors)->withInput();
@@ -195,32 +186,57 @@ class MovieListController extends Controller
         $Account = session('account');
         $Level = session('level');
 
-        $User = forgot::select('Uid', 'name')
+        //取帳號資訊
+        $User = login::select('Uid', 'name')
             ->where('account', $Account)
             ->where('level', $Level)
             ->first()->toArray();
 
-        $OrderSeat = order::select('*')
+        //取帳號已訂票資料
+        $UserOrder = order::select('*')
             ->where('orderuid', $User['Uid'])
             ->where('ordermid', $id)
-            ->sum('OrderTicket');
+            ->where('orderdate', $Data['date'])
+            ->first();
 
-        if ($OrderSeat == 4) {
+        if ($UserOrder) {
+            if ($UserOrder->OrderTicket == 4) {
+                return response()->json([
+                    'error'    => true,
+                    'messages' => '數量已達上限',
+                ]);
+                //判斷數量
+            } elseif (4 - $UserOrder->OrderTicket < $Data['ticket']) {
+                return response()->json([
+                    'error'    => true,
+                    'messages' => '可訂票張數僅剩' . (4 - $UserOrder->OrderTicket) . '位',
+                ]);
+            }
+        }
 
-            return response()->json([
-                'error'    => true,
-                'messages' => '數量已達上限',
+        //取已訂票座位
+        $OrderSeat = order::select('OrderSeat')
+            ->where('orderdate', $Data['date'])
+            ->where('ordermid', $id)
+            ->get()->toArray();
+        // dd($OrderSeat);
+        if ($OrderSeat) {
+            $Count = count($OrderSeat);
 
-            ]);
+            $SeatList = [];
+            for ($i = 0; $i < $Count; $i++) {
+                $OrderSeat[$i]['OrderSeat'] = explode(',', $OrderSeat[$i]['OrderSeat']);
+            }
+            $SeatList = array_flatten($OrderSeat);
 
-            //判斷數量
-        } elseif (4 - $OrderSeat < $Data['ticket']) {
-
-            return response()->json([
-                'error'    => true,
-                'messages' => '張數僅剩' . (4 - $OrderSeat) . '位',
-
-            ]);
+            //判斷座位
+            if (array_intersect($Data['seat'], $SeatList)) {
+                return response()->json([
+                    'error'    => true,
+                    'status'   => 1,
+                    'messages' => '座位目前已被訂走，請重新選擇座位',
+                ]);
+            }
         }
 
         //新增
@@ -241,25 +257,52 @@ class MovieListController extends Controller
         $Order->orderaccount = $Account;
         $Order->ordername = $User['name'];
 
+        //判斷剩餘票數
+        $RemainTicket = time::select('seat')
+            ->where('mid', $id)
+            ->where('date', $Data['date'])
+            ->first();
+
+        if (($RemainTicket->seat) - $Data['ticket'] <= 0) {
+            return response()->json([
+                'error'    => true,
+                'status'   => 2,
+                'url'      => '/movielist/order/' . $id,
+                'messages' => '目前剩餘票數僅剩' . $RemainTicket->seat . '張，請重新選擇票數',
+            ]);
+        }
+
+        //更新DB
+        $Reuslt = time::where('Mid', $id)
+            ->decrement('seat', $Order->orderticket);
+        if ($Reuslt) {
+            //回傳錯誤
+            return response()->json([
+                'error'    => true,
+                'status'   => 2,
+                'url'      => '/movielist/order/' . $id,
+                'messages' => '目前剩餘票數僅剩' . $RemainTicket->seat . '張，請重新選擇票數',
+            ]);
+        }
+
+        //訂票
         $Order->save();
 
         //判斷是否訂票成功
         if ($Order->save() === false) {
-            //失敗
+            //失敗把DB加回來
+            time::where('Mid', $id)
+                ->increment('seat', $Order->orderticket);
+            //回傳錯誤
             return response()->json([
                 'error'    => true,
                 'messages' => "訂票失敗",
-
             ]);
         } else {
-            //成功後更新DB
-            $Reuslt = time::where('Mid', $id)
-                ->decrement('seat', $Order->orderticket);
-
+            //回傳成功
             return response()->json([
                 'error'    => false,
                 'messages' => "訂票成功!",
-
             ]);
         }
     }

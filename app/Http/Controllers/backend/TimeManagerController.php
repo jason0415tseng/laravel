@@ -121,7 +121,6 @@ class TimeManagerController extends Controller
 
         $EndTime = strtotime('24:00');
 
-
         $NewHall = array();
 
         $Hall = array_column($Hall, 'Hall');
@@ -175,6 +174,11 @@ class TimeManagerController extends Controller
         //資料
         $Data = $request->all();
 
+        if (!isset($Data['date'])) {
+            $Errors->add('date', '時刻錯誤，請選擇時刻');
+            return back()->withErrors($Errors)->withInput();
+        }
+
         //判斷張數
         if (($Data['seat'] < 100) || ($Data['seat'] > 999)) {
             $Errors->add('seat', '數量錯誤，範圍(100~999)');
@@ -200,15 +204,11 @@ class TimeManagerController extends Controller
         }
 
         if ($Result) {
-
             $Errors->add('hall', '廳別錯誤');
             return back()->withErrors($Errors)->withInput();
         }
 
-
-
         if ($Movie) {
-
             //轉換
             $Date = $Data['date'];
 
