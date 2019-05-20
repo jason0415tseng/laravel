@@ -41,7 +41,7 @@
                                                     {{$order['orderhall'] . ('廳')}}
                                                 </td>
                                                 <td>
-                                                    {{$order['orderdate']}}
+                                                    {{$order['ordertime']}}
                                                 </td>
                                                 <td>
                                                     {{$order['orderticket']}}

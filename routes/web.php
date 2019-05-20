@@ -66,25 +66,25 @@ Route::post('/register', 'frontend\RegisterController@create');
 Route::get('/memberCenter', 'frontend\MemberCenterController@index')->name('memberCenter');
 
 //訂購資訊
-Route::get('/orderinfo', 'frontend\MemberCenterController@getorder')->name('orderinfo');
+Route::get('/orderinfo', 'frontend\MemberCenterController@getOrderInfo')->name('orderinfo');
 
 //會員修改
 Route::post('/memberCenter/update', 'frontend\MemberCenterController@updateuser')->name('memberCenter.user');
 
 //電影介紹
-Route::get('/movielist', 'frontend\MovieListController@index')->name('movielist');
+Route::get('/movie', 'frontend\MovieController@getMovieIndex')->name('movie');
 
 //電影介紹->電影詳細內容
-Route::get('/movielist/detail/{id}', 'frontend\MovieListController@detail')->name('movielist.detail');
+Route::get('/movie/detail/{id}', 'frontend\MovieController@getMovieDetail')->name('movielist.detail');
 
 //電影介紹->電影訂票介面
-Route::get('/movielist/order/{id}', 'frontend\MovieListController@order')->middleware('CheckLogin')->name('movielist.order');
+Route::get('/movie/order/{id}', 'frontend\MovieController@getMovieOrderPage')->middleware('CheckLogin')->name('movie.order');
 
 //電影介紹->電影選位介面
-Route::post('/movielist/orderseat/{id}', 'frontend\MovieListController@orderseat')->middleware('CheckLogin')->name('movielist.orderseat');
+Route::post('/movie/order/selectseat/{id}', 'frontend\MovieController@MovieOrderSelectSeat')->middleware('CheckLogin')->name('movie.orderselectseat');
 
 //電影介紹->電影訂票
-Route::post('/movielist/order/{id}', 'frontend\MovieListController@orderadd')->middleware('CheckLogin')->name('movielist.orderadd');
+Route::post('/movie/order/{id}', 'frontend\MovieController@createOrder')->middleware('CheckLogin')->name('movie.createorder');
 
 //電影時刻查詢
 Route::get('/movietime', 'frontend\MovieTimeController@index')->name('movietime');

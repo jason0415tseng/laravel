@@ -17,7 +17,7 @@ class CreateTimeTable extends Migration
             $table->bigIncrements('Tid')->comment("時刻ID");;
             $table->integer('Mid')->comment("電影ID");
             $table->string('Hall', 64)->comment("廳別");
-            $table->string('Date', 64)->comment("時刻");
+            $table->string('Time', 64)->comment("時刻");
             $table->smallinteger('Seat')->unsigned()->comment("張數");
             $table->timestamps();
         });

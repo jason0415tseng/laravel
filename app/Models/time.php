@@ -12,6 +12,6 @@ class time extends Model
     protected $primarykey = 'tid';
 
     protected $fillable = [
-        'tid', 'mid', 'hall', 'date', 'seat', 'created_at', 'updated_at'
+        'tid', 'mid', 'hall', 'time', 'seat', 'created_at', 'updated_at'
     ];
 }

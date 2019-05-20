@@ -27,9 +27,9 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="date" class="col-md-5 col-form-label text-md-right"><i class="far fa-clock"></i></label>
-                                <div  id="date" name="date" value="{{$Data['date']}}" class="col-md-1 col-form-label">
-                                   {{$Data['date']}}
+                            <label for="time" class="col-md-5 col-form-label text-md-right"><i class="far fa-clock"></i></label>
+                                <div  id="time" name="time" value="{{$Data['time']}}" class="col-md-1 col-form-label">
+                                   {{$Data['time']}}
                                 </div>
                         </div>
 
@@ -53,8 +53,8 @@
                             <label for="seat" class="col-md-5 col-form-label text-md-right">{{ ('已選票數') }}</label>
                             <div class="col-md-4 col-form-label">
                                     <div class="selectnumber">
-                                        0
-                                    </div>{{('張票')}}
+                                        {{('0 張票')}}
+                                    </div>
                             </div>
                         </div>
                 </div>
@@ -115,42 +115,4 @@
         </div>
     </div>
 </div>
-<!-- JavaScript part -->
-
-<script>
-
-function readURL(input){
-
-  if(input.files && input.files[0]){
-
-    var imageTagID = input.getAttribute("targetID");
-
-    var reader = new FileReader();
-
-    reader.onload = function (e) {
-
-       var div = document.getElementById('preview_poster');
-       var img = document.getElementById('preview_poster_img');
-
-        div.style.display="block";
-        img.style.display="block";
-
-       img.setAttribute("src", e.target.result)
-
-    }
-
-    reader.readAsDataURL(input.files[0]);
-
-  }
-
-}
-
-$(function (){
-    var date = new Date();
-    var nowYear = date.getFullYear();
-    var nowMonth = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1));
-    var nowDay = date.getDate() < 10 ? ('0'+date.getDate()) : date.getDate();
-    document.getElementById('ondate').min = nowYear + '-' + nowMonth + '-' + nowDay;
-});
-</script>
 @endsection

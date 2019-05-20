@@ -83,7 +83,7 @@ function seat(_this) {
     }
 
     $(".selectseat").text(SeatText);
-    $(".selectnumber").text(Selected);
+    $(".selectnumber").text(Selected + ' 張票');
 
     return SeatData, Selected;
 }
@@ -99,14 +99,14 @@ function Order(id) {
     }
     $.ajax({
         type: 'POST',
-        url: '/movielist/order/' + id,
+        url: '/movie/order/' + id,
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         data: {
             id: id,
             hall: $('#hall').attr('value'),
-            date: $('#date').attr('value'),
+            time: $('#time').attr('value'),
             ticket: ticket,
             seat: SeatData,
         },
@@ -124,7 +124,7 @@ function Order(id) {
                 }
             } else {
                 alert(data.messages)
-                window.location.href = '/movielist';
+                window.location.href = '/movie';
             }
         },
         error: function(data) {

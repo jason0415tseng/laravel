@@ -40,27 +40,6 @@ class TimeManagerController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -77,29 +56,6 @@ class TimeManagerController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @param  int  $id
@@ -108,7 +64,7 @@ class TimeManagerController extends Controller
     public function add($id)
     {
         //列出資料
-        $Data = movies::select('movies.Mid', 'movies.Name', 'movies.Length', 'time.Hall', 'time.Date', 'time.Seat')
+        $Data = movies::select('movies.Mid', 'movies.Name', 'movies.Length', 'time.Hall', 'time.Time', 'time.Seat')
             ->join('time', 'movies.mid', '=', 'time.mid')
             ->where('movies.Mid', $id)
             ->first();
@@ -174,8 +130,8 @@ class TimeManagerController extends Controller
         //資料
         $Data = $request->all();
 
-        if (!isset($Data['date'])) {
-            $Errors->add('date', '時刻錯誤，請選擇時刻');
+        if (!isset($Data['time'])) {
+            $Errors->add('time', '時刻錯誤，請選擇時刻');
             return back()->withErrors($Errors)->withInput();
         }
 
@@ -209,47 +165,28 @@ class TimeManagerController extends Controller
         }
 
         if ($Movie) {
-            //轉換
-            $Date = $Data['date'];
-
-            $Data['date'] = implode(',', $Date);
-
             //更新
-            $Result = time::where('Mid', $id)
-                ->update([
-                    'hall' => $Data['hall'],
-                    'date' => $Data['date'],
-                    'seat' => $Data['seat'],
-                ]);
+            foreach ($Data['time'] as $date) {
+                $Result = time::where('Mid', $id)
+                    ->where('time', $date)
+                    ->update([
+                        'hall' => $Data['hall'],
+                        'time' => $date,
+                        'seat' => $Data['seat'],
+                    ]);
+            }
         } else {
-
-            //新增
-            $Time = new time;
-
-            $Time->mid = $id;
-            $Time->hall = $request->hall;
-            $Time->date = $request->date;
-            //轉換
-            $Date = $Time->date;
-
-            $Time->date = implode(',', $Date);
-
-            $Time->seat = $request->seat;
-
-            $Time->save();
+            foreach ($request->time as $Date) {
+                //新增
+                $Time = new time;
+                $Time->mid = $id;
+                $Time->hall = $request->hall;
+                $Time->time = $Date;
+                $Time->seat = $request->seat;
+                $Time->save();
+            }
         }
 
         return redirect('/timemanager');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

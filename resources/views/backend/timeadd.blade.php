@@ -17,16 +17,16 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ ('片名') }}</label>
                             <div class="col-md-4">
                                 <span class="form-control" style="border: 1px;">{{$Data['Name']}}</span>
-                            </div>    
+                            </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('廳別') }}</label>
                             <div class="col-md-4">
-                                <select id="hall" name="hall"  class="form-control{{ $errors->has('hall') ? ' is-invalid' : '' }}" style="text-align:center;text-align-last:center;">
+                                <select id="hall" name="hall" class="form-control{{ $errors->has('hall') ? ' is-invalid' : '' }}" style="text-align:center;text-align-last:center;">
                                     @foreach ($Hall as $hall)
                                         <option value={{$hall}} @if((count($Data)>3)&&($Data['Hall']==$hall)) selected @else  @endif >{{$hall . ('廳')}}</option>
-                                    @endforeach         
+                                    @endforeach
                                 </select>
                                     @if ($errors->has('hall'))
                                         <span class="invalid-feedback" role="alert">
@@ -37,13 +37,13 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="date" class="col-md-4 col-form-label text-md-right">{{ ('時刻') }}</label>
+                            <label for="time" class="col-md-4 col-form-label text-md-right">{{ ('時刻') }}</label>
                             <div style="width:180px;margin-left:15px">
                                 @foreach ($Time as $key => $time)
-                                    <input type="checkbox" value={{$time}} id="{{('date') . $key}}" name="date[]" checked>
-                                    <label for="date">{{$time}}</label>
+                                    <input type="checkbox" value={{$time}} id="{{('time') . $key}}" name="time[]" checked>
+                                    <label for="time">{{$time}}</label>
                                 @endforeach
-                            </div>  
+                            </div>
                         </div>
 
                         <div class="form-group row">
@@ -58,8 +58,8 @@
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('seat') }}</strong>
                                         </span>
-                                    @endif                          
-                            </div>    
+                                    @endif
+                            </div>
                         </div>
 
                         <div class="form-group row mb-0">
