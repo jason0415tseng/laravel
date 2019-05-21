@@ -93,7 +93,19 @@ Route::get('/movietime', 'frontend\MovieTimeController@index')->name('movietime'
 Route::get('/activity', 'frontend\ActivityController@index')->name('activity');
 
 //活動新增介面
-Route::get('/activity/activityadd', 'frontend\ActivityController@add');
+Route::get('/activity/add', 'frontend\ActivityController@showActivityAdd');
+
+//活動新增
+Route::post('/activity/add', 'frontend\ActivityController@createActivityAdd')->middleware('CheckLogin')->name('activity.create');
+
+//活動修改介面
+Route::get('/activity/update/{id}', 'frontend\ActivityController@showActivity');
+
+//活動修改
+Route::post('/activity/update/{id}', 'frontend\ActivityController@updateActivity')->middleware('CheckLogin')->name('activity.update');
+
+//活動刪除
+Route::delete('/activity/delete/{id}', 'frontend\ActivityController@destroyActivity')->middleware('CheckLogin')->name('activity.destroy');
 
 //活動->活動詳細內容
 Route::get('/activity/detail/{id}', 'frontend\ActivityController@detail')->name('activity.detail');
@@ -103,9 +115,6 @@ Route::post('/activity/vote/{id}', 'frontend\ActivityController@vote')->middlewa
 
 //活動->投票結果
 Route::get('/activity/voteresult/{id}', 'frontend\ActivityController@voteresult')->name('activity.result');
-
-//活動新增
-Route::post('/activity/activityadd', 'frontend\ActivityController@activityadd')->middleware('CheckLogin')->name('activity.activityadd');
 
 //管理者
 Route::get('/admin', 'backend\AdminController@index')->middleware('CheckManager')->name('admin');

@@ -51,7 +51,7 @@ class ActivityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function add()
+    public function showActivityAdd()
     {
         return view('frontend.activityadd');
     }
@@ -62,7 +62,7 @@ class ActivityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function activityadd(Request $request)
+    public function createActivityAdd(Request $request)
     {
 
         $Errors = new MessageBag;
@@ -83,7 +83,6 @@ class ActivityController extends Controller
 
         //新增
         $Activity = new Activity;
-
         $Activity->title = $Data['title'];
         $Activity->author = $Account;
         $Activity->startdate = $Data['startdate'];
@@ -91,7 +90,7 @@ class ActivityController extends Controller
 
         $Activity->save();
 
-        //判斷是否訂票成功
+        //判斷是否新增成功
         if ($Activity->save() === false) {
             //失敗
             $Errors->add('title', '新增失敗');
@@ -107,7 +106,6 @@ class ActivityController extends Controller
 
                 //新增
                 $Activitycontent = new Activitycontent;
-
                 $Activitycontent->aid = $Aid->aid;
                 $Activitycontent->content = $content;
 
@@ -126,13 +124,11 @@ class ActivityController extends Controller
      */
     public function detail($id)
     {
-        //
         $Title = activity::select('title', 'aid')
             ->where('aid', $id)
             ->first();
 
         $Data = activitycontent::select('acid', 'content')
-            // ->join('activity','activity.aid','=','activitycontent.aid')
             ->where('aid', $id)
             ->get()->toArray();
 
@@ -155,18 +151,12 @@ class ActivityController extends Controller
         $Account = session('account');
 
         $Data = explode(',', $Data['acid']);
-        //         foreach($Data as $date){
-        //             $Data[] .= $date;
-        // print_r($date);
-        //         }
-        // dd($Data[0]);
-
 
         $Content = activitycontent::select('*')
             ->where('acid', $Data[0])
             ->where('content', $Data[1])
             ->first();
-        // dd($Content);
+
         //判斷選項
         if (!$Content) {
             $Errors->add('content', '選項錯誤');
@@ -186,21 +176,7 @@ class ActivityController extends Controller
         $UpdateVote = activitycontent::where('acid', $Data[0])
             ->increment('votenumber', '1');
 
-        //         DB::table('posts')
-        // ->where('id',1)
-        // ->increment('words', 1);
-
         return redirect('/activity');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -223,21 +199,16 @@ class ActivityController extends Controller
     public function voteresult($id)
     {
         $Title = activity::select('title', 'aid')
-            ->where('aid', $id)
+            ->where('Aid', $id)
             ->first();
 
         $Data = activitycontent::select('acid', 'content', 'votenumber')
-            // ->join('activity','activity.aid','=','activitycontent.aid')
-            ->where('aid', $id)
+            ->where('Aid', $id)
             ->get()->toArray();
 
         $Total = DB::table('activitycontent')
             ->where('Aid', $id)
             ->sum('votenumber');
-        // var_dump($Data[0]['votenumber']);
-        // $Result = vote::select('acid')
-        //     ->where('aid',$id)
-        //     ->get()->toArray();
 
         return view('frontend.activityresult', ['Data' => $Data, 'Title' => $Title->makeHidden('attribute')->toArray(), 'Total' => $Total]);
     }
@@ -254,15 +225,102 @@ class ActivityController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showActivity($id)
+    {
+        $Activity = activity::select('title', 'aid', 'startdate', 'enddate')
+            ->where('aid', $id)
+            ->first();
+
+        $Content = activitycontent::select('acid', 'content')
+            ->where('aid', $id)
+            ->get()->toArray();
+
+        return view('frontend.activityeditor', ['Activity' => $Activity, 'Content' => $Content]);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateActivity(Request $request, $id)
     {
-        //
+        $Errors = new MessageBag;
+
+        //判斷標題
+        $Title = activity::select('*')
+            ->where('title', $request->input('title'))
+            ->where('aid', '<>', $id)
+            ->first();
+
+        if ($Title) {
+            $Errors->add('title', '已存在相同的活動囉 !');
+            return back()->withErrors($Errors)->withInput();
+        }
+
+        //判斷選項
+        $Content = $request->input('content');
+        foreach ($Content as $content) {
+            if (!$content) {
+                $Errors->add('content', '選項內容請勿留空 !');
+                return back()->withErrors($Errors)->withInput();
+            }
+        }
+
+        //判斷開始時間
+        $Activity = activity::select('title', 'aid', 'startdate', 'enddate')
+            ->where('aid', $id)
+            ->first();
+
+        if ($request->input('startdate') < $Activity['startdate']) {
+            $Errors->add('startdate', '開始時間請勿小於原本設定時間 !');
+            return back()->withErrors($Errors)->withInput();
+        }
+
+        //判斷結束時間
+        if ($request->input('enddate') < $request->input('startdate')) {
+            $Errors->add('enddate', '結束時間請勿小於開始時間 !');
+            return back()->withErrors($Errors)->withInput();
+        }
+
+        //更新活動
+        $Result = activity::where('Aid', $id)
+            ->update([
+                'title' => $request->input('title'),
+                'startdate' => $request->input('startdate'),
+                'enddate' => $request->input('enddate'),
+            ]);
+
+        if ($Result == false) {
+            $Errors->add('title', '更新失敗 !');
+            return back()->withErrors($Errors)->withInput();
+        } else {
+            foreach ($request->input('content') as $key => $value) {
+                //更新選項
+                $ContentResult = activitycontent::where('ACid', $key)
+                    ->where('Aid', $id)
+                    ->update([
+                        'content' => $value,
+                    ]);
+
+                if ($ContentResult == false) {
+                    //新增
+                    $Activitycontent = new Activitycontent;
+                    $Activitycontent->aid = $id;
+                    $Activitycontent->content = $value;
+
+                    $Activitycontent->save();
+                }
+            }
+        }
+
+        return redirect('/activity');
     }
 
     /**
@@ -271,8 +329,21 @@ class ActivityController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroyActivity($id)
     {
-        //
+        $Activity = activity::select('*')
+            ->where('Aid', $id);
+
+        $ActivityContent = activitycontent::select('*')
+            ->where('Aid', $id);
+
+        $Vote = vote::select('*')
+            ->where('VoteAid', $id);
+
+        $Activity->delete();
+        $ActivityContent->delete();
+        $Vote->delete();
+
+        return redirect('/activity');
     }
 }
