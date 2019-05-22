@@ -26,7 +26,7 @@
                         </div>
 
                         <div id="activitylist" class="form-group row">
-                            <label for="name_en" class="col-md-4 col-form-label text-md-right">{{ ('選項內容') }}</label>
+                            <label for="content" class="col-md-4 col-form-label text-md-right">{{ ('選項內容') }}</label>
                             <div class="col-md-4 col-form-label">
                                 <input type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required>
                             </div>   

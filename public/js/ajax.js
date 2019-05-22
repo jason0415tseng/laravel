@@ -154,26 +154,54 @@ function Order(id) {
 
 var max = 2; //maximum input boxes allowed
 var wrapper = $("#activitylist"); //Fields wrapper
-var add_button = $("#acadd"); //Add button ID
-
 var x = 1; //initlal text box count
 
 function activityadd() {
-    console.log(x);
-    // $(add_button).click(function(e) { //on add input button click
-    // e.preventDefault();
     if (x <= max) { //max input box allowed
         x++; //text box increment
-        // $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
-        $(wrapper).append('<div class="col-md-4 col-form-label" style="margin-left: 239px;"><input id="name_en" type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required><a href="#" class="remove_field">移除</a></div>'); //add input box
+        $(wrapper).append('<div class="col-md-4 col-form-label" style="margin-left: 239px;"><input id="content" type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required><a href="#" class="remove_field">移除</a></div>'); //add input box
     } else {
         alert('已達新增上限');
     }
-    // });
-
-    $(wrapper).on("click", ".remove_field", function(e) { //user click on remove text
-        // e.preventDefault();
-        $(this).parent('div').remove();
-        x--;
-    })
 }
+$(wrapper).on("click", ".remove_field", function() { //user click on remove text
+    $(this).parent('div').remove();
+    x--;
+    console.log(x);
+})
+
+
+var max = 2; //maximum input boxes allowed
+var activityupdate = $("#activityupdate"); //Fields wrapper
+var count = $("#activityupdate #number").length;
+var i = 1; //initlal text box count
+
+function activityupdateadd() {
+    if (count == 3) {
+        if (i <= max) { //max input box allowed
+            i++; //text box increment
+            console.log(x);
+            console.log((count));
+            $(activityupdate).append('<div class="col-md-4 col-form-label" style="margin-left: 239px;"><input id="content" type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required><a href="#" class="remove">移除</a></div>'); //add input box
+        } else {
+            alert('已達新增上限');
+        }
+    } else {
+        if (i <= 1) { //max input box allowed
+            i++; //text box increment
+            console.log(x);
+            console.log((count));
+            $(activityupdate).append('<div class="col-md-4 col-form-label" style="margin-left: 239px;"><input id="content" type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required><a href="#" class="remove">移除</a></div>'); //add input box
+        } else {
+            alert('已達新增上限');
+        }
+    }
+}
+$(activityupdate).on("click", ".remove", function() { //user click on remove text
+    if (confirm('是否確認刪除這筆資料?')) {
+        $(this).parent('div').find("input[name='acid[]']").attr('name', 'delete[]');
+        $(this).parent('div').find("#content").remove(); //清除全部
+        $(this).parent('div').find("a").remove(); //清除全部
+        x--;
+    }
+})

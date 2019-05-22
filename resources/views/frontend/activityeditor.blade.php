@@ -25,13 +25,16 @@
                             </div>    
                         </div>
                         
-                        <div id="activitylist" class="form-group row">
-                            <label for="name_en" class="col-md-4 col-form-label text-md-right">{{ ('選項內容') }}</label>
+                        <div id="activityupdate" class="form-group row">
+                            <label for="content" class="col-md-4 col-form-label text-md-right">{{ ('選項內容') }}</label>
                             <div style="width:320px;">
                                 @foreach ($Content as $key =>$content)
-                                    <div class="col-md-9 col-form-label">
+                                    <div class="col-md-9 col-form-label" id="number">
                                         <input type="text" name="acid[]" value="{{$content['acid']}}" style="display:none;">
                                         <input type="text" class="form-control" id="content" data-type='Sold' name="content[{{$content['acid']}}]" value="{{$content['content']}}" placeholder="選項內容" required>
+                                        @if($key == 3 || $key == 4)
+                                            <a href="#" class="remove">移除</a>
+                                        @endif
                                     </div>   
                                 @endforeach
                                 <input type="text" class="form-control{{ $errors->has('content') ? ' is-invalid' : '' }}" style="display:none;">
@@ -41,7 +44,10 @@
                                         </span>
                                     @endif  
                             </div>
-                            <button class="btn btn-primary" onclick="activityadd()" style="height:55px;margin-left:-80px;">{{('增加選項')}}</button>
+                                @if(count($Content) == 5)
+                                @else
+                                    <button class="btn btn-primary" onclick="activityupdateadd()" style="height:55px;margin-left:-80px;">{{('增加選項')}}</button>
+                                @endif
                         </div>
 
                         <div class="form-group row">

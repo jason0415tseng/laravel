@@ -8,7 +8,6 @@ use App\Models\activity;
 use App\Models\activitycontent;
 use App\Models\vote;
 use Illuminate\Support\MessageBag;
-use Illuminate\Support\Facades\DB;
 
 class ActivityController extends Controller
 {
@@ -33,9 +32,7 @@ class ActivityController extends Controller
         $NowTime = date('Y-m-d', $Time);
 
         foreach ($Data as $key => $value) {
-
-            $Data[$key]['votenumber'] = DB::table('activitycontent')
-                ->where('Aid', $value['Aid'])
+            $Data[$key]['votenumber'] = activitycontent::where('Aid', $value['Aid'])
                 ->sum('votenumber');
         }
 
@@ -103,7 +100,6 @@ class ActivityController extends Controller
                 ->first();
 
             foreach ($Data['content'] as $content) {
-
                 //新增
                 $Activitycontent = new Activitycontent;
                 $Activitycontent->aid = $Aid->aid;
@@ -122,7 +118,7 @@ class ActivityController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function detail($id)
+    public function showActivityDetail($id)
     {
         $Title = activity::select('title', 'aid')
             ->where('aid', $id)
@@ -142,7 +138,7 @@ class ActivityController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function vote(Request $request, $id)
+    public function createVote(Request $request, $id)
     {
         $Errors = new MessageBag;
 
@@ -180,23 +176,12 @@ class ActivityController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function voteresult($id)
+    public function showVoteResult($id)
     {
         $Title = activity::select('title', 'aid')
             ->where('Aid', $id)
@@ -206,22 +191,10 @@ class ActivityController extends Controller
             ->where('Aid', $id)
             ->get()->toArray();
 
-        $Total = DB::table('activitycontent')
-            ->where('Aid', $id)
+        $Total = activitycontent::where('Aid', $id)
             ->sum('votenumber');
 
         return view('frontend.activityresult', ['Data' => $Data, 'Title' => $Title->makeHidden('attribute')->toArray(), 'Total' => $Total]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -289,6 +262,25 @@ class ActivityController extends Controller
             return back()->withErrors($Errors)->withInput();
         }
 
+        //刪除選項
+        if ($request->input('delete')) {
+            foreach ($request->input('delete') as $delete) {
+                $Data = activitycontent::select('*')
+                    ->where('acid', $delete)
+                    ->where('aid', $id)
+                    ->first();
+                if (!$Data) {
+                    $Errors->add('content', '選項有誤 !');
+                    return back()->withErrors($Errors)->withInput();
+                } else {
+                    activitycontent::where('acid', $delete)
+                        ->delete();
+                    vote::where('voteacid', $delete)
+                        ->delete();
+                }
+            }
+        }
+
         //更新活動
         $Result = activity::where('Aid', $id)
             ->update([
@@ -301,7 +293,7 @@ class ActivityController extends Controller
             $Errors->add('title', '更新失敗 !');
             return back()->withErrors($Errors)->withInput();
         } else {
-            foreach ($request->input('content') as $key => $value) {
+            foreach ($Content as $key => $value) {
                 //更新選項
                 $ContentResult = activitycontent::where('ACid', $key)
                     ->where('Aid', $id)

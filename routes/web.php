@@ -108,13 +108,13 @@ Route::post('/activity/update/{id}', 'frontend\ActivityController@updateActivity
 Route::delete('/activity/delete/{id}', 'frontend\ActivityController@destroyActivity')->middleware('CheckLogin')->name('activity.destroy');
 
 //活動->活動詳細內容
-Route::get('/activity/detail/{id}', 'frontend\ActivityController@detail')->name('activity.detail');
+Route::get('/activity/detail/{id}', 'frontend\ActivityController@showActivityDetail')->name('activity.detail');
 
 //活動->投票
-Route::post('/activity/vote/{id}', 'frontend\ActivityController@vote')->middleware('CheckLogin')->name('activity.vote');
+Route::post('/activity/vote/{id}', 'frontend\ActivityController@createVote')->middleware('CheckLogin')->name('activity.vote');
 
 //活動->投票結果
-Route::get('/activity/voteresult/{id}', 'frontend\ActivityController@voteresult')->name('activity.result');
+Route::get('/activity/voteresult/{id}', 'frontend\ActivityController@showVoteResult')->name('activity.voteresult');
 
 //管理者
 Route::get('/admin', 'backend\AdminController@index')->middleware('CheckManager')->name('admin');
