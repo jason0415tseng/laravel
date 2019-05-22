@@ -11,7 +11,7 @@
             <ul class="nav nav-tabs" role="tablist">
                 <li data-movieid="196" class="film-item slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide16" style="width: 284px;margin-top: 15px;">
                     <div class="movie-move">
-                        <a href="/movielist/detail/{{$data['Mid']}}" class="cover" tabindex="0">
+                        <a href="/movie/detail/{{$data['Mid']}}" class="cover" tabindex="0">
                             <img src="{{ asset('/img/'.$data['Poster'])}}" alt="" width="253" height="361">
                         </a>
                     </div>
@@ -44,10 +44,10 @@
                             @default
                         @endswitch
                         <div class="centerBtn" style="clear:both;">
-                            <a href="/movielist/detail/{{$data['Mid']}}" title="電影介紹" tabindex="0">
+                            <a href="/movie/detail/{{$data['Mid']}}" title="電影介紹" tabindex="0">
                                 <button type="button" class="btn btn-primary">電影介紹</button>
                             </a>
-                            <a href="/movielist/time/{{$data['Mid']}}" data-movieid="196" title="時刻查詢" class="order_now" tabindex="0">
+                            <a href="/movie/time/{{$data['Mid']}}" data-movieid="196" title="時刻查詢" class="order_now" tabindex="0">
                                 <button type="button" class="btn btn-primary">時刻查詢</button>
                             </a>
                         </div>

@@ -27,9 +27,9 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="date" class="col-md-5 col-form-label text-md-right"><i class="far fa-clock"></i></label>
-                                <div  id="date" name="date" value="{{$Data['date']}}" class="col-md-1 col-form-label">
-                                   {{$Data['date']}}
+                            <label for="time" class="col-md-5 col-form-label text-md-right"><i class="far fa-clock"></i></label>
+                                <div  id="time" name="time" value="{{$Data['time']}}" class="col-md-1 col-form-label">
+                                   {{$Data['time']}}
                                 </div>
                         </div>
 
@@ -41,11 +41,20 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="seat" class="col-md-5 col-form-label text-md-right">{{ ('已選座位') }}</label>
-                            <div class="col-md-1 col-form-label">
+                            <label for="selectseat" class="col-md-5 col-form-label text-md-right">{{ ('已選座位') }}</label>
+                            <div class="col-md-4 col-form-label">
                                     <div class="selectseat">
                                         0
-                                    </div>{{('張票')}}
+                                    </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="seat" class="col-md-5 col-form-label text-md-right">{{ ('已選票數') }}</label>
+                            <div class="col-md-4 col-form-label">
+                                    <div class="selectnumber">
+                                        {{('0 張票')}}
+                                    </div>
                             </div>
                         </div>
                 </div>
@@ -70,23 +79,20 @@
                                     <td style="text-align: left;font-size: 0.8em;cursor: pointer;">
                                             {{$i.('排')}}
                                     </td>
-                                    @php
-                                    dd($OrderSeat)
-                                    @endphp
                                     @for ($j=1;$j<=4;$j++)
-                                        <td class="" data-type="Empty" data-name="{{$i}}" data-col="{{$j}}" data-seatnum="8" data-status="5" data-areanum="1" >
+                                        <td class="" data-type="Empty" data-rol="{{$i}}" data-col="{{$j}}" data-seatnum="8" data-status="5" data-areanum="1" >
                                             @if(isset($OrderSeat))
                                                 @if(in_array(($i.('_').$j), $OrderSeat))
-                                                    <div id="{{$i.('_').$j}}" data-type='Sold' class="Select" name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
+                                                    <div id="{{$i.('_').$j}}" data-type='Sold' data-row="{{$i}}" data-col="{{$j}}" class="Select" name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
                                                         {{$j.('號')}}
                                                     </div>
                                                 @else
-                                                    <div id="{{$i.('_').$j}}" data-type='Empty' name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
+                                                    <div id="{{$i.('_').$j}}" data-type='Empty' data-row="{{$i}}" data-col="{{$j}}" name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
                                                         {{$j.('號')}}
                                                     </div>
                                                 @endif
                                             @else
-                                                <div id="{{$i.('_').$j}}" data-type='Empty' name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
+                                                <div id="{{$i.('_').$j}}" data-type='Empty' data-row="{{$i}}" data-col="{{$j}}" name="selectseat[]" value="{{$i.('_').$j}}" onclick="seat(this)">
                                                     {{$j.('號')}}
                                                 </div>
                                             @endif
@@ -109,42 +115,4 @@
         </div>
     </div>
 </div>
-<!-- JavaScript part -->
-
-<script>
-
-function readURL(input){
-
-  if(input.files && input.files[0]){
-
-    var imageTagID = input.getAttribute("targetID");
-
-    var reader = new FileReader();
-
-    reader.onload = function (e) {
-
-       var div = document.getElementById('preview_poster');
-       var img = document.getElementById('preview_poster_img');
-
-        div.style.display="block";
-        img.style.display="block";
-
-       img.setAttribute("src", e.target.result)
-
-    }
-
-    reader.readAsDataURL(input.files[0]);
-
-  }
-
-}
-
-$(function (){
-    var date = new Date();
-    var nowYear = date.getFullYear();
-    var nowMonth = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1));
-    var nowDay = date.getDate() < 10 ? ('0'+date.getDate()) : date.getDate();
-    document.getElementById('ondate').min = nowYear + '-' + nowMonth + '-' + nowDay;
-});
-</script>
 @endsection

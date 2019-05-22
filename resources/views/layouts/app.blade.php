@@ -62,7 +62,7 @@
                                     </li>
                                 @else
                                     <li role="presentation">
-                                        <a class="nav-link" href="{{ route('movielist') }}">{{ __('電影介紹') }}</a>
+                                        <a class="nav-link" href="{{ route('movie') }}">{{ __('電影介紹') }}</a>
                                 	</li>
                                     <li role="presentation">
                                     	<a class="nav-link" href="{{ route('movietime') }}">{{ __('時刻查詢') }}</a>
@@ -82,7 +82,7 @@
 								@endif
                             @else
                                     <li role="presentation">
-                                		<a class="nav-link" href="{{ route('movielist') }}">{{ __('電影介紹') }}</a>
+                                		<a class="nav-link" href="{{ route('movie') }}">{{ __('電影介紹') }}</a>
                         			</li>
                                     <li role="presentation">
                                 		<a class="nav-link" href="{{ route('movietime') }}">{{ __('時刻查詢') }}</a>

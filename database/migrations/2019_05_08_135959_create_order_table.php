@@ -18,7 +18,7 @@ class CreateOrderTable extends Migration
             $table->string('OrderNumber', 64)->comment("訂票編號");
             $table->integer('OrderMid')->comment("訂票電影ID");
             $table->string('OrderHall', 64)->comment("訂票廳別");
-            $table->string('OrderDate', 64)->comment("訂票時刻");
+            $table->string('OrderTime', 64)->comment("訂票時刻");
             $table->integer('OrderTicket')->comment("訂票數量");
             $table->string('OrderSeat', 64)->comment("訂票座位");
             $table->integer('OrderUid')->comment("訂購者ID");
