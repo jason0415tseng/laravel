@@ -121,12 +121,7 @@ class MovieController extends Controller
         }
 
         //判斷數量
-        if ($Data['ticket'] < 0) {
-            $Errors->add('ticket', '數字錯誤');
-            return back()->withErrors($Errors)->withInput();
-        }
-        if (!(in_array($Data['ticket'], ['1', '2', '3', '4']))) {
-            //判斷範圍
+        if ($Data['ticket'] < 0 || !(in_array($Data['ticket'], ['1', '2', '3', '4']))) {
             $Errors->add('ticket', '數量錯誤');
             return back()->withErrors($Errors)->withInput();
         }
@@ -169,7 +164,7 @@ class MovieController extends Controller
             ->where('OrderMid', $id)
             ->where('OrderTime', $Data['time'])
             ->get()->toArray();
-        // dd($OrderSeat);
+
         $Count = count($OrderSeat);
 
         $SeatList = [];
@@ -205,10 +200,18 @@ class MovieController extends Controller
         $Data = $request->all();
 
         //判斷數量是否與座位數相同
-        if (count($Data['seat']) != $Data['ticket']) {
+        if (count($Data['seat']) < $Data['ticket']) {
             return response()->json([
                 'error'    => true,
                 'messages' => '請選擇剩餘座位',
+            ]);
+        }
+
+        if (count($Data['seat']) > $Data['ticket']) {
+            return response()->json([
+                'error'    => true,
+                'status'   => 1,
+                'messages' => '座位數錯誤',
             ]);
         }
 
