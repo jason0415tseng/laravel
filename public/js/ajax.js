@@ -47,9 +47,9 @@ var Count = 0;
 var Selected = 0;
 var SeatData = [];
 var SeatText = [];
+var SeatLimit = $('#ticket').attr('value');
 
 function seat(_this) {
-    var SeatLimit = $('#ticket').attr('value');
     var SelectSeat = _this;
     var Seat = $(SelectSeat).attr('value');
     var Type = $(SelectSeat).data('type');

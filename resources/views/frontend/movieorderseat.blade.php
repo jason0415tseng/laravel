@@ -13,35 +13,35 @@
                 <div class="card-body">
                     @csrf
                         <div class="form-group row">
-                            <label for="hall" class="col-md-5 col-form-label text-md-right">{{ ('票名') }}</label>
-                            <div id="name" name="name" value="{{$Data['name']}}" class="col-md-4 col-form-label text-md-left">
+                            <label for="hall" class="col-md-6 col-form-label text-md-right">{{ ('票名') }}</label>
+                            <div id="name" name="name" value="{{$Data['name']}}" class="col-md-1 col-form-label text-md-left">
                                 {{$Data['name']}}
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="hall" class="col-md-5 col-form-label text-md-right">{{ ('廳別') }}</label>
+                            <label for="hall" class="col-md-6 col-form-label text-md-right">{{ ('廳別') }}</label>
                             <div id="hall" name="hall" value="{{ $Data['hall'] }}" class="col-md-4 col-form-label text-md-left">
                                 {{$Data['hall'] . ('廳')}}
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="time" class="col-md-5 col-form-label text-md-right"><i class="far fa-clock"></i></label>
-                                <div  id="time" name="time" value="{{$Data['time']}}" class="col-md-1 col-form-label">
+                            <label for="time" class="col-md-6 col-form-label text-md-right"><i class="far fa-clock"></i></label>
+                                <div id="time" name="time" value="{{$Data['time']}}" class="col-md-1 col-form-label">
                                    {{$Data['time']}}
                                 </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="ticket" class="col-md-5 col-form-label text-md-right">{{ ('數量') }}</label>
+                            <label for="ticket" class="col-md-6 col-form-label text-md-right">{{ ('數量') }}</label>
                                 <div id="ticket" name="ticket" value="{{ $Data['ticket'] }}" class="col-md-1 col-form-label">
                                     {{$Data['ticket']}}
                                 </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="selectseat" class="col-md-5 col-form-label text-md-right">{{ ('已選座位') }}</label>
+                            <label for="selectseat" class="col-md-6 col-form-label text-md-right">{{ ('已選座位') }}</label>
                             <div class="col-md-4 col-form-label">
                                     <div class="selectseat">
                                         0
@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="seat" class="col-md-5 col-form-label text-md-right">{{ ('已選票數') }}</label>
+                            <label for="seat" class="col-md-6 col-form-label text-md-right">{{ ('已選票數') }}</label>
                             <div class="col-md-4 col-form-label">
                                     <div class="selectnumber">
                                         {{('0 張票')}}
@@ -105,7 +105,7 @@
                 </div>
             </div>
             <div class="form-group row mb-0">
-                <div class="col-md-6 offset-md-4">
+                <div class="col-md-6 offset-md-5">
                     <button type="submit" class="btn btn-primary" onclick="Order({{$Data['mid']}})">
                         {{ ('確定') }}
                     </button>
