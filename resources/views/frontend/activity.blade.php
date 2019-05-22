@@ -40,10 +40,6 @@
                                             <div style="color:red;font-weight: bold;">{{ ('已截止') }}</div>
                                         @else
                                             @if(isset($Voted))                                                    
-                                            @php
-                                            // dd($NowTime)
-                                            @endphp
-                                            
                                                 @if($Voted->contains('voteaid',$data['Aid']))
                                                     {{('已投票')}}
                                                 @else
@@ -68,6 +64,17 @@
                                             {{$data['votenumber']}}
                                         </a>
                                     </td>
+                                    @if($data['author'] == session('account'))
+                                        <td>
+                                            <form method="POST" action="{{ route('activity.destroy', ['Aid'=> $data['Aid']]) }}">
+                                                @csrf @method('delete')
+                                                <a href="/activity/update/{{$data['Aid']}}"  style="text-decoration:none;color:seashell">
+                                                    <button type="button" class="btn btn-primary">{{ ('修改') }}</button>
+                                                </a>
+                                                <button type="submit" class="btn btn-primary" onclick="return confirm('是否確認刪除這筆資料');">{{ ('刪除') }}</button>
+                                            </form>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         @endif
@@ -78,7 +85,7 @@
             <div class="form-group row mb-0">
                 <div class="col-md-6 offset-md-4">
                     @if(session('account'))
-                    <a href="/activity/activityadd"  style="text-decoration:none;color:seashell">
+                    <a href="/activity/add"  style="text-decoration:none;color:seashell">
                         <button type="button" class="btn btn-primary">{{ ('新增活動') }}</button>
                     </a>
                     @else

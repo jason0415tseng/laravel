@@ -5,18 +5,18 @@
 
 
 <div class="container">
-    <h1>{{ ('Activity Add') }}</h1>
+    <h1>{{ ('Activity Update') }}</h1>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ ('新增活動') }}</div>
+                <div class="card-header">{{ ('修改活動') }}</div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('activity.create') }}">
+                    <form method="POST" action="{{ route('activity.update', ['Aid' => $Activity['aid']]) }}">
                         @csrf
                         <div class="form-group row">
                             <label for="title" class="col-md-4 col-form-label text-md-right">{{ ('標題') }}</label>
                             <div class="col-md-4">
-                                <input id="title" type="text" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" name="title" value="{{ old('title') }}" placeholder="標題" required autofocus>                            
+                                <input id="title" type="text" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" name="title" value="{{ $Activity['title'] ? $Activity['title'] : old('title') }}" placeholder="標題" required autofocus>                            
                                     @if ($errors->has('title'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('title') }}</strong>
@@ -24,25 +24,36 @@
                                     @endif                          
                             </div>    
                         </div>
-
-                        <div id="activitylist" class="form-group row">
+                        
+                        <div id="activityupdate" class="form-group row">
                             <label for="content" class="col-md-4 col-form-label text-md-right">{{ ('選項內容') }}</label>
-                            <div class="col-md-4 col-form-label">
-                                <input type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required>
-                            </div>   
-                            <button class="btn btn-primary" onclick="activityadd()">{{('增加選項')}}</button>
-                            <div class="col-md-4 col-form-label" style="margin-left: 239px;">
-                                <input type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required>
+                            <div style="width:320px;">
+                                @foreach ($Content as $key =>$content)
+                                    <div class="col-md-9 col-form-label" id="number">
+                                        <input type="text" name="acid[]" value="{{$content['acid']}}" style="display:none;">
+                                        <input type="text" class="form-control" id="content" data-type='Sold' name="content[{{$content['acid']}}]" value="{{$content['content']}}" placeholder="選項內容" required>
+                                        @if($key == 3 || $key == 4)
+                                            <a href="#" class="remove">移除</a>
+                                        @endif
+                                    </div>   
+                                @endforeach
+                                <input type="text" class="form-control{{ $errors->has('content') ? ' is-invalid' : '' }}" style="display:none;">
+                                    @if ($errors->has('content'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('content') }}</strong>
+                                        </span>
+                                    @endif  
                             </div>
-                            <div class="col-md-4 col-form-label" style="margin-left: 239px;">
-                                <input type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required>
-                            </div> 
+                                @if(count($Content) == 5)
+                                @else
+                                    <button class="btn btn-primary" onclick="activityupdateadd()" style="height:55px;margin-left:-80px;">{{('增加選項')}}</button>
+                                @endif
                         </div>
 
                         <div class="form-group row">
                             <label for="startdate" class="col-md-4 col-form-label text-md-right">{{ ('開始時間') }}</label>
                             <div class="col-md-4">
-                                <input id="startdate" type="date" class="form-control{{ $errors->has('startdate') ? ' is-invalid' : '' }}" name="startdate" value="{{ old('startdate') }}" required>                            
+                            <input id="startdate" type="date" class="form-control{{ $errors->has('startdate') ? ' is-invalid' : '' }}" name="startdate" min="{{$Activity['startdate']}}" value="{{ $Activity['startdate'] ? $Activity['startdate'] : old('startdate') }}" required>                            
                                     @if ($errors->has('startdate'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('startdate') }}</strong>
@@ -54,7 +65,7 @@
                         <div class="form-group row">
                             <label for="enddate" class="col-md-4 col-form-label text-md-right">{{ ('結束時間') }}</label>
                             <div class="col-md-4">
-                                <input id="enddate" type="date" class="form-control{{ $errors->has('enddate') ? ' is-invalid' : '' }}" name="enddate" value="{{ old('enddate') }}" required>                            
+                                <input id="enddate" type="date" class="form-control{{ $errors->has('enddate') ? ' is-invalid' : '' }}" min="{{$Activity['startdate']}}" name="enddate" value="{{ $Activity['enddate']? $Activity['enddate'] : old('enddate') }}" required>                            
                                     @if ($errors->has('enddate'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('enddate') }}</strong>
@@ -79,18 +90,4 @@
         </div>
     </div>
 </div>
-<!-- JavaScript part -->
-
-<script>
-
-
-$(function (){
-    var date = new Date();
-    var nowYear = date.getFullYear();
-    var nowMonth = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1));
-    var nowDay = date.getDate() < 10 ? ('0'+date.getDate()) : date.getDate();
-    document.getElementById('startdate').min = nowYear + '-' + nowMonth + '-' + nowDay;
-    document.getElementById('enddate').min = nowYear + '-' + nowMonth + '-' + nowDay;
-});
-</script>
 @endsection
