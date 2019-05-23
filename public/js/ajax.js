@@ -49,21 +49,20 @@ var SeatData = [];
 var SeatText = [];
 var SeatLimit = $('#ticket').attr('value');
 
-function seat(_this) {
-    var SelectSeat = _this;
-    var Seat = $(SelectSeat).attr('value');
-    var Type = $(SelectSeat).data('type');
-    var Row = $(SelectSeat).data('row');
-    var Col = $(SelectSeat).data('col');
+function SelectSeat(_this) {
+    var Seat = $(_this).attr('value');
+    var Type = $(_this).data('type');
+    var Row = $(_this).data('row');
+    var Col = $(_this).data('col');
 
     if (Type == 'Sold') {
         alert("提醒您, 此座位不可選");
     } else {
-        if (!($(SelectSeat).hasClass('P'))) {
+        if (!($(_this).hasClass('P'))) {
             if (Selected == SeatLimit) {
                 alert("已達可選上限");
             } else {
-                $(SelectSeat).addClass('P');
+                $(_this).addClass('P');
                 Selected++;
                 Count++;
 
@@ -72,7 +71,7 @@ function seat(_this) {
                 SeatData.push(Seat);
             }
         } else {
-            $(SelectSeat).removeClass('P');
+            $(_this).removeClass('P');
             Count = 0;
             Selected--;
 
@@ -88,8 +87,9 @@ function seat(_this) {
     return SeatData, Selected;
 }
 
-function Order(id) {
-    var ticket = $('#ticket').attr('value');
+var ticket = $('#ticket').attr('value');
+
+function CreateOrder(id) {
     if (Selected == 0) {
         alert("尚未選擇任何座位");
         return false;

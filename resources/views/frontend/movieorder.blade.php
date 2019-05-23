@@ -11,28 +11,26 @@
             <div class="card">
                 <div class="card-header">{{ ('訂購') }}</div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('movie.orderselectseat' , ['Mid'=> $MovieData['Mid']]) }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('movie.orderselectseat' , ['Mid'=> $movieData['Mid']]) }}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ ('票名') }}</label>
                             <div class="col-md-4 col-form-label text-md-left">
-                                {{$MovieData['Name']}}
+                                {{$movieData['Name']}}
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('廳別') }}</label>
                             <div class="col-md-4 col-form-label text-md-left">
-                                <input id="hall" type="text" name="hall" value="{{ $MovieData['Hall'] }}" required style="display:none">
-                                    {{$MovieData['Hall'] . ('廳')}}
+                                <input id="hall" type="text" name="hall" value="{{ $movieData['Hall'] }}" required style="display:none">
+                                    {{$movieData['Hall'] . ('廳')}}
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="date" class="col-md-4 col-form-label text-md-right">{{ ('場次') }}</label>
                             <div class="col-md-4">
                                 <select id="time" name="time" class="form-control{{ $errors->has('time') ? ' is-invalid' : '' }}" style="text-align: center;">
-                                    @foreach ($TimeSeat as $timeseat)
+                                    @foreach ($timeSeat as $timeseat)
                                         <option value="{{$timeseat['Time']}}">{{$timeseat['Time'] . ('  剩餘座位：'). $timeseat['Seat'] }}</option>
                                     @endforeach
                                 </select>
@@ -43,7 +41,6 @@
                                 @endif
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="ticket" class="col-md-4 col-form-label text-md-right">{{ ('數量') }}</label>
                             <div class="col-md-4">
@@ -55,7 +52,6 @@
                                     @endif
                             </div>
                         </div>
-
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

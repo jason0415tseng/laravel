@@ -113,6 +113,58 @@
     background-color: #e60010;
 }
 
+.movie_name {
+    font-size: 18px;
+    clear: left;
+    padding-top: 10px;
+    font-weight: 400;
+}
+
+.movie_name_en {
+    font-size: 18px;
+    clear: left;
+    font-weight: 400;
+    color: #888;
+}
+
+.movie_info .title {
+    font-size: 30px;
+    line-height: 30px;
+}
+
+.movie_info .title_en {
+    font-size: 22px;
+    line-height: 22px;
+    color: rgb(136, 136, 136);
+    padding-top: 10px;
+}
+
+.movie_info p {
+    color: rgb(119, 119, 119);
+    font-size: 18px;
+    border-radius: 30px;
+    margin-bottom: 10px;
+    list-style-type: none;
+}
+
+.movie_info_item {
+    clear: both;
+    padding-left: 0px;
+}
+
+.movie_info_item li {
+    color: rgb(119, 119, 119);
+    font-size: 18px;
+    border-radius: 30px;
+    margin-bottom: 10px;
+    list-style-type: none;
+}
+
+.movie_info_item li b {
+    display: block;
+    color: rgb(121, 182, 236);
+}
+
 .Seating-Area {
     padding: 0px;
     margin: 0px;
