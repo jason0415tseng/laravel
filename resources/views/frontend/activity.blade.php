@@ -9,8 +9,8 @@
         <div class="col-md-8">
             <div class="form-group row">
                 <div class="col-md-12">
-                    <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border="1">
-                        @if(count($Data)<1)
+                    <table style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border="1">
+                        @if(count($activityData)<1)
                             <h3>{{('無任何活動')}}</h3>
                         @else
                             <tr>
@@ -21,7 +21,7 @@
                                 <td>目前狀態</td>
                                 <td>結果</td>
                             </tr>
-                            @foreach ($Data as $data)
+                            @foreach ($activityData as $data)
                                 <tr>
                                     <td>
                                         {{$data['title']}}
@@ -36,20 +36,20 @@
                                         {{$data['enddate']}}
                                     </td>
                                     <td>
-                                        @if($NowTime > $data['enddate'])
+                                        @if($nowTime > $data['enddate'])
                                             <div style="color:red;font-weight: bold;">{{ ('已截止') }}</div>
                                         @else
-                                            @if(isset($Voted))                                                    
-                                                @if($Voted->contains('voteaid',$data['Aid']))
+                                            @if(isset($voted))
+                                                @if($voted->contains('voteaid',$data['aid']))
                                                     {{('已投票')}}
                                                 @else
-                                                    <a href="/activity/detail/{{$data['Aid']}}">
+                                                    <a href="/activity/detail/{{$data['aid']}}">
                                                         {{('參加投票')}}
                                                     </a>
                                                 @endif
                                             @else
                                                 @if(session('account'))
-                                                    <a href="/activity/detail/{{$data['Aid']}}">
+                                                    <a href="/activity/detail/{{$data['aid']}}">
                                                         {{('參加投票')}}
                                                     </a>
                                                 @else
@@ -57,18 +57,17 @@
                                                 @endif
                                             @endif
                                         @endif
-                                        
                                     </td>
                                     <td>
-                                        <a href="/activity/voteresult/{{$data['Aid']}}">
+                                        <a href="/activity/voteresult/{{$data['aid']}}">
                                             {{$data['votenumber']}}
                                         </a>
                                     </td>
                                     @if($data['author'] == session('account'))
                                         <td>
-                                            <form method="POST" action="{{ route('activity.destroy', ['Aid'=> $data['Aid']]) }}">
+                                            <form method="POST" action="{{ route('activity.destroy', ['aid'=> $data['aid']]) }}">
                                                 @csrf @method('delete')
-                                                <a href="/activity/update/{{$data['Aid']}}"  style="text-decoration:none;color:seashell">
+                                                <a href="/activity/update/{{$data['aid']}}"  style="text-decoration:none;color:seashell">
                                                     <button type="button" class="btn btn-primary">{{ ('修改') }}</button>
                                                 </a>
                                                 <button type="submit" class="btn btn-primary" onclick="return confirm('是否確認刪除這筆資料');">{{ ('刪除') }}</button>
@@ -81,16 +80,15 @@
                     </table>
                 </div>
             </div>
-
             <div class="form-group row mb-0">
                 <div class="col-md-6 offset-md-4">
                     @if(session('account'))
-                    <a href="/activity/add"  style="text-decoration:none;color:seashell">
-                        <button type="button" class="btn btn-primary">{{ ('新增活動') }}</button>
-                    </a>
+                        <a href="/activity/add" style="text-decoration:none;color:seashell">
+                            <button type="button" class="btn btn-primary">{{ ('新增活動') }}</button>
+                        </a>
                     @else
                     @endif
-                    <a href="/"  style="text-decoration:none;color:seashell">
+                    <a href="/" style="text-decoration:none;color:seashell">
                         <button type="button" class="btn btn-primary">{{ ('上一頁') }}</button>
                     </a>
                 </div>
@@ -98,39 +96,4 @@
         </div>
     </div>
 </div>
-<!-- JavaScript part -->
-
-<script>
-
-function readURL(input){
-
-  if(input.files && input.files[0]){
-
-    var imageTagID = input.getAttribute("targetID");
-
-    var reader = new FileReader();
-
-    reader.onload = function (e) {
-
-       var img = document.getElementById(imageTagID);
-
-        img.style.display="block";
-
-       img.setAttribute("src", e.target.result)
-
-    }
-
-    reader.readAsDataURL(input.files[0]);
-
-  }
-
-}
-$(function (){
-    var date = new Date();
-    var nowYear = date.getFullYear();
-    var nowMonth = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1));
-    var nowDay = date.getDate() < 10 ? ('0'+date.getDate()) : date.getDate();
-    document.getElementById('ondate').min = nowYear + '-' + nowMonth + '-' + nowDay;
-});
-</script>
 @endsection

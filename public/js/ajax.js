@@ -135,7 +135,7 @@ function Order(id) {
 }
 
 
-var max = 2; //maximum input boxes allowed
+var max = 3; //maximum input boxes allowed
 var wrapper = $("#activitylist"); //Fields wrapper
 var x = 1; //initlal text box count
 
@@ -150,31 +150,26 @@ function activityadd() {
 $(wrapper).on("click", ".remove_field", function() { //user click on remove text
     $(this).parent('div').remove();
     x--;
-    console.log(x);
 })
 
 
-var max = 2; //maximum input boxes allowed
+var max = 3; //maximum input boxes allowed
 var activityupdate = $("#activityupdate"); //Fields wrapper
 var count = $("#activityupdate #number").length;
 var i = 1; //initlal text box count
 
-function activityupdateadd() {
-    if (count == 3) {
+function ActivityUpdateAdd() {
+    if (count == 2) {
         if (i <= max) { //max input box allowed
             i++; //text box increment
-            console.log(x);
-            console.log((count));
-            $(activityupdate).append('<div class="col-md-4 col-form-label" style="margin-left: 239px;"><input id="content" type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required><a href="#" class="remove">移除</a></div>'); //add input box
+            $(activityupdate).append('<div class="col-md-4 col-form-label" style="margin-left: 239px;"><input id="content" type="text" class="form-control" name="create[]" value="" placeholder="選項內容" required><a href="#" class="remove">移除</a></div>'); //add input box
         } else {
             alert('已達新增上限');
         }
     } else {
-        if (i <= 1) { //max input box allowed
+        if (i <= 2) { //max input box allowed
             i++; //text box increment
-            console.log(x);
-            console.log((count));
-            $(activityupdate).append('<div class="col-md-4 col-form-label" style="margin-left: 239px;"><input id="content" type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required><a href="#" class="remove">移除</a></div>'); //add input box
+            $(activityupdate).append('<div class="col-md-4 col-form-label" style="margin-left: 239px;"><input id="content" type="text" class="form-control" name="create[]" value="" placeholder="選項內容" required><a href="#" class="remove">移除</a></div>'); //add input box
         } else {
             alert('已達新增上限');
         }

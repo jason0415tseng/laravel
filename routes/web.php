@@ -90,7 +90,7 @@ Route::post('/movie/order/{id}', 'frontend\MovieController@createOrder')->middle
 Route::get('/movietime', 'frontend\MovieTimeController@index')->name('movietime');
 
 //活動
-Route::get('/activity', 'frontend\ActivityController@index')->name('activity');
+Route::get('/activity', 'frontend\ActivityController@showActivityList')->name('activity');
 
 //活動新增介面
 Route::get('/activity/add', 'frontend\ActivityController@showActivityAdd');
