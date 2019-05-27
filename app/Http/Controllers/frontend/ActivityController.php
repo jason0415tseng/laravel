@@ -132,7 +132,11 @@ class ActivityController extends Controller
             ->where('aid', $id)
             ->get()->toArray();
 
-        return view('frontend.activitydetail', ['activityTitle' => $activityTitle, 'activityContent' => $activityContent]);
+        if (!$activityTitle) {
+            return redirect('/activity');
+        } else {
+            return view('frontend.activitydetail', ['activityTitle' => $activityTitle, 'activityContent' => $activityContent]);
+        }
     }
 
     /**
@@ -219,7 +223,11 @@ class ActivityController extends Controller
             $activityContentData[$key]['rate'] = (round($value["votenumber"] / $total, 2) * 100);
         }
 
-        return view('frontend.activityresult', ['activityTitle' => $activityTitle, 'activityContentData' => $activityContentData]);
+        if (!$activityTitle) {
+            return redirect('/activity');
+        } else {
+            return view('frontend.activityresult', ['activityTitle' => $activityTitle, 'activityContentData' => $activityContentData]);
+        }
     }
 
     /**
@@ -239,7 +247,11 @@ class ActivityController extends Controller
             ->where('aid', $id)
             ->get()->toArray();
 
-        return view('frontend.activityeditor', ['activity' => $activity, 'content' => $content]);
+        if (!$activity) {
+            return redirect('/activity');
+        } else {
+            return view('frontend.activityeditor', ['activity' => $activity, 'content' => $content]);
+        }
     }
 
     /**
