@@ -16,30 +16,31 @@ class ActivityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function showActivityList()
     {
         //列出資料
-        $Data = activity::select('Aid', 'title', 'author', 'startdate', 'enddate')
+        $activityData = activity::select('aid', 'title', 'author', 'startdate', 'enddate')
             ->get()->toArray();
 
         //是否有投票
-        $Voted = vote::select('voteaid', 'voteaccount')
+        $voted = vote::select('voteaid', 'voteaccount')
             ->where('voteaccount', session('account'))
             ->get();
 
-        //日期
-        $Time = time();
-        $NowTime = date('Y-m-d', $Time);
+        //現在日期
+        $time = time();
+        $nowTime = date('Y-m-d', $time);
 
-        foreach ($Data as $key => $value) {
-            $Data[$key]['votenumber'] = activitycontent::where('Aid', $value['Aid'])
+        //投票總數
+        foreach ($activityData as $key => $value) {
+            $activityData[$key]['votenumber'] = activitycontent::where('aid', $value['aid'])
                 ->sum('votenumber');
         }
 
-        if ($Voted) {
-            return view('frontend.activity', ['Data' => $Data, 'Voted' => $Voted, 'NowTime' => $NowTime]);
+        if ($voted) {
+            return view('frontend.activity', ['activityData' => $activityData, 'voted' => $voted, 'nowTime' => $nowTime]);
         } else {
-            return view('frontend.activity', ['Data' => $Data, 'NowTime' => $NowTime]);
+            return view('frontend.activity', ['activityData' => $activityData, 'nowTime' => $nowTime]);
         }
     }
 
@@ -62,50 +63,51 @@ class ActivityController extends Controller
     public function createActivityAdd(Request $request)
     {
 
-        $Errors = new MessageBag;
+        $errors = new MessageBag;
 
-        $Data = $request->all();
-
-        $Account = session('account');
+        $title = $request->input('title');
+        $content = $request->input('content');
+        $startdate = $request->input('startdate');
+        $enddate = $request->input('enddate');
 
         //判斷標題
-        $Title = activity::select('*')
-            ->where('title', $Data['title'])
+        $checkTitle = activity::select('*')
+            ->where('title', $title)
             ->first();
 
-        if ($Title) {
-            $Errors->add('title', '已存在相同的活動囉!');
-            return back()->withErrors($Errors)->withInput();
+        if ($checkTitle) {
+            $errors->add('title', '已存在相同的活動囉!');
+            return back()->withErrors($errors)->withInput();
         }
 
         //新增
-        $Activity = new Activity;
-        $Activity->title = $Data['title'];
-        $Activity->author = $Account;
-        $Activity->startdate = $Data['startdate'];
-        $Activity->enddate = $Data['enddate'];
+        $activity = new Activity;
+        $activity->title = $title;
+        $activity->author = session('account');
+        $activity->startdate = $startdate;
+        $activity->enddate = $enddate;
 
-        $Activity->save();
+        $activity->save();
 
         //判斷是否新增成功
-        if ($Activity->save() === false) {
+        if (!$activity->save()) {
             //失敗
-            $Errors->add('title', '新增失敗');
-            return back()->withErrors($Errors)->withInput();
+            $errors->add('title', '新增失敗');
+            return back()->withErrors($errors)->withInput();
         } else {
             //成功後撈取id
-            $Aid = activity::select('aid')
-                ->where('title', $Data['title'])
-                ->where('author', $Account)
+            $titleAid = activity::select('aid')
+                ->where('title', $title)
+                ->where('author', session('account'))
                 ->first();
 
-            foreach ($Data['content'] as $content) {
+            foreach ($content as $content) {
                 //新增
-                $Activitycontent = new Activitycontent;
-                $Activitycontent->aid = $Aid->aid;
-                $Activitycontent->content = $content;
+                $activitycontent = new Activitycontent;
+                $activitycontent->aid = $titleAid['aid'];
+                $activitycontent->content = $content;
 
-                $Activitycontent->save();
+                $activitycontent->save();
             }
 
             return redirect('/activity');
@@ -120,15 +122,21 @@ class ActivityController extends Controller
      */
     public function showActivityDetail($id)
     {
-        $Title = activity::select('title', 'aid')
+        //活動標題
+        $activityTitle = activity::select('title', 'aid')
             ->where('aid', $id)
             ->first();
 
-        $Data = activitycontent::select('acid', 'content')
+        //選項內容
+        $activityContent = activitycontent::select('acid', 'content')
             ->where('aid', $id)
             ->get()->toArray();
 
-        return view('frontend.activitydetail', ['Data' => $Data, 'Title' => $Title->makeHidden('attribute')->toArray()]);
+        if (!$activityTitle) {
+            return redirect('/activity');
+        } else {
+            return view('frontend.activitydetail', ['activityTitle' => $activityTitle, 'activityContent' => $activityContent]);
+        }
     }
 
     /**
@@ -140,37 +148,49 @@ class ActivityController extends Controller
      */
     public function createVote(Request $request, $id)
     {
-        $Errors = new MessageBag;
+        $errors = new MessageBag;
 
-        $Data = $request->all();
-
-        $Account = session('account');
-
-        $Data = explode(',', $Data['acid']);
-
-        $Content = activitycontent::select('*')
-            ->where('acid', $Data[0])
-            ->where('content', $Data[1])
-            ->first();
+        //傳送資料
+        $requestData = explode(',', $request->input('acid'));
 
         //判斷選項
-        if (!$Content) {
-            $Errors->add('content', '選項錯誤');
-            return back()->withErrors($Errors)->withInput();
+        $checkContent = activitycontent::select('*')
+            ->where('acid', $requestData[0])
+            ->where('content', $requestData[1])
+            ->first();
+
+        if (!$checkContent) {
+            $errors->add('content', '選項錯誤');
+            return back()->withErrors($errors)->withInput();
+        }
+
+        //更新投票數
+        $updateVote = activitycontent::where('acid', $requestData[0])
+            ->increment('votenumber', '1');
+
+        if (!$updateVote) {
+            $errors->add('content', '投票更新失敗，請重新投票');
+            return back()->withErrors($errors)->withInput();
         }
 
         //新增
-        $Vote = new vote;
-        $Vote->voteaid = $id;
-        $Vote->voteacid = $Data[0];
-        $Vote->voteaccount = $Account;
-        $Vote->voteip = $request->getClientIp();
+        $vote = new vote;
+        $vote->voteaid = $id;
+        $vote->voteacid = $requestData[0];
+        $vote->voteaccount = session('account');
+        $vote->voteip = $request->getClientIp();
 
-        $Vote->save();
+        $vote->save();
 
-        //更新投票數
-        $UpdateVote = activitycontent::where('acid', $Data[0])
-            ->increment('votenumber', '1');
+        //判斷是否投票成功
+        if (!$vote->save()) {
+            //失敗把DB扣回來
+            activitycontent::where('acid', $requestData[0])
+                ->decrement('votenumber', '1');
+            //回傳錯誤
+            $errors->add('content', '投票失敗，請重新投票');
+            return back()->withErrors($errors)->withInput();
+        }
 
         return redirect('/activity');
     }
@@ -183,18 +203,31 @@ class ActivityController extends Controller
      */
     public function showVoteResult($id)
     {
-        $Title = activity::select('title', 'aid')
+        //活動標題
+        $activityTitle = activity::select('title', 'aid')
             ->where('Aid', $id)
             ->first();
 
-        $Data = activitycontent::select('acid', 'content', 'votenumber')
+        //活動選項&投票數
+        $activityContentData = activitycontent::select('acid', 'content', 'votenumber')
             ->where('Aid', $id)
             ->get()->toArray();
 
-        $Total = activitycontent::where('Aid', $id)
+        //總投票數
+        $total = activitycontent::where('Aid', $id)
             ->sum('votenumber');
 
-        return view('frontend.activityresult', ['Data' => $Data, 'Title' => $Title->makeHidden('attribute')->toArray(), 'Total' => $Total]);
+        if (($total == 0) ? $total =  1 : $total);
+
+        foreach ($activityContentData as $key => $value) {
+            $activityContentData[$key]['rate'] = (round($value["votenumber"] / $total, 2) * 100);
+        }
+
+        if (!$activityTitle) {
+            return redirect('/activity');
+        } else {
+            return view('frontend.activityresult', ['activityTitle' => $activityTitle, 'activityContentData' => $activityContentData]);
+        }
     }
 
     /**
@@ -204,15 +237,21 @@ class ActivityController extends Controller
      */
     public function showActivity($id)
     {
-        $Activity = activity::select('title', 'aid', 'startdate', 'enddate')
+        //活動詳細資料
+        $activity = activity::select('title', 'aid', 'startdate', 'enddate')
             ->where('aid', $id)
             ->first();
 
-        $Content = activitycontent::select('acid', 'content')
+        //選項資料
+        $content = activitycontent::select('acid', 'content')
             ->where('aid', $id)
             ->get()->toArray();
 
-        return view('frontend.activityeditor', ['Activity' => $Activity, 'Content' => $Content]);
+        if (!$activity) {
+            return redirect('/activity');
+        } else {
+            return view('frontend.activityeditor', ['activity' => $activity, 'content' => $content]);
+        }
     }
 
     /**
@@ -224,91 +263,104 @@ class ActivityController extends Controller
      */
     public function updateActivity(Request $request, $id)
     {
-        $Errors = new MessageBag;
+        $errors = new MessageBag;
+
+        $title = $request->input('title');
+        $content = $request->input('content');
+        $startdate = $request->input('startdate');
+        $enddate = $request->input('enddate');
 
         //判斷標題
-        $Title = activity::select('*')
-            ->where('title', $request->input('title'))
+        $checkTitle = activity::select('*')
+            ->where('title', $title)
             ->where('aid', '<>', $id)
             ->first();
 
-        if ($Title) {
-            $Errors->add('title', '已存在相同的活動囉 !');
-            return back()->withErrors($Errors)->withInput();
+        if ($checkTitle) {
+            $errors->add('title', '已存在相同的活動囉 !');
+            return back()->withErrors($errors)->withInput();
         }
 
         //判斷選項
-        $Content = $request->input('content');
-        foreach ($Content as $content) {
-            if (!$content) {
-                $Errors->add('content', '選項內容請勿留空 !');
-                return back()->withErrors($Errors)->withInput();
+        foreach ($content as $contentData) {
+            if (!$contentData) {
+                $errors->add('content', '選項內容請勿留空 !');
+                return back()->withErrors($errors)->withInput();
             }
         }
 
         //判斷開始時間
-        $Activity = activity::select('title', 'aid', 'startdate', 'enddate')
+        $activityStartDate = activity::select('startdate')
             ->where('aid', $id)
             ->first();
 
-        if ($request->input('startdate') < $Activity['startdate']) {
-            $Errors->add('startdate', '開始時間請勿小於原本設定時間 !');
-            return back()->withErrors($Errors)->withInput();
+        if ($startdate < $activityStartDate['startdate']) {
+            $errors->add('startdate', '開始時間請勿小於原本設定時間 !');
+            return back()->withErrors($errors)->withInput();
         }
 
         //判斷結束時間
-        if ($request->input('enddate') < $request->input('startdate')) {
-            $Errors->add('enddate', '結束時間請勿小於開始時間 !');
-            return back()->withErrors($Errors)->withInput();
+        if ($enddate < $startdate) {
+            $errors->add('enddate', '結束時間請勿小於開始時間 !');
+            return back()->withErrors($errors)->withInput();
         }
 
         //刪除選項
         if ($request->input('delete')) {
             foreach ($request->input('delete') as $delete) {
-                $Data = activitycontent::select('*')
+                //判斷是否有該選項
+                $activityContentData = activitycontent::select('*')
                     ->where('acid', $delete)
                     ->where('aid', $id)
                     ->first();
-                if (!$Data) {
-                    $Errors->add('content', '選項有誤 !');
-                    return back()->withErrors($Errors)->withInput();
+                if (!$activityContentData) {
+                    $errors->add('content', '選項有誤 !');
+                    return back()->withErrors($errors)->withInput();
                 } else {
+                    //刪除選項
                     activitycontent::where('acid', $delete)
                         ->delete();
+                    //刪除投票
                     vote::where('voteacid', $delete)
                         ->delete();
                 }
             }
         }
 
+        //新增選項
+        if ($request->input('create')) {
+            foreach ($request->input('create') as $create) {
+                if (!$create) {
+                    $errors->add('content', '選項內容請勿留空 !');
+                    return back()->withErrors($errors)->withInput();
+                } else {
+                    //新增選項
+                    $activitycontent = new Activitycontent;
+                    $activitycontent->aid = $id;
+                    $activitycontent->content = $create;
+
+                    $activitycontent->save();
+                }
+            }
+        }
+
         //更新活動
-        $Result = activity::where('Aid', $id)
+        $updateActivity = activity::where('aid', $id)
             ->update([
                 'title' => $request->input('title'),
                 'startdate' => $request->input('startdate'),
                 'enddate' => $request->input('enddate'),
             ]);
 
-        if ($Result == false) {
-            $Errors->add('title', '更新失敗 !');
-            return back()->withErrors($Errors)->withInput();
+        if (!$updateActivity) {
+            $errors->add('title', '更新失敗 !');
+            return back()->withErrors($errors)->withInput();
         } else {
-            foreach ($Content as $key => $value) {
+            foreach ($content as $key => $value) {
                 //更新選項
-                $ContentResult = activitycontent::where('ACid', $key)
-                    ->where('Aid', $id)
-                    ->update([
-                        'content' => $value,
-                    ]);
-
-                if ($ContentResult == false) {
-                    //新增
-                    $Activitycontent = new Activitycontent;
-                    $Activitycontent->aid = $id;
-                    $Activitycontent->content = $value;
-
-                    $Activitycontent->save();
-                }
+                activitycontent::where('acid', $key)
+                    ->where('aid', $id)
+                    ->update(['content' => $value]);
             }
         }
 
@@ -323,18 +375,19 @@ class ActivityController extends Controller
      */
     public function destroyActivity($id)
     {
-        $Activity = activity::select('*')
+        $activity = activity::select('*')
             ->where('Aid', $id);
 
-        $ActivityContent = activitycontent::select('*')
+        $activityContent = activitycontent::select('*')
             ->where('Aid', $id);
 
-        $Vote = vote::select('*')
+        $vote = vote::select('*')
             ->where('VoteAid', $id);
 
-        $Activity->delete();
-        $ActivityContent->delete();
-        $Vote->delete();
+        //刪除活動&選項&投票
+        $activity->delete();
+        $activityContent->delete();
+        $vote->delete();
 
         return redirect('/activity');
     }

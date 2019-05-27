@@ -219,3 +219,12 @@
     border-style: solid;
     border-width: 1px;
 }
+
+
+/* activity */
+
+.line {
+    display: inline-block;
+    height: 25px;
+    background: grey;
+}

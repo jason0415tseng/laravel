@@ -16,53 +16,46 @@
                         <div class="form-group row">
                             <label for="title" class="col-md-4 col-form-label text-md-right">{{ ('標題') }}</label>
                             <div class="col-md-4">
-                                <input id="title" type="text" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" name="title" value="{{ old('title') }}" placeholder="標題" required autofocus>                            
+                                <input id="title" type="text" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" name="title" value="{{ old('title') }}" placeholder="標題" required autofocus>
                                     @if ($errors->has('title'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('title') }}</strong>
                                         </span>
-                                    @endif                          
-                            </div>    
+                                    @endif
+                            </div>
                         </div>
-
                         <div id="activitylist" class="form-group row">
                             <label for="content" class="col-md-4 col-form-label text-md-right">{{ ('選項內容') }}</label>
                             <div class="col-md-4 col-form-label">
                                 <input type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required>
-                            </div>   
+                            </div>
                             <button class="btn btn-primary" onclick="activityadd()">{{('增加選項')}}</button>
                             <div class="col-md-4 col-form-label" style="margin-left: 239px;">
                                 <input type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required>
                             </div>
-                            <div class="col-md-4 col-form-label" style="margin-left: 239px;">
-                                <input type="text" class="form-control" name="content[]" value="" placeholder="選項內容" required>
-                            </div> 
                         </div>
-
                         <div class="form-group row">
                             <label for="startdate" class="col-md-4 col-form-label text-md-right">{{ ('開始時間') }}</label>
                             <div class="col-md-4">
-                                <input id="startdate" type="date" class="form-control{{ $errors->has('startdate') ? ' is-invalid' : '' }}" name="startdate" value="{{ old('startdate') }}" required>                            
+                                <input id="startdate" type="date" class="form-control{{ $errors->has('startdate') ? ' is-invalid' : '' }}" name="startdate" value="{{ old('startdate') }}" required>
                                     @if ($errors->has('startdate'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('startdate') }}</strong>
                                         </span>
-                                    @endif                          
-                            </div>    
+                                    @endif
+                            </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="enddate" class="col-md-4 col-form-label text-md-right">{{ ('結束時間') }}</label>
                             <div class="col-md-4">
-                                <input id="enddate" type="date" class="form-control{{ $errors->has('enddate') ? ' is-invalid' : '' }}" name="enddate" value="{{ old('enddate') }}" required>                            
+                                <input id="enddate" type="date" class="form-control{{ $errors->has('enddate') ? ' is-invalid' : '' }}" name="enddate" value="{{ old('enddate') }}" required>
                                     @if ($errors->has('enddate'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('enddate') }}</strong>
                                         </span>
-                                    @endif                          
-                            </div>    
+                                    @endif
+                            </div>
                         </div>
-                        
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
