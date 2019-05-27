@@ -16,108 +16,83 @@ class ForgotPasswordController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function showForgotForm()
     {
         //
         return view('frontend.forgot');
     }
 
     /**
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getResetAccount(Request $request)
+    {
+        $errors = new MessageBag;
+        $requestData = $request->only('account', 'name');
+        $userData = forgot::select('uid', 'account', 'name', 'freeze')
+            ->where('account', $requestData['account'])
+            ->where('name', $requestData['name'])
+            ->first();
+
+        if (!$userData) {
+            return back()->withErrors($errors->add('name', '查無帳號或名稱'))->withInput();
+        } else {
+            if (($userData['freeze']) == 'N') {
+                return back()->withErrors($errors->add('name', '此帳號目前凍結中'))->withInput();
+            } else {
+                return redirect('/password/reset')->with('userData', $userData->makeHidden('attribute')->toArray());
+            }
+        }
+    }
+
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function resetindex()
+    public function showResetForm()
     {
         //
         return view('frontend.reset');
     }
 
     /**
-     *
-     * @param  \Illuminate\Http\Request  $Request
-     * @return \Illuminate\Http\Response
-     */
-    public function resetaccount(Request $Request)
-    {
-        $Errors = new MessageBag;
-        $Data = $Request->only('account','name');
-        $User = forgot::
-                    select('uid','account','name','freeze')
-                    ->where('account',$Data['account'])
-                    ->where('name', $Data['name'])
-                    ->first();
-        
-        if (!$User) {
-            return back()->withErrors($Errors->add('name','查無帳號或名稱'))->withInput();
-        } else {
-            if(($User->freeze)== 'N'){
-                return back()->withErrors($Errors->add('name', '此帳號目前凍結中'))->withInput();
-            }else{
-                return redirect('/password/reset')->with('User', $User->makeHidden('attribute')->toArray());
-            }
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $Request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function reset(Request $Request)
+    public function updateAccountPassword(Request $request)
     {
-        //
-        $Data = $Request->only('uid','account','password', 'password_confirmation');
+        $requestData = $request->only('uid', 'account', 'password', 'password_confirmation');
 
         //原生檢查的方式 == S ==
-        $Auth = new Auth;
+        $auth = new Auth;
 
-        $Validator = Validator::make($Data, $Auth->forgotrules($Data), $Auth->messages());
+        $validator = Validator::make($requestData, $auth->forgotrules($requestData), $auth->messages());
 
-        if ($Validator->fails()) {
+        if ($validator->fails()) {
             return redirect('/password/reset')
-                ->withErrors($Validator)
+                ->withErrors($validator)
                 ->withInput();
         }
         //原生檢查的方式 == E ==
 
-        $Password = base64_encode($Data['password']);
+        $password = base64_encode($requestData['password']);
 
-        $Result = forgot::
-                where('uid', $Data['uid'])
-                    ->update(['password' => $Password]);
+        forgot::where('uid', $requestData['uid'])
+            ->update(['password' => $password]);
 
         //修改完登入
-        $User = forgot::
-                select('account','level')
-                    ->where('account', $Data['account'])
-                    ->where('password', $Password )
-                    ->first();
+        $userData = forgot::select('account', 'level')
+            ->where('account', $requestData['account'])
+            ->where('password', $password)
+            ->first();
 
-        $Request->session()->put(['account' => $User['account'], 'level' => $User['level']]);
+        $request->session()->put(['account' => $userData['account'], 'level' => $userData['level']]);
 
         return redirect('/success')->with([
             //跳轉資訊
@@ -129,16 +104,5 @@ class ForgotPasswordController extends Controller
             //跳轉等待時間（s）
             'JumpTime' => 3,
         ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

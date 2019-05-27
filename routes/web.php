@@ -11,65 +11,47 @@
 |
 */
 
-// use App\News as NewsModel;
-use App\News;
-use App\Http\Middleware\CheckData;
-
-
-
-//把model寫在檔案最上面，使用use來載入User的model
-//在function中就只要寫User就可以了，是不是方便很多
-// use App\User
-
-
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-
-Route::get('/', 'NewsController@hello');
-
-Auth::routes();
+//首頁
+Route::get('/', 'HelloController@index');
 
 //登入介面
-Route::get('/login', 'backend\LoginController@index')->middleware('CheckLogin')->name('login');
+Route::get('/login', 'frontend\LoginController@showLoginForm')->middleware('CheckLogin')->name('login');
 
 //登入
-Route::post('/login', 'backend\LoginController@login')->middleware('CheckData');
+Route::post('/login', 'frontend\LoginController@login')->middleware('CheckData');
 
 //登入成功
-Route::get('/success', 'backend\LoginController@show')->middleware('CheckSession')->name('success');
+Route::get('/success', 'frontend\LoginController@showSuccessPage')->middleware('CheckSession')->name('success');
 
 //登出
-Route::get('/logout', 'backend\LoginController@logout')->name('logout');
+Route::get('/logout', 'frontend\LoginController@logout')->name('logout');
 
 //忘記密碼介面
-Route::get('/password/forgot', 'frontend\ForgotPasswordController@index')->name('password.forgot');
+Route::get('/password/forgot', 'frontend\ForgotPasswordController@showForgotForm')->name('password.forgot');
 
 //忘記密碼
-Route::post('/password/account', 'frontend\ForgotPasswordController@resetaccount')->name('password.account');
+Route::post('/password/account', 'frontend\ForgotPasswordController@getResetAccount')->name('password.account');
 
 //重設密碼介面
-Route::get('/password/reset', 'frontend\ForgotPasswordController@resetindex')->name('password.reset');
+Route::get('/password/reset', 'frontend\ForgotPasswordController@showResetForm')->name('password.reset');
 
 //重設密碼
-Route::post('/password/update', 'frontend\ForgotPasswordController@reset')->name('password.update');
+Route::post('/password/update', 'frontend\ForgotPasswordController@updateAccountPassword')->name('password.update');
 
 //註冊介面
-Route::get('/register', 'frontend\RegisterController@index')->middleware('CheckLogin')->name('register');
+Route::get('/register', 'frontend\RegisterController@showRegisterForm')->middleware('CheckLogin')->name('register');
 
 //註冊
-Route::post('/register', 'frontend\RegisterController@create');
+Route::post('/register', 'frontend\RegisterController@createUser');
 
 //會員中心
-Route::get('/memberCenter', 'frontend\MemberCenterController@index')->name('memberCenter');
+Route::get('/membercenter', 'frontend\MemberCenterController@index')->name('membercenter');
 
 //訂購資訊
 Route::get('/orderinfo', 'frontend\MemberCenterController@getOrderInfo')->name('orderinfo');
 
 //會員修改
-Route::post('/memberCenter/update', 'frontend\MemberCenterController@updateuser')->name('memberCenter.user');
+Route::post('/membercenter/update', 'frontend\MemberCenterController@updateUser')->name('membercenter.user');
 
 //電影介紹
 Route::get('/movie', 'frontend\MovieController@getMovieIndex')->name('movie');

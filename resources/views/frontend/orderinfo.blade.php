@@ -10,12 +10,10 @@
             <div class="card">
                 <div class="card-header">{{ ('訂購資訊') }}</div>
                     <div class="card-body">
-                    <form method="POST" action="{{ route('memberCenter.user') }}">
-                        @csrf
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border="1">
-                                    @if(count($Order)<1)
+                                    @if(!isset($orderList))
                                         <h3>{{('無訂購資料')}}</h3>
                                     @else
                                         <tr>
@@ -29,7 +27,7 @@
                                             <td>名稱</td>
                                             <td>訂購時間</td>
                                         </tr>
-                                        @foreach ($Order as $order)
+                                        @foreach ($orderList as $order)
                                             <tr>
                                                 <td>
                                                     {{$order['ordernumber']}}
@@ -64,17 +62,10 @@
                                 </table>
                             </div>
                         </div>
-                    </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script>
-    var msg = '{{ $errors->first('messages')}}';
-    if(msg){
-        alert(msg);
-    }
-</script>
 @endsection

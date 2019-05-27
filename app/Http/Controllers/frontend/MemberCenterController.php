@@ -17,13 +17,11 @@ class MemberCenterController extends Controller
      */
     public function index()
     {
-
-        //列出帳號
-        $User = login::select('uid', 'account', 'freeze', 'level', 'name', 'created_at', 'updated_at')
+        //帳號資料
+        $userData = login::select('uid', 'account', 'freeze', 'level', 'name', 'created_at')
             ->where('account', session('account'))
-            ->get();
-
-        return view('membercenter', ['User' => $User->makeHidden('attribute')->toArray()]);
+            ->first();
+        return view('frontend.membercenter', ['userData' => $userData]);
     }
 
     /**
@@ -33,110 +31,54 @@ class MemberCenterController extends Controller
      */
     public function getOrderInfo()
     {
-
         //列出帳號
-        $Order = order::select('movies.name', 'order.ordernumber', 'order.orderhall', 'order.ordertime', 'order.orderticket', 'order.orderseat', 'order.orderaccount', 'order.ordername', 'order.created_at', 'order.updated_at')
+        $orderList = order::select('movies.name', 'order.ordernumber', 'order.orderhall', 'order.ordertime', 'order.orderticket', 'order.orderseat', 'order.orderaccount', 'order.ordername', 'order.created_at', 'order.updated_at')
             ->join('movies', 'movies.mid', '=', 'order.ordermid')
             ->where('orderaccount', session('account'))
-            ->get();
-        $Order = $Order->toArray();
+            ->get()->toArray();
 
-        $Count = count($Order);
-
-        for ($i = 0; $i < $Count; $i++) {
-            $Order[$i]['orderseat'] .= ',';
-            $Order[$i]['orderseat'] = str_replace(['_', ','], ['排', '號</br>'], $Order[$i]['orderseat']);
+        foreach ($orderList as $key => $value) {
+            $orderList[$key]['orderseat'] .= ',';
+            $orderList[$key]['orderseat'] = str_replace(['_', ','], ['排', '號</br>'], $orderList[$key]['orderseat']);
         }
-
-        return view('frontend.orderinfo', ['Order' => $Order]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $Request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $Request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        // dd($orderList);
+        if (!$orderList) {
+            return view('frontend.orderinfo');
+        } else {
+            return view('frontend.orderinfo', ['orderList' => $orderList]);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $Request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function updateuser(Request $Request)
+    public function updateUser(Request $request)
     {
-        //
-        $Msg = new MessageBag;
+        $msg = new MessageBag;
 
-        $Data = $Request->only('uid', 'name');
+        $requestData = $request->only('uid', 'name');
 
-        //
         //檢查資料
-        $Error = $this->checkUser($Data);
+        $error = $this->CheckUser($requestData);
 
         //判斷是否有錯誤訊息
-        if ($Error->any()) {
-            return back()->withErrors($Error)->withInput();
+        if ($error->any()) {
+            return back()->withErrors($error)->withInput();
         }
 
-        $Reult = login::where('uid', $Data['uid'])
-            ->update(['name' => $Data['name']]);
+        $Reult = login::where('uid', $requestData['uid'])
+            ->update(['name' => $requestData['name']]);
 
         if (!$Reult) {
-            $Msg->add('messages', '修改失敗');
+            $msg->add('messages', '修改失敗');
         } else {
-            $Msg->add('messages', '修改成功');
+            $msg->add('messages', '修改成功');
         }
 
-        return redirect('memberCenter')->withErrors($Msg);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return redirect('membercenter')->withErrors($msg);
     }
 
     /**
@@ -145,24 +87,24 @@ class MemberCenterController extends Controller
      * @param  array  $Data
      * @return \Illuminate\Http\Response
      */
-    public function checkUser($Data)
+    public function CheckUser($Data)
     {
 
-        $Errors = new MessageBag;
+        $errors = new MessageBag;
 
-        $Name = $Data['name'];
+        $name = $Data['name'];
 
         //判斷名稱是否重複
-        $User = login::select('Name')
-            ->where('Name', $Name)
+        $userName = login::select('name')
+            ->where('name', $name)
             ->first();
 
         //帳號是否存在
-        if ($User['Name']) {
+        if ($userName['name']) {
 
-            $Errors->add('name', '名稱已存在');
+            $errors->add('name', '名稱已存在');
         }
 
-        return $Errors;
+        return $errors;
     }
 }
