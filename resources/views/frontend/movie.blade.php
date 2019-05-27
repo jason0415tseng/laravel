@@ -7,25 +7,25 @@
 <div class="container">
     <h1>{{ ('Movie List') }}</h1>
     <div class="row content-center">
-        @foreach ($Data as $data)
+        @foreach ($movieData as $moviedata)
             <ul class="nav nav-tabs" role="tablist">
                 <li data-movieid="196" class="film-item slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide16" style="width: 284px;margin-top: 15px;">
                     <div class="movie-move">
-                        <a href="/movie/detail/{{$data['Mid']}}" class="cover" tabindex="0">
-                            <img src="{{ asset('/img/'.$data['Poster'])}}" alt="" width="253" height="361">
+                        <a href="/movie/detail/{{$moviedata['Mid']}}" class="cover" tabindex="0">
+                            <img src="{{ asset('/img/'.$moviedata['Poster'])}}" alt="" width="253" height="361">
                         </a>
                     </div>
-                    <div class="groupMask">
-                        <div class="movie-name" style="font-size: 18px;clear: left;padding-top: 10px;font-weight: 400;">
-                            <h2>{{$data['Name']}}</h2>
+                    <div>
+                        <div class="movie_name">
+                            <h2>{{$moviedata['Name']}}</h2>
                         </div> 
-                        <div class="movie-name" style="color: #888;">
-                            <h3>{{$data['Name_en']}}</h3>
+                        <div class="movie_name_en">
+                            <h3>{{$moviedata['Name_en']}}</h3>
                         </div>
                         <div class="movie-date">
-                            <time>{{$data['Ondate']}}</time>
+                            <time>{{$moviedata['Ondate']}}</time>
                         </div>
-                        @switch($data['Grade'])
+                        @switch($moviedata['Grade'])
                             @case(0)
                                 <div class="movie_badge level_g">普通級</div>
                                 @break
@@ -44,10 +44,10 @@
                             @default
                         @endswitch
                         <div class="centerBtn" style="clear:both;">
-                            <a href="/movie/detail/{{$data['Mid']}}" title="電影介紹" tabindex="0">
+                            <a href="/movie/detail/{{$moviedata['Mid']}}" title="電影介紹" tabindex="0">
                                 <button type="button" class="btn btn-primary">電影介紹</button>
                             </a>
-                            <a href="/movie/time/{{$data['Mid']}}" data-movieid="196" title="時刻查詢" class="order_now" tabindex="0">
+                            <a href="/movie/time/{{$moviedata['Mid']}}" data-movieid="196" title="時刻查詢" class="order_now" tabindex="0">
                                 <button type="button" class="btn btn-primary">時刻查詢</button>
                             </a>
                         </div>
