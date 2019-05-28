@@ -100,7 +100,11 @@ class MovieManagerController extends Controller
             ->where('Mid', $id)
             ->get()->toArray();
 
-        return view('backend.movieedit', ['movieData' => $movieData]);
+        if (!$movieData) {
+            return redirect('moviemanager');
+        } else {
+            return view('backend.movieedit', ['movieData' => $movieData]);
+        }
     }
 
     /**

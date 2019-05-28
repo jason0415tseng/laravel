@@ -87,16 +87,20 @@ class TimeManagerController extends Controller
 
             $movieData = movies::select('Mid', 'Name', 'Length')
                 ->where('Mid', $id)
-                ->first()->toArray();
+                ->first();
 
-            $lengthTime = ((($movieData['Length']) + 20) * 60);
+            if (!$movieData) {
+                return redirect('timemanager');
+            } else {
+                $lengthTime = ((($movieData['Length']) + 20) * 60);
 
-            for ($i = $startTime; ($i +  $lengthTime) <= $endTime; ($i += $lengthTime)) {
+                for ($i = $startTime; ($i +  $lengthTime) <= $endTime; ($i += $lengthTime)) {
 
-                $this->TimeList[] .= date("H:i", ($i));
-            };
+                    $this->TimeList[] .= date("H:i", ($i));
+                };
 
-            return view('backend.timeadd', ['movieData' => $movieData, 'hall' => $hall, 'time' => $this->TimeList]);
+                return view('backend.timeadd', ['movieData' => $movieData->toArray(), 'hall' => $hall, 'time' => $this->TimeList]);
+            }
         }
     }
 
