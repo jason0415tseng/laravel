@@ -7,7 +7,7 @@
 <div class="container">
     <h1>{{ ('Movie List') }}</h1>
     <div class="row content-center">
-        @foreach ($Data as $data)
+        @foreach ($movieData as $data)
             <ul class="nav nav-tabs" role="tablist">
                 <li data-movieid="196" class="film-item slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide16" style="width: 284px;margin-top: 15px;">
                     <div class="movie-move">
@@ -16,8 +16,8 @@
                         </a>
                     </div>
                     <div class="groupMask">
-                        <div class="movie-name" style="font-size: 18px;clear: left;padding-top: 10px;font-weight: 400;"><h2>{{$data['Name']}}</h2></div>
-                        <div class="movie-name" style="color: #888;"><h3>{{$data['Name_en']}}</h3></div>
+                        <div class="movie_name"><h2>{{$data['Name']}}</h2></div>
+                        <div class="movie_name_en"><h3>{{$data['Name_en']}}</h3></div>
                         <div class="movie-date"><time>{{$data['Ondate']}}</time></div>
                         @switch($data['Grade'])
                             @case(0)
@@ -49,11 +49,11 @@
                 </li>
             </ul>
         @endforeach
-            <a href="/moviemanager/movieadd"  style="text-decoration:none;color:seashell">
-                <div style="width:253px;height:361px;background-color:#b1b5bd;margin-top:15px;padding-top:6.5rem;text-align:center;">
-                    <i class="fas fa-plus-circle fa-9x" style="color:#FFF;"></i>
-                </div>
-            </a>
+        <a href="/moviemanager/add" style="text-decoration:none;color:seashell">
+            <div class="movie_add">
+                <i class="fas fa-plus-circle fa-9x" style="color:#FFF;"></i>
+            </div>
+        </a>
     </div>
 </div>
 @endsection

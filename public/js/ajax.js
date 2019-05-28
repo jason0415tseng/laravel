@@ -16,7 +16,7 @@ function CloseWindow() {
 }
 
 //更新
-function Update() {
+function UpdateAccount() {
     $.ajax({
         type: 'POST',
         url: '/admin/update',
@@ -30,9 +30,14 @@ function Update() {
         },
         dataType: 'json',
         success: function(data) {
-            opener.window.location.reload();
-            self.close();
-            window.close();
+            if (data.error) {
+                alert(data.messages);
+                window.location.reload();
+            } else {
+                opener.window.location.reload();
+                self.close();
+                window.close();
+            }
         },
         error: function(data) {
             var errors = data.responseJSON;

@@ -28,31 +28,15 @@ class TimeManagerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function showMovieList()
     {
         //列出資料
-        $Data = movies::select('*')
+        $movieData = movies::select('*')
             ->where('display', '1')
             ->orderBy('ondate', 'ASC')
-            ->get();
+            ->get()->toArray();
 
-        return view('backend.timemanager', ['Data' => $Data->makeHidden('attribute')->toArray()]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function getmovietime($id)
-    {
-        //列出資料
-        $Data = movies::select('Mid', 'name')
-            ->where('Mid', $id)
-            ->get();
-
-        return view('backend.timeedit', ['Data' => $Data->makeHidden('attribute')->toArray()]);
+        return view('backend.timemanager', ['movieData' => $movieData]);
     }
 
     /**
@@ -61,58 +45,58 @@ class TimeManagerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function add($id)
+    public function showAddPage($id)
     {
         //列出資料
-        $Data = movies::select('movies.Mid', 'movies.Name', 'movies.Length', 'time.Hall', 'time.Time', 'time.Seat')
+        $movieData = movies::select('movies.Mid', 'movies.Name', 'movies.Length', 'time.Hall', 'time.Time', 'time.Seat')
             ->join('time', 'movies.mid', '=', 'time.mid')
             ->where('movies.Mid', $id)
             ->first();
 
-        $Hall = time::select('Hall')
+        $movieHall = time::select('Hall')
             ->where('Mid', '<>', $id)
             ->get()->toArray();
 
-        $StartTime = strtotime('10:00');
+        $startTime = strtotime('10:00');
 
-        $EndTime = strtotime('24:00');
+        $endTime = strtotime('24:00');
 
-        $NewHall = array();
+        $newHall = array();
 
-        $Hall = array_column($Hall, 'Hall');
+        $hall = array_column($movieHall, 'Hall');
 
-        $Hall = array_diff($this->HallList, $Hall);
+        $hall = array_diff($this->HallList, $hall);
 
-        foreach ($Hall as $key => $value) {
+        foreach ($hall as $key => $value) {
 
-            $NewHall[] = $value;
+            $newHall[] = $value;
         }
 
         //列出資料
-        if ($Data) {
+        if ($movieData) {
 
-            $LengthTime = ((($Data['Length']) + 20) * 60);
+            $lengthTime = ((($movieData['Length']) + 20) * 60);
 
-            for ($i = $StartTime; ($i +  $LengthTime) <= $EndTime; ($i += $LengthTime)) {
+            for ($i = $startTime; ($i +  $lengthTime) <= $endTime; ($i += $lengthTime)) {
 
                 $this->TimeList[] .= date("H:i", ($i));
             };
 
-            return view('backend.timeadd', ['Data' => $Data->makeHidden('attribute')->toArray(), 'Hall' => $NewHall, 'Time' => $this->TimeList]);
+            return view('backend.timeadd', ['movieData' => $movieData->toArray(), 'hall' => $newHall, 'time' => $this->TimeList]);
         } else {
 
-            $Data = movies::select('Mid', 'Name', 'Length')
+            $movieData = movies::select('Mid', 'Name', 'Length')
                 ->where('Mid', $id)
                 ->first()->toArray();
 
-            $LengthTime = ((($Data['Length']) + 20) * 60);
+            $lengthTime = ((($movieData['Length']) + 20) * 60);
 
-            for ($i = $StartTime; ($i +  $LengthTime) <= $EndTime; ($i += $LengthTime)) {
+            for ($i = $startTime; ($i +  $lengthTime) <= $endTime; ($i += $lengthTime)) {
 
                 $this->TimeList[] .= date("H:i", ($i));
             };
 
-            return view('backend.timeadd', ['Data' => $Data, 'Hall' => $Hall, 'Time' => $this->TimeList]);
+            return view('backend.timeadd', ['movieData' => $movieData, 'hall' => $hall, 'time' => $this->TimeList]);
         }
     }
 
@@ -123,56 +107,56 @@ class TimeManagerController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function timeadd(Request $request, $id)
+    public function updateTime(Request $request, $id)
     {
-        $Errors = new MessageBag;
+        $errors = new MessageBag;
 
         //資料
-        $Data = $request->all();
+        $requestData = $request->all();
 
-        if (!isset($Data['time'])) {
-            $Errors->add('time', '時刻錯誤，請選擇時刻');
-            return back()->withErrors($Errors)->withInput();
+        if (!isset($requestData['time'])) {
+            $errors->add('time', '時刻錯誤，請選擇時刻');
+            return back()->withErrors($errors)->withInput();
         }
 
         //判斷張數
-        if (($Data['seat'] < 100) || ($Data['seat'] > 999)) {
-            $Errors->add('seat', '數量錯誤，範圍(100~999)');
-            return back()->withErrors($Errors)->withInput();
+        if (($requestData['seat'] < 100) || ($requestData['seat'] > 999)) {
+            $errors->add('seat', '數量錯誤，範圍(100~999)');
+            return back()->withErrors($errors)->withInput();
         }
 
         //確認是否有資料
-        $Movie = time::select('*')
+        $movieData = time::select('*')
             ->where('Mid', $id)
             ->first();
 
-        if ($Movie) {
+        if ($movieData) {
             //確認廳別
             $Result = time::select('*')
-                ->where('Hall', $Data['hall'])
+                ->where('Hall', $requestData['hall'])
                 ->where('Mid', '<>', $id)
                 ->first();
         } else {
             //確認廳別
             $Result = time::select('*')
-                ->where('Hall', $Data['hall'])
+                ->where('Hall', $requestData['hall'])
                 ->first();
         }
 
         if ($Result) {
-            $Errors->add('hall', '廳別錯誤');
-            return back()->withErrors($Errors)->withInput();
+            $errors->add('hall', '廳別錯誤');
+            return back()->withErrors($errors)->withInput();
         }
 
-        if ($Movie) {
+        if ($movieData) {
             //更新
-            foreach ($Data['time'] as $date) {
+            foreach ($requestData['time'] as $date) {
                 $Result = time::where('Mid', $id)
                     ->where('time', $date)
                     ->update([
-                        'hall' => $Data['hall'],
+                        'hall' => $requestData['hall'],
                         'time' => $date,
-                        'seat' => $Data['seat'],
+                        'seat' => $requestData['seat'],
                     ]);
             }
         } else {

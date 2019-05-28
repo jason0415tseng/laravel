@@ -11,12 +11,12 @@
             <div class="card">
                 <div class="card-header">{{ ('新增時刻') }}</div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('time.timeadd' , ['Mid'=> $Data['Mid']]) }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('time.timeadd' , ['mid'=> $movieData['Mid']]) }}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ ('片名') }}</label>
                             <div class="col-md-4">
-                                <span class="form-control" style="border: 1px;">{{$Data['Name']}}</span>
+                                <span class="form-control" style="border: 1px;">{{$movieData['Name']}}</span>
                             </div>
                         </div>
 
@@ -24,8 +24,8 @@
                             <label for="hall" class="col-md-4 col-form-label text-md-right">{{ ('廳別') }}</label>
                             <div class="col-md-4">
                                 <select id="hall" name="hall" class="form-control{{ $errors->has('hall') ? ' is-invalid' : '' }}" style="text-align:center;text-align-last:center;">
-                                    @foreach ($Hall as $hall)
-                                        <option value={{$hall}} @if((count($Data)>3)&&($Data['Hall']==$hall)) selected @else  @endif >{{$hall . ('廳')}}</option>
+                                    @foreach ($hall as $hall)
+                                        <option value={{$hall}} @if((count($movieData)>3)&&($movieData['Hall']==$hall)) selected @else  @endif >{{$hall . ('廳')}}</option>
                                     @endforeach
                                 </select>
                                     @if ($errors->has('hall'))
@@ -39,7 +39,7 @@
                         <div class="form-group row">
                             <label for="time" class="col-md-4 col-form-label text-md-right">{{ ('時刻') }}</label>
                             <div style="width:180px;margin-left:15px">
-                                @foreach ($Time as $key => $time)
+                                @foreach ($time as $key => $time)
                                     <input type="checkbox" value={{$time}} id="{{('time') . $key}}" name="time[]" checked>
                                     <label for="time">{{$time}}</label>
                                 @endforeach
@@ -49,8 +49,8 @@
                         <div class="form-group row">
                             <label for="seat" class="col-md-4 col-form-label text-md-right">{{ ('席位') }}</label>
                             <div class="col-md-4">
-                                @if(count($Data)>3)
-                                    <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ $Data['Seat'] ? $Data['Seat'] : old('seat') }}" placeholder="席位" required>
+                                @if(count($movieData)>3)
+                                    <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ $movieData['Seat'] ? $movieData['Seat'] : old('seat') }}" placeholder="席位" required>
                                 @else
                                     <input id="seat" type="number" class="form-control{{ $errors->has('seat') ? ' is-invalid' : '' }}" name="seat" value="{{ old('seat') }}" placeholder="席位" required>
                                 @endif

@@ -9,11 +9,9 @@
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">{{ ('帳號管理') }}</div>
-
                 <div class="card-body">
                     <form method="POST" action="{{ route('admin.delete') }}">
                         @csrf
-
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border="1">
@@ -25,7 +23,7 @@
                                         <td>修改時間</td>
                                         <td colspan="2">操作</td>
                                     </tr>
-                                    @foreach ($User as $user)
+                                    @foreach ($userList as $user)
                                         <tr>
                                             <td>
                                                 {{$user['account']}}

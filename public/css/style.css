@@ -165,6 +165,15 @@
     color: rgb(121, 182, 236);
 }
 
+.movie_add {
+    width: 253px;
+    height: 361px;
+    background-color: rgb(177, 181, 189);
+    margin-top: 15px;
+    padding-top: 6.5rem;
+    text-align: center;
+}
+
 .Seating-Area {
     padding: 0px;
     margin: 0px;
