@@ -32,7 +32,6 @@
             .links > a {
                 color: #636b6f;
                 padding: 0 25px;
-                /* font-size: 13px; */
                 font-size: 2em;
                 font-weight: 600;
                 letter-spacing: .1rem;
@@ -42,6 +41,10 @@
         </style>
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+        
+        <!-- Scripts -->
+        <script src="{{ asset('js/app.js') }}" defer></script>
+    
     </head>
     <body>       
         <div class="content">
@@ -53,70 +56,70 @@
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <!-- Left Side Of Navbar -->
-                            <ul class="navbar-nav mr-auto">
-                            </ul>
-                            <div class="menu">
-                                <!-- Right Side Of Navbar -->
-                                <ul class="nav nav-tabs" role="tablist">
-							    	@if (session('account'))
-                                        @if (session('level') < 3)
-                                            <li role="presentation">
-                                                <a class="nav-link" href="{{ route('moviemanager') }}">{{ __('電影管理') }}</a>
-                                	        </li>
-                                            <li role="presentation">
-                                    	        <a class="nav-link" href="{{ route('timemanager') }}">{{ __('時刻管理') }}</a>
-                                	        </li>
-                                            <li role="presentation">
-                                                <a class="nav-link" href="{{ route('admin') }}">{{ __('管理帳號') }}</a>
-							    			</li>
-							    			<li role="presentation">
-                                                <a class="nav-link" href="">{{ session('account') }}</a>
-                                            </li>
-                                            <li role="presentation">
-							    				<a class="nav-link" href="/logout">{{ ('登出') }}</a>
-                                            </li>
-                                        @else
-                                            <li role="presentation">
-                                        		<a class="nav-link" href="{{ route('movie') }}">{{ __('電影介紹') }}</a>
-                                			</li>
-                                            <li role="presentation">
-                                        		<a class="nav-link" href="{{ route('movietime') }}">{{ __('時刻查詢') }}</a>
-                                            </li>
-                                            <li role="presentation">
-                                		        <a class="nav-link" href="{{ route('activity') }}">{{ __('活動') }}</a>
-                        			        </li>
-                                            <li role="presentation">
-                                                <a class="nav-link" href="{{ route('orderinfo') }}">{{ __('訂購資訊') }}</a>
-							    		    </li>
-							    			<li role="presentation">
-                                                <a class="nav-link" href="{{ route('memberCenter') }}">{{ session('account') }}</a>
-                                			</li>
-                                                <li role="presentation">
-							    				    <a class="nav-link" href="/logout">{{ ('登出') }}</a>
-                                                </li>
-							    		@endif
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <!-- Left Side Of Navbar -->
+                        <ul class="navbar-nav mr-auto">
+                        </ul>
+                        <div class="menu">
+                            <!-- Right Side Of Navbar -->
+                            <ul class="nav nav-tabs" role="tablist">
+						    	@if (session('account'))
+                                    @if (session('level') < 3)
+                                        <li role="presentation">
+                                            <a class="nav-link" href="{{ route('moviemanager') }}">{{ __('電影管理') }}</a>
+                            	        </li>
+                                        <li role="presentation">
+                                	        <a class="nav-link" href="{{ route('timemanager') }}">{{ __('時刻管理') }}</a>
+                            	        </li>
+                                        <li role="presentation">
+                                            <a class="nav-link" href="{{ route('admin') }}">{{ __('管理帳號') }}</a>
+						    			</li>
+						    			<li role="presentation">
+                                            <a class="nav-link" href="">{{ session('account') }}</a>
+                                        </li>
+                                        <li role="presentation">
+						    				<a class="nav-link" href="/logout">{{ ('登出') }}</a>
+                                        </li>
                                     @else
+                                        <li role="presentation">
+                                    		<a class="nav-link" href="{{ route('movie') }}">{{ __('電影介紹') }}</a>
+                            			</li>
+                                        <li role="presentation">
+                                    		<a class="nav-link" href="{{ route('movietime') }}">{{ __('時刻查詢') }}</a>
+                                        </li>
+                                        <li role="presentation">
+                            		        <a class="nav-link" href="{{ route('activity') }}">{{ __('活動') }}</a>
+                    			        </li>
+                                        <li role="presentation">
+                                            <a class="nav-link" href="{{ route('orderinfo') }}">{{ __('訂購資訊') }}</a>
+						    		    </li>
+						    			<li role="presentation">
+                                            <a class="nav-link" href="{{ route('membercenter') }}">{{ session('account') }}</a>
+                            			</li>
                                             <li role="presentation">
-                                        		<a class="nav-link" href="{{ route('movie') }}">{{ __('電影介紹') }}</a>
-                                			</li>
-                                            <li role="presentation">
-                                        		<a class="nav-link" href="{{ route('movietime') }}">{{ __('時刻查詢') }}</a>
+						    				    <a class="nav-link" href="/logout">{{ ('登出') }}</a>
                                             </li>
-                                            <li role="presentation">
-                                		        <a class="nav-link" href="{{ route('activity') }}">{{ __('活動') }}</a>
-                        			        </li>
-							    			<li role="presentation">
-                                        		<a class="nav-link" href="{{ route('register') }}">{{ __('註冊') }}</a>
-                                			</li>
-                                			<li role="presentation">
-                                    	    	<a class="nav-link" href="{{ route('login') }}">{{ __('登入') }}</a>
-                                			</li>
-                                    @endif 
-                                </ul>
-                            </div>
+						    		@endif
+                                @else
+                                    <li role="presentation">
+                                    	<a class="nav-link" href="{{ route('movie') }}">{{ __('電影介紹') }}</a>
+                            		</li>
+                                    <li role="presentation">
+                                    	<a class="nav-link" href="{{ route('movietime') }}">{{ __('時刻查詢') }}</a>
+                                    </li>
+                                    <li role="presentation">
+                            		    <a class="nav-link" href="{{ route('activity') }}">{{ __('活動') }}</a>
+                    			    </li>
+						    		<li role="presentation">
+                                    	<a class="nav-link" href="{{ route('register') }}">{{ __('註冊') }}</a>
+                            		</li>
+                            		<li role="presentation">
+                                		<a class="nav-link" href="{{ route('login') }}">{{ __('登入') }}</a>
+                            		</li>
+                                @endif 
+                            </ul>
                         </div>
+                    </div>
                 </div>
             </nav>
 			<div class="slider">		
@@ -129,7 +132,7 @@
 							    	<img src="{{ asset('img/1.jpg') }}" class="img-responsive" alt=""> 
 							    	<div class="carousel-caption">
 							    		<div>								
-							    			<h2><p>Hello</span></p>
+							    			<h2><p>Hello</p></h2>
                                         </div>
 							    	</div>
                                 </div>
@@ -139,7 +142,7 @@
 							        	<img src="{{ asset('img/3.jpg') }}" class="img-responsive" alt=""> 
 							        	<div class="carousel-caption">
 							        		<div>								
-							        			<h2><p>Manager system</span></p>
+							        			<h2><p>Manager system</p></h2>
                                             </div>
 							        	</div>
                                     </div>
@@ -148,7 +151,7 @@
 							        	<img src="{{ asset('img/2.jpg') }}" class="img-responsive" alt=""> 
 							        	<div class="carousel-caption">
 							        		<div>								
-							        			<h2><p>Member system</span></p>
+							        			<h2><p>Member system</p></h2>
                                             </div>
 							        	</div>
                                     </div>
@@ -157,9 +160,7 @@
                         </div>
 					</div>   
                 </div>
-			</div>   
-            </div>
-			</div>   
+			</div>
         </div>
     </body>
 </html>

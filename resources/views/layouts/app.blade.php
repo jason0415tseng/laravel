@@ -74,30 +74,31 @@
                                         <a class="nav-link" href="{{ route('orderinfo') }}">{{ __('訂購資訊') }}</a>
 								    </li>
 									<li role="presentation">
-                                        <a class="nav-link" href="{{ route('memberCenter') }}">{{ session('account') }}</a>
+                                        <a class="nav-link" href="{{ route('membercenter') }}">{{ session('account') }}</a>
                         			</li>
-                                        <li role="presentation">
-										    <a class="nav-link" href="/logout">{{ ('登出') }}</a>
-                                        </li>
+                                    <li role="presentation">
+										<a class="nav-link" href="/logout">{{ ('登出') }}</a>
+                                    </li>
 								@endif
                             @else
-                                    <li role="presentation">
-                                		<a class="nav-link" href="{{ route('movie') }}">{{ __('電影介紹') }}</a>
-                        			</li>
-                                    <li role="presentation">
-                                		<a class="nav-link" href="{{ route('movietime') }}">{{ __('時刻查詢') }}</a>
-                                    </li>
-                                    <li role="presentation">
-                                		<a class="nav-link" href="{{ route('activity') }}">{{ __('活動') }}</a>
-                        			</li>
-									<li role="presentation">
-                                		<a class="nav-link" href="{{ route('register') }}">{{ __('註冊') }}</a>
-                        			</li>
-                        			<li role="presentation">
-                            	    	<a class="nav-link" href="{{ route('login') }}">{{ __('登入') }}</a>
-                        			</li>
+                                <li role="presentation">
+                                	<a class="nav-link" href="{{ route('movie') }}">{{ __('電影介紹') }}</a>
+                        		</li>
+                                <li role="presentation">
+                                	<a class="nav-link" href="{{ route('movietime') }}">{{ __('時刻查詢') }}</a>
+                                </li>
+                                <li role="presentation">
+                                	<a class="nav-link" href="{{ route('activity') }}">{{ __('活動') }}</a>
+                        		</li>
+								<li role="presentation">
+                                	<a class="nav-link" href="{{ route('register') }}">{{ __('註冊') }}</a>
+                        		</li>
+                        		<li role="presentation">
+                            		<a class="nav-link" href="{{ route('login') }}">{{ __('登入') }}</a>
+                        		</li>
                             @endif 
                         </ul>
+                    </div>
                 </div>
             </div>
         </nav>

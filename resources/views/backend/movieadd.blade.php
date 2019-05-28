@@ -24,7 +24,6 @@
                                     @endif
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="name_en" class="col-md-4 col-form-label text-md-right">{{ ('英文片名') }}</label>
                             <div class="col-md-4">
@@ -36,7 +35,6 @@
                                     @endif
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="ondate" class="col-md-4 col-form-label text-md-right">{{ ('上映時間') }}</label>
                             <div class="col-md-4">
@@ -48,7 +46,6 @@
                                     @endif
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="type" class="col-md-4 col-form-label text-md-right">{{ ('類型') }}</label>
                             <div class="col-md-4">
@@ -60,11 +57,10 @@
                                     @endif
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="length" class="col-md-4 col-form-label text-md-right">{{ ('片長') }}</label>
                             <div class="col-md-4">
-                                <input id="length" type="text" class="form-control{{ $errors->has('length') ? ' is-invalid' : '' }}" name="length" value="{{ old('length') }}" placeholder="片長" required>{{('單位:分')}}
+                                <input id="length" type="number" class="form-control{{ $errors->has('length') ? ' is-invalid' : '' }}" name="length" value="{{ old('length') }}" placeholder="片長" required>{{('單位:分')}}
                                     @if ($errors->has('length'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('length') }}</strong>
@@ -72,7 +68,6 @@
                                     @endif
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="grade" class="col-md-4 col-form-label text-md-right">{{ ('分級') }}</label>
                                 <div class="col-md-4">
@@ -83,14 +78,13 @@
                                         <option value="3">輔15級</option>
                                         <option value="4">限制級</option>
                                     </select>
-                                        @if ($errors->has('grade'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('grade') }}</strong>
-                                            </span>
-                                        @endif
+                                    @if ($errors->has('grade'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('grade') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="director" class="col-md-4 col-form-label text-md-right">{{ ('導演') }}</label>
                             <div class="col-md-4">
@@ -102,7 +96,6 @@
                                     @endif
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="actor" class="col-md-4 col-form-label text-md-right">{{ ('演員') }}</label>
                             <div class="col-md-4">
@@ -114,7 +107,6 @@
                                     @endif
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="poster" class="col-md-4 col-form-label text-md-right">{{ ('海報') }}</label>
                             <div class="col-md-4" style="position: relative;">
@@ -129,7 +121,6 @@
                                 <img id="preview_poster_img" src="#" width="200" height="250" style="display: none;"/>
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="introduction" class="col-md-4 col-form-label text-md-right">{{ ('劇情簡介') }}</label>
                             <div class="col-md-4">
@@ -142,7 +133,6 @@
                                 </textarea>
                             </div>
                         </div>
-
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

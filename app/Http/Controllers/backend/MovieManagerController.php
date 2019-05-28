@@ -3,12 +3,8 @@
 namespace App\Http\Controllers\backend;
 
 use Illuminate\Http\Request;
-// use Illuminate\Http\UploadedFile;
 use App\Http\Controllers\Controller;
 use App\Models\movies;
-use Storage;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\Auth;
 use Illuminate\Support\MessageBag;
 
 class MovieManagerController extends Controller
@@ -31,15 +27,15 @@ class MovieManagerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function showMovieList()
     {
         //列出資料
-        $Data = movies::select('*')
+        $movieData = movies::select('*')
             ->where('display', '1')
             ->orderBy('ondate', 'ASC')
-            ->get();
+            ->get()->toArray();
 
-        return view('backend.moviemanager', ['Data' => $Data->makeHidden('attribute')->toArray()]);
+        return view('backend.moviemanager', ['movieData' => $movieData]);
     }
 
     /**
@@ -48,58 +44,47 @@ class MovieManagerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function movieadd(Request $request)
+    public function createMovie(Request $request)
     {
         //圖片
-        $File = $request->file('poster');
+        $picFile = $request->file('poster');
 
         //檢查圖片
-        $Error = $this->checkPic($File);
+        $error = $this->CheckPic($picFile);
 
         //判斷是否有錯誤訊息
-        if ($Error->any()) {
-            return back()->withErrors($Error)->withInput();
+        if ($error->any()) {
+            return back()->withErrors($error)->withInput();
         }
 
-        $FileName = $File->getClientOriginalName();
+        $fileName = $picFile->getClientOriginalName();
 
         // === 上傳圖片 === 
-        $Path = '../public/img/' . $this->PathTime;
-        $NewFileName = $this->FileTime . '_' . $FileName;
-        if (!is_dir($Path)) {
-            mkdir($Path, 0777);
+        $path = '../public/img/' . $this->PathTime;
+        $newFileName = $this->FileTime . '_' . $fileName;
+        if (!is_dir($path)) {
+            mkdir($path, 0777);
         }
-        $request->file('poster')->move($Path, $NewFileName);
+        $request->file('poster')->move($path, $newFileName);
         // === 上傳圖片 === 
 
         //新增
-        $Movies = new movies;
+        $movies = new movies;
 
-        $Movies->name = $request->name;
-        $Movies->name_en = $request->name_en;
-        $Movies->ondate = $request->ondate;
-        $Movies->type = $request->type;
-        $Movies->length = $request->length;
-        $Movies->grade = $request->grade;
-        $Movies->director = $request->director;
-        $Movies->actor = $request->actor;
-        $Movies->poster = $this->PathTime . '/' . $NewFileName;
-        $Movies->introduction = $request->introduction;
+        $movies->name = $request->name;
+        $movies->name_en = $request->name_en;
+        $movies->ondate = $request->ondate;
+        $movies->type = $request->type;
+        $movies->length = $request->length;
+        $movies->grade = $request->grade;
+        $movies->director = $request->director;
+        $movies->actor = $request->actor;
+        $movies->poster = $this->PathTime . '/' . $newFileName;
+        $movies->introduction = $request->introduction;
 
-        $Movies->save();
+        $movies->save();
 
         return redirect('/moviemanager');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -108,15 +93,18 @@ class MovieManagerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getmovie($id)
+    public function getMovie($id)
     {
-        //
         //列出資料
-        $Data = movies::select('*')
+        $movieData = movies::select('*')
             ->where('Mid', $id)
-            ->get();
+            ->get()->toArray();
 
-        return view('backend.movieedit', ['Data' => $Data->makeHidden('attribute')->toArray()]);
+        if (!$movieData) {
+            return redirect('moviemanager');
+        } else {
+            return view('backend.movieedit', ['movieData' => $movieData]);
+        }
     }
 
     /**
@@ -126,66 +114,65 @@ class MovieManagerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function movieedit(Request $request, $id)
+    public function updateMovie(Request $request, $id)
     {
-        $Errors = new MessageBag;
+        $errors = new MessageBag;
 
-        $Data = $request->all();
+        $requestData = $request->all();
 
         //判斷片長
-        if (($Data['length'] < 60) || ($Data['length'] > 240)) {
-            $Errors->add('length', '片長錯誤，範圍(60~240)');
-            return back()->withErrors($Errors)->withInput();
+        if (($requestData['length'] < 60) || ($requestData['length'] > 240)) {
+            $errors->add('length', '片長錯誤，範圍(60~240)');
+            return back()->withErrors($errors)->withInput();
         }
 
         //圖片
-        $File = $request->file('poster');
+        $picFile = $request->file('poster');
 
         //有上傳圖片
-        if ($File) {
-
+        if ($picFile) {
             //檢查圖片
-            $Error = $this->checkPic($File);
+            $error = $this->checkPic($picFile);
 
             //判斷是否有錯誤訊息
-            if ($Error->any()) {
-                return back()->withErrors($Error)->withInput();
+            if ($error->any()) {
+                return back()->withErrors($error)->withInput();
             }
 
             //刪除舊圖
-            $Poster = movies::select('poster')
+            $oldPoster = movies::select('poster')
                 ->where('Mid', $id)
                 ->first();
 
             // ==== 刪除圖片 ====
-            $Path = '../public/img/' . $Poster['poster'];
-            unlink($Path);
+            $path = '../public/img/' . $oldPoster['poster'];
+            unlink($path);
             // ==== 刪除圖片 ====
 
             //上傳新圖
             // === 上傳圖片 === 
-            $FileName = $File->getClientOriginalName();
-            $Path = '../public/img/' . $this->PathTime;
-            $NewFileName = $this->FileTime . '_' . $FileName;
-            if (!is_dir($Path)) {
-                mkdir($Path, 0777);
+            $fileName = $picFile->getClientOriginalName();
+            $path = '../public/img/' . $this->PathTime;
+            $newFileName = $this->FileTime . '_' . $fileName;
+            if (!is_dir($path)) {
+                mkdir($path, 0777);
             }
-            $request->file('poster')->move($Path, $NewFileName);
+            $request->file('poster')->move($path, $newFileName);
             // === 上傳圖片 === 
 
             //更新
             $Result = movies::where('Mid', $id)
                 ->update([
-                    'name' => $Data['name'],
-                    'name_en' => $Data['name_en'],
-                    'ondate' => $Data['ondate'],
-                    'type' => $Data['type'],
-                    'length' => $Data['length'],
-                    'grade' => $Data['grade'],
-                    'director' => $Data['director'],
-                    'actor' => $Data['actor'],
-                    'introduction' => $Data['introduction'],
-                    'poster' => $this->PathTime . '/' . $NewFileName,
+                    'name' => $requestData['name'],
+                    'name_en' => $requestData['name_en'],
+                    'ondate' => $requestData['ondate'],
+                    'type' => $requestData['type'],
+                    'length' => $requestData['length'],
+                    'grade' => $requestData['grade'],
+                    'director' => $requestData['director'],
+                    'actor' => $requestData['actor'],
+                    'introduction' => $requestData['introduction'],
+                    'poster' => $this->PathTime . '/' . $newFileName,
                 ]);
 
             return redirect('moviemanager');
@@ -194,15 +181,15 @@ class MovieManagerController extends Controller
         //更新
         $Result = movies::where('Mid', $id)
             ->update([
-                'name' => $Data['name'],
-                'name_en' => $Data['name_en'],
-                'ondate' => $Data['ondate'],
-                'type' => $Data['type'],
-                'length' => $Data['length'],
-                'grade' => $Data['grade'],
-                'director' => $Data['director'],
-                'actor' => $Data['actor'],
-                'introduction' => $Data['introduction'],
+                'name' => $requestData['name'],
+                'name_en' => $requestData['name_en'],
+                'ondate' => $requestData['ondate'],
+                'type' => $requestData['type'],
+                'length' => $requestData['length'],
+                'grade' => $requestData['grade'],
+                'director' => $requestData['director'],
+                'actor' => $requestData['actor'],
+                'introduction' => $requestData['introduction'],
             ]);
 
         return redirect('moviemanager');
@@ -213,9 +200,8 @@ class MovieManagerController extends Controller
      *
      * @param  int  $id
      */
-    public function moviedelete($id)
+    public function deleteMovie($id)
     {
-
         $Result = movies::where('Mid', $id)
             ->update(['display' => '0']);
 
@@ -223,22 +209,11 @@ class MovieManagerController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function add()
+    public function showAddPage()
     {
         return view('backend.movieadd');
     }
@@ -249,29 +224,29 @@ class MovieManagerController extends Controller
      * @param  array  $Data
      * @return \Illuminate\Http\Response
      */
-    public function checkPic($Data)
+    public function CheckPic($Data)
     {
-        $Errors = new MessageBag;
+        $errors = new MessageBag;
 
-        $Type = $Data->getClientOriginalExtension();
-        $Size = $Data->getSize();
+        $type = $Data->getClientOriginalExtension();
+        $size = $Data->getSize();
 
         //確認上傳的檔案是否有效
         if (!($Data->isvalid())) {
 
-            $Errors->add('poster', '檔案無效');
+            $errors->add('poster', '檔案無效');
 
             //確認上傳格式
-        } elseif (!(in_array($Type, ['jpeg', 'jpg', 'gif', 'png']))) {
+        } elseif (!(in_array($type, ['jpeg', 'jpg', 'gif', 'png']))) {
 
-            $Errors->add('poster', '檔案格式錯誤');
+            $errors->add('poster', '檔案格式錯誤');
 
             //確認檔案大小
-        } elseif ($Size > 1048576) {
+        } elseif ($size > 1048576) {
 
-            $Errors->add('poster', '檔案大於1MB');
+            $errors->add('poster', '檔案大於1MB');
         }
 
-        return $Errors;
+        return $errors;
     }
 }

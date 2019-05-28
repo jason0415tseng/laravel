@@ -5,7 +5,6 @@ namespace App\Http\Controllers\backend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
-use DB;
 use Illuminate\Support\MessageBag;
 
 class AdminController extends Controller
@@ -15,119 +14,78 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function showAccountList()
     {
-        $Account = session('account');
         //列出帳號
-        $User = Admin::select('uid', 'account', 'freeze', 'level', 'name', 'created_at', 'updated_at')
+        $userList = Admin::select('uid', 'account', 'freeze', 'level', 'name', 'created_at', 'updated_at')
             ->where('level', '>', '0')
-            ->where('account', '<>', $Account)
-            ->get();
-  
-        return view('backend.admin', ['User' => $User->makeHidden('attribute')->toArray()]);
-    }
+            ->where('account', '<>', session('account'))
+            ->get()->toArray();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        return view('backend.admin', ['userList' => $userList]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $user
      * @return \Illuminate\Http\Response
      */
-    public function getaccount($id)
+    public function getAccount($user)
     {
         //列出帳號資訊
-        $User = Admin::select('uid', 'account', 'freeze', 'level', 'name')
-            ->where('uid', $id)
+        $userData = Admin::select('uid', 'account', 'freeze', 'level', 'name')
+            ->where('uid', $user)
             ->first();
 
-        return view('backend.account', ['User' => $User->makeHidden('attribute')->toArray()]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function editaccount(Request $Request)
-    {
-
-
-        $User = $Request->only(['uid', 'level', 'freeze']);
-
-        $User = Admin::where('uid', $User['uid'])
-
-            ->update(['level' => $User['level'], 'freeze' => $User['freeze']]);
-
-        if ($User) {
- 
-            return response()->json([
-                'error' => false,
-            ]);
-        } else {
-
-            return response()->json([
-                'error'    => true,
-                'messages' => '修改失敗',
-
-            ]);
-        }
-
+        return view('backend.account', ['userData' => $userData]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $Request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $Request, $id)
+    public function updateAccount(Request $request)
     {
-        //
+        $requestData = $request->only(['uid', 'level', 'freeze']);
+
+        $updateUser = Admin::where('uid', $requestData['uid'])
+            ->update([
+                'level' => $requestData['level'],
+                'freeze' => $requestData['freeze']
+            ]);
+
+        if ($updateUser) {
+            return response()->json([
+                'error' => false,
+            ]);
+        } else {
+            return response()->json([
+                'error'    => true,
+                'messages' => '修改失敗',
+            ]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Illuminate\Http\Request  $Request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function deleteaccount(Request $Request)
+    public function deleteAccount(Request $request)
     {
-        $Errors = new MessageBag;
+        $errors = new MessageBag;
 
-        $User = Admin::where('uid', $Request->uid)->delete();
-        if ($User) {
+        $deleteUser = Admin::where('uid', $request['uid'])->delete();
 
+        if ($deleteUser) {
             return redirect('admin');
         } else {
-
-            $Errors->add('messages', '修改失敗');
-
-            return back()->withErrors($Errors)->withInput();
-
+            $errors->add('messages', '修改失敗');
+            return back()->withErrors($errors)->withInput();
         }
-
     }
 }

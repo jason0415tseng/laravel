@@ -27,10 +27,8 @@
                                 @endif
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ ('密碼') }}</label>
-
                             <div class="col-md-4">
                                 <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" maxlength="8" placeholder="請輸入密碼" required>
                                 @if ($errors->has('password'))
@@ -40,7 +38,6 @@
                                 @endif
                             </div>
                         </div>
-
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
@@ -58,7 +55,6 @@
         </div>
     </div>
 </div>
-   
 <script>
     var msg = '{{ $errors->first('freeze')}}';
     if(msg){

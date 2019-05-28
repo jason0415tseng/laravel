@@ -10,7 +10,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ ('修改電影') }}</div>
-                @foreach ($Data as $data)
+                @foreach ($movieData as $data)
                 <div class="card-body">
                     <form method="POST" action="{{ route('moive.movieupdate' , ['Mid'=> $data['Mid']]) }}" enctype="multipart/form-data">
                         @csrf
@@ -25,7 +25,6 @@
                                     @endif                          
                             </div>    
                         </div>
-
                         <div class="form-group row">
                             <label for="name_en" class="col-md-4 col-form-label text-md-right">{{ ('英文片名') }}</label>
                             <div class="col-md-4">
@@ -37,7 +36,6 @@
                                     @endif                          
                             </div>    
                         </div>
-
                         <div class="form-group row">
                             <label for="ondate" class="col-md-4 col-form-label text-md-right">{{ ('上映時間') }}</label>
                             <div class="col-md-4">
@@ -49,7 +47,6 @@
                                     @endif                          
                             </div>    
                         </div>
-
                         <div class="form-group row">
                             <label for="type" class="col-md-4 col-form-label text-md-right">{{ ('類型') }}</label>
                             <div class="col-md-4">
@@ -61,7 +58,6 @@
                                     @endif                          
                             </div>    
                         </div>
-
                         <div class="form-group row">
                             <label for="length" class="col-md-4 col-form-label text-md-right">{{ ('片長') }}</label>
                             <div class="col-md-4">
@@ -74,25 +70,23 @@
                                     @endif                          
                             </div>    
                         </div>
-
                         <div class="form-group row">
                             <label for="grade" class="col-md-4 col-form-label text-md-right">{{ ('分級') }}</label>
-                                <div class="col-md-4">
-                                    <select id="grade" name="grade"  class="form-control" style="text-align:center;text-align-last:center;"> 
-                                        <option value="0" @if($data['Grade']=='0') selected @endif>普通級</option>
-                                        <option value="1" @if($data['Grade']=='1') selected @endif>保護級</option>
-                                        <option value="2" @if($data['Grade']=='2') selected @endif>輔12級</option>
-                                        <option value="3" @if($data['Grade']=='3') selected @endif>輔15級</option>
-                                        <option value="4" @if($data['Grade']=='4') selected @endif>限制級</option>
-                                    </select>
-                                        @if ($errors->has('grade'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('grade') }}</strong>
-                                            </span>
-                                        @endif
-                                </div>
+                            <div class="col-md-4">
+                                <select id="grade" name="grade"  class="form-control" style="text-align:center;text-align-last:center;"> 
+                                    <option value="0" @if($data['Grade']=='0') selected @endif>普通級</option>
+                                    <option value="1" @if($data['Grade']=='1') selected @endif>保護級</option>
+                                    <option value="2" @if($data['Grade']=='2') selected @endif>輔12級</option>
+                                    <option value="3" @if($data['Grade']=='3') selected @endif>輔15級</option>
+                                    <option value="4" @if($data['Grade']=='4') selected @endif>限制級</option>
+                                </select>
+                                @if ($errors->has('grade'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('grade') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="director" class="col-md-4 col-form-label text-md-right">{{ ('導演') }}</label>
                             <div class="col-md-4">
@@ -104,7 +98,6 @@
                                     @endif
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="actor" class="col-md-4 col-form-label text-md-right">{{ ('演員') }}</label>
                             <div class="col-md-4">
@@ -116,7 +109,6 @@
                                     @endif
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="poster" class="col-md-4 col-form-label text-md-right">{{ ('海報') }}</label>
                             <div class="col-md-4" style="position: relative;">
@@ -131,7 +123,6 @@
                                 <img id="preview_poster_img" src="{{ asset('/img/'.$data['Poster'])}}" width="200" height="250"/>
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="introduction" class="col-md-4 col-form-label text-md-right">{{ ('劇情簡介') }}</label>
                             <div class="col-md-4">
@@ -144,7 +135,6 @@
                                 </textarea>
                             </div>
                         </div>
-                        
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

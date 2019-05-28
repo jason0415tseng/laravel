@@ -15,12 +15,11 @@
                         <div class="form-group row">
                             <label for="account" class="col-md-4 col-form-label text-md-right">{{ ('帳號') }}</label>
                             <div class="col-md-4">
-                                <input id="uid" name="uid" value="{{ session('User')['uid'] ? session('User')['uid'] : old('uid')}}" style="display:none">
-                                <input id="account" name="account" value="{{ session('User')['account'] ? session('User')['account'] : old('account')}}" style="display:none">
-                                <span class="form-control">{{ session('User')['account'] ? session('User')['account'] : old('account')}}</span>
+                                <input id="uid" name="uid" value="{{ session('userData')['uid'] ? session('userData')['uid'] : old('uid')}}" style="display:none">
+                                <input id="account" name="account" value="{{ session('userData')['account'] ? session('userData')['account'] : old('account')}}" style="display:none">
+                                <span class="form-control">{{ session('userData')['account'] ? session('userData')['account'] : old('account')}}</span>
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ ('密碼') }}</label>
                             <div class="col-md-4">
@@ -32,14 +31,12 @@
                                     @endif
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ ('再次確認密碼') }}</label>
                             <div class="col-md-4">
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" pattern="^[A-Za-z\d\.]{8,}$" maxlength="8" required  placeholder="*再次輸入密碼">
                             </div>
                         </div>
-
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

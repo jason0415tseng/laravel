@@ -37,16 +37,16 @@
                                     <table class="" style="border:3px #cccccc solid;margin:auto;text-align:center;" cellpadding="10" border='1'>
                                         <tr colspan="2">
                                             <td>帳號</td>
-                                            <td colspan="2">{{$User['account']}}</td>
+                                            <td colspan="2">{{$userData['account']}}</td>
                                         </tr>
                                         <tr>
                                             <td>Level</td>
                                             <td colspan="2" style="width: 200px;">
-                                                <input id="uid" name="uid" value="{{$User['uid']}}" style="display:none">
+                                                <input id="uid" name="uid" value="{{$userData['uid']}}" style="display:none">
                                                 <select id="level" name="level"  class="form-control" style="text-align:center;text-align-last:center;"> 
-                                                    <option value="1" @if($User['level']=='1') selected @endif >1</option>
-                                                    <option value="2" @if($User['level']=='2') selected @endif >2</option>
-                                                    <option value="3" @if($User['level']=='3') selected @endif >3</option>
+                                                    <option value="1" @if($userData['level']=='1') selected @endif >1</option>
+                                                    <option value="2" @if($userData['level']=='2') selected @endif >2</option>
+                                                    <option value="3" @if($userData['level']=='3') selected @endif >3</option>
                                                 </select>
                                             </td>
                                         </tr>
@@ -54,14 +54,14 @@
                                             <td>啟用/凍結</td>
                                             <td colspan="2">
                                                 <select id="freeze" name="freeze"  class="form-control" style="text-align:center;text-align-last:center;">
-                                                    <option value="Y" @if($User['freeze']=='Y') selected @endif >Y</option>
-                                                    <option value="N" @if($User['freeze']=='N') selected @endif >N</option>
+                                                    <option value="Y" @if($userData['freeze']=='Y') selected @endif >Y</option>
+                                                    <option value="N" @if($userData['freeze']=='N') selected @endif >N</option>
                                                 </select>
                                             </td> 
                                         </tr>
                                         <tr>
                                             <td colspan="2">
-                                                <button type="submit" class="btn btn-primary" onclick="Update({{$User['uid']}})">{{ ('確認') }}</button>
+                                                <button type="submit" class="btn btn-primary" onclick="UpdateAccount({{$userData['uid']}})">{{ ('確認') }}</button>
                                                 <button type="button" class="btn btn-primary" onclick="CloseWindow()">{{ ('取消') }}</button>
                                             </td>
                                          </tr>

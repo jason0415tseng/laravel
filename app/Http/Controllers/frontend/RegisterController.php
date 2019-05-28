@@ -7,8 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\register;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\MessageBag;
 
 class RegisterController extends Controller
 {
@@ -17,7 +15,7 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function showRegisterForm()
     {
         return view('frontend.register');
     }
@@ -25,149 +23,39 @@ class RegisterController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $Request)
+    public function createUser(Request $request)
     {
         //資料
-        $Data = $Request->all();
-    
-        //檢查資料
-        $Error = $this->checkUser($Data);
-
-        //判斷是否有錯誤訊息
-        if($Error->any()){
-            return back()->withErrors($Error)->withInput();
-        }
-        
+        $requestData = $request->all();
 
         //原生檢查的方式 == S ==
-        $Auth = new Auth;
+        $auth = new Auth;
 
-        $Validator = Validator::make($Data,$Auth->rules($Data),$Auth->messages());
+        $validator = Validator::make($requestData, $auth->rules($requestData), $auth->messages());
 
-        if ($Validator->fails()) {
+        if ($validator->fails()) {
             return redirect('/register')
-                        ->withErrors($Validator)
-                        ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
         //原生檢查的方式 == E ==
 
         //註冊
-        $Register = new register;
+        $register = new register;
 
-        $Register->account = $Request->account;
-        $Register->password = base64_encode( $Request->password);
-        $Register->name = $Request->name;
+        $register->account = $request->account;
+        $register->password = base64_encode($request->password);
+        $register->name = $request->name;
 
-
-        $Register->save();
+        $register->save();
 
         //註冊完登入
-        $Request->session()->put('account', $Register->account);
-        $Request->session()->put('level', '3');
+        $request->session()->put('account', $register->account);
+        $request->session()->put('level', '3');
 
         return redirect('/success');
-
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $Request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $Request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $Request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $Request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  array  $Data
-     * @return \Illuminate\Http\Response
-     */
-    public function checkUser($Data)
-    {
-        
-        $Errors = new MessageBag;
-
-        $Account = $Data['account'];
-        $Name = $Data['name'];
-        $Password = $Data['password'];
-        $Password2 = $Data['password_confirmation'];
-
-        //判斷帳號、名稱是否重複
-        $User = register::
-                    select('Account' , 'Name')
-                    ->where('Account' , $Account)
-                    ->orwhere('Name' , $Name)
-                    ->first();
-
-        //帳號是否存在
-        if($User['Account']){
-
-            $Errors->add('account','帳號已存在');         
-
-        //名稱是否存在
-        }elseif($User['Name']){
-
-            $Errors->add('name','名稱已存在');
-
-        //密碼是否一致
-        }elseif ($Password != $Password2) {        
-
-            $Errors->add('password','密碼需相同');
-
-        }
-        
-        return $Errors;
-    }
-
 }
