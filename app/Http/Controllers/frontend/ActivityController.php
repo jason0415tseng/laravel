@@ -20,6 +20,7 @@ class ActivityController extends Controller
     {
         //列出資料
         $activityData = activity::select('aid', 'title', 'author', 'startdate', 'enddate')
+            ->orderby('startdate')
             ->get()->toArray();
 
         //是否有投票
@@ -125,6 +126,7 @@ class ActivityController extends Controller
         //活動標題
         $activityTitle = activity::select('title', 'aid')
             ->where('aid', $id)
+            ->where('enddate', '>', date('Y-m-d H:i:s'))
             ->first();
 
         //選項內容

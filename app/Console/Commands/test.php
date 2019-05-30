@@ -86,11 +86,16 @@ class test extends Command
 
         //要求確認 == S ==
         if ($this->confirm('請問要繼續嗎?')) {
-            echo "YES" . "\n";
+            $this->comment('你的選擇是:YES');
         } else {
-            echo "NO" . "\n";
+            $this->comment('你的選擇是:NO');
         }
         //要求確認 == E ==
+
+        //互動式輸入(密碼) == S ==
+        $password = $this->secret('你的密碼是?');
+        $this->comment('你的密碼是:' . $password);
+        //互動式輸入(密碼) == E ==
 
         $endtime = time();
         $endtime = date("Y-m-d H:i:s", $endtime);
