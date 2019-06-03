@@ -27,7 +27,7 @@ class MinGameController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
      */
     public function createAccount($request)
     {
@@ -35,14 +35,44 @@ class MinGameController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Display the specified resource.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function login($request)
     {
-        //
+        return $this->minGameService->login($request);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function checkAmount($request)
+    {
+        return $this->minGameService->checkAmount($request);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function checkNumber($request)
+    {
+        return $this->minGameService->checkNumber($request);
+    }
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function lottery($request)
+    {
+        return $this->minGameService->lottery($request);
     }
 
     /**
