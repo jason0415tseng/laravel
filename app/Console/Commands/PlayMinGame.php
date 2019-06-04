@@ -95,73 +95,74 @@ class PlayMinGame extends Command
 
         //註冊&登入 == E ==
 
-        //是否遊玩小遊戲
-        $chicePlay = $this->choice('請問是否要遊玩小遊戲呢?', ['是', '否']);
+        $k = 1;
+        for ($i = 0; $i < $k; $i++) {
 
-        if ($chicePlay == '是') {
+            //下注金額 == S ==
+            $j = 1;
+            for ($i = 0; $i < $j; $i++) {
 
-            $k = 1;
-            for ($i = 0; $i < $k; $i++) {
-
-                //下注金額 == S ==
-                $j = 1;
-                for ($i = 0; $i < $j; $i++) {
-
-                    $request['betAmount'] = $this->ask('您好' . $result['account'] . '，請輸入下注金額(10 ~ 100)');
-                    $amount = $this->minGmme->checkAmount($request);
-
-                    if (isset($amount['status'])) {
-                        $this->error($amount['messages']);
-                        $j++;
-                    }
+                $result = $this->minGmme->getUserData($request);
+                if( $result['gold'] == 0){
+                    $this->info('您餘額不足!!');
+                    return;
                 }
+                $request['betamount'] = $this->ask('您好' . $result['account'] . '，目前餘額:' . number_format($result['gold']) . '，請輸入下注金額(10 ~ 100)');
+                $amount = $this->minGmme->checkAmount($request);
 
-                //下注金額== E ==
-
-                //下注號碼== S ==
-                $request['betNumber'] = $this->choice('您好，請選擇下注號碼', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'random']);
-                $number = $this->minGmme->checkNumber($request);
-
-                if (isset($number['status'])) {
-                    $this->error($number['messages']);
-                } else {
-                    $request['betNumber'] = $number['betNumber'];
-                }
-
-                //下注號碼== E ==
-
-                //開獎 == S ==
-                $this->line('您的下注金額:' . $request['betAmount'] . ', 您的下注號碼:' . $request['betNumber']);
-                $all = '5';
-                $bar = $this->output->createProgressBar($all);
-
-                $bar->setFormat("開獎中...\n%current%/%max% [%bar%] %percent:3s%%\n");
-
-                foreach (range(1, 5) as $user) {
-                    sleep(1);
-                    $bar->advance();
-                }
-
-                $bar->finish();
-
-                $winlose = $this->minGmme->lottery($request);
-
-                if (isset($winlose['status'])) {
-                    $this->error($winlose['messages']);
-                    $this->error($winlose['lottery']);
-                }
-
-                //開獎 == E ==
-
-                if ($this->confirm('請問要繼續玩小遊戲嗎?')) {
-                    $k = $k + 2;
-                } else {
-                    $this->line('ByeBye');
-                    $k = 0;
+                if (isset($amount['status'])) {
+                    $this->error($amount['messages']);
+                    $j++;
                 }
             }
-        } else {
-            $this->line('ByeBye');
+
+            //下注金額== E ==
+
+            //下注號碼== S ==
+            $request['betnumber'] = $this->choice('您好，請選擇下注號碼', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'random']);
+            $number = $this->minGmme->checkNumber($request);
+
+            if (isset($number['status'])) {
+                $this->error($number['messages']);
+            }else{
+                $request['betnumber'] = $number['betnumber'];
+            }
+
+            //下注號碼== E ==
+
+            //開獎 == S ==
+            $this->comment('您的下注金額:' . $request['betamount'] . ', 您的下注號碼:' . $request['betnumber']);
+            $all = '5';
+            $bar = $this->output->createProgressBar($all);
+
+            $bar->setFormat("開獎中...\n%current%/%max% [%bar%] %percent:3s%%\n");
+
+            foreach (range(1, 5) as $user) {
+                sleep(1);
+                $bar->advance();
+            }
+
+            $bar->finish();
+
+            $winlose = $this->minGmme->lottery($request);
+
+            if ($winlose['status'] == 2) {
+                $this->comment('開獎號碼:' . $winlose['lottery']);
+                $this->comment($winlose['messages']);
+            } else {
+                $this->error('開獎號碼:' . $winlose['lottery']);
+                $this->error($winlose['messages']);
+            }
+
+            //開獎 == E ==
+
+            if ($this->confirm('請問要繼續玩小遊戲嗎?')) {
+                $k = $k + 2;
+                sleep(0.5);
+            } else {
+                $this->comment('ByeBye');
+                $k = 0;
+            }
         }
     }
 }

@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //
         Commands\insert::class,
+        Commands\wagers::class,
         Commands\RepositoryMakeCommand::class,
     ];
 
@@ -30,6 +31,7 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
         // 每分鐘執行 
         $schedule->command('test:insert')->everyMinute()->withoutOverlapping();
+        $schedule->command('wagers:insert')->everyMinute()->withoutOverlapping();
     }
 
     /**

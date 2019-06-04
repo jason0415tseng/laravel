@@ -16,7 +16,7 @@ class CreateGamegoldTable extends Migration
         Schema::create('gamegold', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('Uid')->comment("帳號ID");
-            $table->decimal('Gold', 10, 4)->comment("遊戲額度");
+            $table->decimal('Gold', 10, 4)->unsigned()->comment("遊戲額度");
             $table->timestamps();
         });
     }

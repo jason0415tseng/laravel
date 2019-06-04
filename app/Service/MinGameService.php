@@ -27,6 +27,12 @@ class MinGameService
     }
 
     //確認下注金額
+    public function getUserData($request)
+    {
+        return $this->minGameRepo->getUserData($request);
+    }
+
+    //確認下注金額
     public function checkAmount($request)
     {
         return $this->minGameRepo->checkAmount($request);
