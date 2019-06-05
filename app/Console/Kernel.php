@@ -13,8 +13,6 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
-        Commands\insert::class,
         Commands\wagers::class,
         Commands\RepositoryMakeCommand::class,
     ];
@@ -27,11 +25,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        //log位置
+        $logPath = storage_path('logs/' . date('Ymd'));
+
+        if (!is_dir($logPath)) {
+            mkdir($logPath, 0777);
+        }
+
         // 每分鐘執行 
-        $schedule->command('test:insert')->everyMinute()->withoutOverlapping();
-        $schedule->command('wagers:insert')->everyMinute()->withoutOverlapping();
+        $schedule->command('wagers:insert')->everyMinute()->withoutOverlapping()->appendOutputTo($logPath . '/wagers.log');
     }
 
     /**
@@ -41,7 +43,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

@@ -140,7 +140,7 @@ class MinGameRepository
     //確認下注號碼
     public function checkNumber($request)
     {
-        if ((!preg_match('/^([1-9]|10)$/', $request['betnumber'])) && ($request['betnumber'] != 'random')) {
+        if ((!preg_match('/^([0-9])$/', $request['betnumber'])) && ($request['betnumber'] != 'random')) {
             $result = [
                 'status' => 2,
                 'messages' => '下注號碼錯誤!!',
@@ -192,8 +192,8 @@ class MinGameRepository
             return $result;
         } else {
             //中獎
-            //更新DB
 
+            //更新DB
             $updateGold = gamegold::where('uid', $request['uid'])
                 ->increment('gold', $request['betamount']);
 

@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Http\Controllers\MinGameController;
-use App\Models\Login;
 
 class PlayMinGame extends Command
 {
@@ -45,10 +44,10 @@ class PlayMinGame extends Command
 
         $this->info('您好，歡迎遊玩小遊戲!!');
 
-        $chiceLogin = $this->choice('請選擇登入或是註冊?', ['登入', '註冊']);
+        $choiceLogin = $this->choice('請選擇登入或是註冊?', ['登入', '註冊']);
 
         //註冊&登入 == S ==
-        if ($chiceLogin == '登入') {
+        if ($choiceLogin == '登入') {
 
             $j = 1;
             $request['account'] = '';
@@ -57,7 +56,7 @@ class PlayMinGame extends Command
                 $request['account'] = $this->ask('請輸入帳號?');
                 $request['password'] = $this->secret('請輸入密碼?');
                 $result = $this->minGmme->login($request);
-                // dd($result);
+
                 if ($result['status'] == 2) {
                     $this->error('帳號或密碼錯誤');
                     $j++;
@@ -103,7 +102,7 @@ class PlayMinGame extends Command
             for ($i = 0; $i < $j; $i++) {
 
                 $result = $this->minGmme->getUserData($request);
-                if( $result['gold'] == 0){
+                if ($result['gold'] == 0) {
                     $this->info('您餘額不足!!');
                     return;
                 }
@@ -124,7 +123,7 @@ class PlayMinGame extends Command
 
             if (isset($number['status'])) {
                 $this->error($number['messages']);
-            }else{
+            } else {
                 $request['betnumber'] = $number['betnumber'];
             }
 
