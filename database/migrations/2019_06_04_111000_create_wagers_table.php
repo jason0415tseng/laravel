@@ -15,7 +15,7 @@ class CreateWagersTable extends Migration
     {
         Schema::create('wagers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('GameId', 32)->comment("注單ID");
+            $table->string('GameId', 32)->unique('GameId')->comment("注單ID");
             $table->integer('Uid')->comment("帳號ID");
             $table->string('Account', 64)->comment("會員帳號");
             $table->tinyInteger('BetNumber')->comment("下注號碼");

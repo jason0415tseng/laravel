@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\betlog;
 use App\Models\wagersDB;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\InsertWagers;
 
 class wagers extends Command
 {
@@ -47,8 +48,8 @@ class wagers extends Command
 
         //時間判斷
         if ($date == 0) {
-            $starttime ? $starttime = date('Y-m-d ' . $starttime) : $starttime = date('Y-m-d' . ' 00:00:00');
-            $endtime ? $endtime = date('Y-m-d ' . $endtime) : $endtime = date('Y-m-d' . ' 23:59:59');
+            $starttime = date('Y-m-d ' . $starttime);
+            $endtime = date('Y-m-d ' . $endtime);
         } else {
             $date ? $starttime = $date . ' ' . $starttime : $starttime = date('Y-m-d ' . $starttime);
             $date ? $endtime = $date . ' '  . $endtime : $endtime = date('Y-m-d ' . $endtime);
@@ -61,124 +62,82 @@ class wagers extends Command
             return;
         }
 
-        //比對方式一:總筆數 === S ===
+        //比對總筆數 & 總下注金額 === S ===
         $betloglist = betlog::select('*')
             ->whereBetween('bettime', [$starttime, $endtime])
             ->get();
+
+        $betlogTotalGold = betlog::select('*')
+            ->whereBetween('bettime', [$starttime, $endtime])
+            ->sum('betgold');
 
         $betloglist = json_decode($betloglist, true);
 
         $betlogTotal = count($betloglist);
 
-        if (!$betlogTotal) {
-
-            $this->info(' === 開始時間 ' . $starttime . ' ===');
-            $this->error('此時段無任何注單');
-            $this->info(' === 結束時間 ' . $endtime . ' ===');
-            return;
-        }
-
         $wagersTotal = wagersDB::select('*')
             ->whereBetween('bettime', [$starttime, $endtime])
             ->count('*');
-
-        //比對總筆數
-        if ($betlogTotal == $wagersTotal) {
-            $this->info(' 總筆數相同 ');
-            return;
-        }
-
-        $this->info(' === 開始寫注單 ' . date('Y-m-d H:i:s') . ' ===');
-
-        if ($betlogTotal > $wagersTotal) {
-            //寫入DB    
-            foreach ($betloglist as $betlog) {
-
-                $wagerDB = new wagersDB;
-
-                $wagerDB->gameid = $betlog['GameId'];
-                $wagerDB->uid = $betlog['Uid'];
-                $wagerDB->account = $betlog['Account'];
-                $wagerDB->betnumber = $betlog['BetNumber'];
-                $wagerDB->lottery = $betlog['Lottery'];
-                $wagerDB->betgold = $betlog['BetGold'];
-                $wagerDB->wingold = $betlog['WinGold'];
-                $wagerDB->bettime = $betlog['BetTime'];
-
-                $wagerDB->save();
-
-                //判斷是否寫入成功
-                if (!$wagerDB->save()) {
-                    $this->info(' === 寫注單 ' . $betlog['GameId'] . ' 失敗 ===');
-                }
-                $this->info(' === 寫注單 ' . $betlog['GameId'] . ' ===');
-            }
-        }
-
-        $this->info(' === 結束寫注單 ' . date('Y-m-d H:i:s') . ' ===');
-
-        return;
-        //比對方式一:總筆數 === E ===
-
-        //比對方式一:總下注金額 === S ===
-        $betlogTotalGold = betlog::select('*')
-            ->whereBetween('bettime', [$starttime, $endtime])
-            ->sum('betgold');
-
-        if (!$betlogTotalGold) {
-
-            $this->info(' === 開始時間 ' . $starttime . ' ===');
-            $this->error('此時段無任何注單');
-            $this->info(' === 結束時間 ' . $endtime . ' ===');
-            return;
-        }
 
         $wagersTotalGold = wagersDB::select('*')
             ->whereBetween('bettime', [$starttime, $endtime])
             ->sum('betgold');
 
-        //比對總下注金額
-        if ($betlogTotalGold == $wagersTotalGold) {
-            $this->info(' 總金額相同 ');
+
+        if (!$betlogTotal && !$betlogTotalGold) {
+
+            $this->info(' === 開始時間 ' . $starttime . ' ===');
+            $this->error('此時段無任何注單');
+            $this->info(' === 結束時間 ' . $endtime . ' ===');
+            return;
+        }
+
+        //比對
+        if ($betlogTotal == $wagersTotal && $betlogTotalGold == $wagersTotalGold) {
+            $this->info(' 總筆數 ' . $betlogTotal . ' 筆相同 ');
             return;
         }
 
         $this->info(' === 開始寫注單 ' . date('Y-m-d H:i:s') . ' ===');
 
-        if ($betlogTotalGold > $wagersTotalGold) {
-            //寫入DB
-            $betloglist = betlog::select('*')
-                ->whereBetween('bettime', [$starttime, $endtime])
-                ->get();
-
-            $betloglist = json_decode($betloglist, true);
-
+        if ($betlogTotal > $wagersTotal && $betlogTotalGold > $wagersTotalGold) {
+            //寫入DB    
             foreach ($betloglist as $betlog) {
 
-                $wagerDB = new wagersDB;
+                $wagers = wagersDB::select('*')
+                    ->where('gameid', $betlog['GameId'])
+                    ->whereBetween('bettime', [$starttime, $endtime])
+                    ->first();
 
-                $wagerDB->gameid = $betlog['GameId'];
-                $wagerDB->uid = $betlog['Uid'];
-                $wagerDB->account = $betlog['Account'];
-                $wagerDB->betnumber = $betlog['BetNumber'];
-                $wagerDB->lottery = $betlog['Lottery'];
-                $wagerDB->betgold = $betlog['BetGold'];
-                $wagerDB->wingold = $betlog['WinGold'];
-                $wagerDB->bettime = $betlog['BetTime'];
+                if ($wagers == null) {
 
-                $wagerDB->save();
+                    $wagerDB = new wagersDB;
 
-                //判斷是否寫入成功
-                if (!$wagerDB->save()) {
-                    $this->info(' === 寫注單 ' . $betlog['GameId'] . ' 失敗 ===');
+                    $wagerDB->gameid = $betlog['GameId'];
+                    $wagerDB->uid = $betlog['Uid'];
+                    $wagerDB->account = $betlog['Account'];
+                    $wagerDB->betnumber = $betlog['BetNumber'];
+                    $wagerDB->lottery = $betlog['Lottery'];
+                    $wagerDB->betgold = $betlog['BetGold'];
+                    $wagerDB->wingold = $betlog['WinGold'];
+                    $wagerDB->bettime = $betlog['BetTime'];
+
+                    $wagerDB->save();
+
+                    //判斷是否寫入成功
+                    if (!$wagerDB->save()) {
+                        $this->info(' === 寫注單 ' . $betlog['GameId'] . ' 失敗 ===');
+                    }
+                    $this->info(' === 寫注單 ' . $betlog['GameId'] . ' ===');
+                } else {
+                    $this->info(' === 注單 ' . $betlog['GameId'] . ' 已存在 ===');
                 }
-                $this->info(' === 寫注單 ' . $betlog['GameId'] . ' ===');
             }
         }
-
+        $this->info(' === 注單總筆數 ' . $betlogTotal . ' ===');
         $this->info(' === 結束寫注單 ' . date('Y-m-d H:i:s') . ' ===');
 
         return;
-        //比對方式一:總下注金額 === E ===
+        //比對總筆數 & 總下注金額 === E ===
     }
 }

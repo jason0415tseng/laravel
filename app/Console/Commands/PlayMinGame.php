@@ -75,7 +75,7 @@ class PlayMinGame extends Command
                 $request['password'] = $this->secret('請輸入密碼(8碼包含英數)?');
                 $request['password_confirmation'] = $this->secret('請再次輸入密碼?');
                 $result = $this->minGmme->createAccount($request);
-
+                $request['uid'] = $result['uid'];
                 if ($result['status'] == 2) {
 
                     if (isset($result['messages']['account'])) {
