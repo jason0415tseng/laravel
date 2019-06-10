@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use File;
 
 class Kernel extends ConsoleKernel
 {
@@ -28,8 +29,8 @@ class Kernel extends ConsoleKernel
         //log位置
         $logPath = storage_path('logs/' . date('Ymd'));
 
-        if (!is_dir($logPath)) {
-            mkdir($logPath, 0777);
+        if (!File::isDirectory($logPath)) {
+            File::makeDirectory($logPath, 0777, true);
         }
 
         // 每分鐘執行 
