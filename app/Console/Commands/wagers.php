@@ -15,7 +15,7 @@ class wagers extends Command
      *
      * @var string
      */
-    protected $signature = 'wagers:insert {date=0 format : 2019-05-01} {--S|starttime=00:00:00} {--E|endtime=23:59:59}';
+    protected $signature = 'wagers:insert {--S|starttime= : format: 2019-05-01T00:00:00}  {--E|endtime= : format: 2019-05-01T23:59:59}';
 
     /**
      * The console command description.
@@ -42,17 +42,13 @@ class wagers extends Command
     public function handle()
     {
         //時間
-        $date = $this->argument('date');
         $starttime = $this->option('starttime');
         $endtime = $this->option('endtime');
 
         //時間判斷
-        if ($date == 0) {
-            $starttime = date('Y-m-d ' . $starttime);
-            $endtime = date('Y-m-d ' . $endtime);
-        } else {
-            $date ? $starttime = $date . ' ' . $starttime : $starttime = date('Y-m-d ' . $starttime);
-            $date ? $endtime = $date . ' '  . $endtime : $endtime = date('Y-m-d ' . $endtime);
+        if (empty($endtime)) {
+            $endtime = date('Y-m-d H:i', strtotime($starttime)) . ':59';
+            $endtime = str_replace(' ', 'T', $endtime);
         }
 
         if ($starttime > $endtime) {
@@ -61,6 +57,16 @@ class wagers extends Command
             $this->info(' === 結束時間 ' . $endtime . ' ===');
             return;
         }
+
+        if ($starttime == $endtime) {
+            $this->info(' === 開始時間 ' . $starttime . ' ===');
+            $this->error('結束時間請勿等於開始時間');
+            $this->info(' === 結束時間 ' . $endtime . ' ===');
+            return;
+        }
+
+        $job = new InsertWagers($starttime, $endtime);
+        dispatch($job);
 
         //比對總筆數 & 總下注金額 === S ===
         $betloglist = betlog::select('*')
