@@ -3,27 +3,24 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\betlog;
-use App\Models\wagersDB;
-use Illuminate\Support\Facades\Log;
-use App\Jobs\InsertWagers;
-use Curl;
+use App\Jobs\checkWagers;
+use App\Models\apiwagers;
 
-class wagers extends Command
+class check extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'wagers:insert {--S|starttime= : format: 2019-05-01T00:00:00}  {--E|endtime= : format: 2019-05-01T23:59:59}';
+    protected $signature = 'wagers:check {--S|starttime= : format: 2019-05-01T00:00:00}  {--E|endtime= : format: 2019-05-01T23:59:59}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Insert Betlog to Wagers';
+    protected $description = 'check APIlog to Wagers';
 
     /**
      * Create a new command instance.
@@ -48,9 +45,10 @@ class wagers extends Command
 
         //時間判斷
         if (empty($starttime)) {
-            $starttime = date('Y-m-d H:i', time()) . ':00';
+            $nowTime = date('Y-m-d H:i', time()) . ':00';
+            $starttime = date('Y-m-d H:i:s', strtotime("$nowTime -5 minute"));
             $starttime = str_replace(' ', 'T', $starttime);
-            $endtime = date('Y-m-d H:i', strtotime($starttime)) . ':59';
+            $endtime = date('Y-m-d H:i', strtotime($nowTime)) . ':59';
             $endtime = str_replace(' ', 'T', $endtime);
         }
 
@@ -73,7 +71,7 @@ class wagers extends Command
             return;
         }
 
-        $job = new InsertWagers($starttime, $endtime);
+        $job = new checkWagers($starttime, $endtime);
         dispatch($job);
     }
 }

@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\wagers::class,
+        Commands\check::class,
         Commands\RepositoryMakeCommand::class,
     ];
 
@@ -32,9 +33,11 @@ class Kernel extends ConsoleKernel
         if (!File::isDirectory($logPath)) {
             File::makeDirectory($logPath, 0777, true);
         }
-
         // 每分鐘執行 
         $schedule->command('wagers:insert')->everyMinute()->withoutOverlapping()->appendOutputTo($logPath . '/wagers.log');
+
+        // 每五分鐘執行 
+        $schedule->command('wagers:check')->everyFiveMinutes()->withoutOverlapping()->appendOutputTo($logPath . '/checkwagers.log');
     }
 
     /**
