@@ -46,7 +46,7 @@ class check extends Command
         //時間判斷
         if (empty($starttime)) {
             $nowTime = date('Y-m-d H:i', time()) . ':00';
-            $starttime = date('Y-m-d H:i:s', strtotime("$nowTime -5 minute"));
+            $starttime = date('Y-m-d H:i:s', strtotime("$nowTime -10 minute"));
             $starttime = str_replace(' ', 'T', $starttime);
             $endtime = date('Y-m-d H:i', strtotime($nowTime)) . ':59';
             $endtime = str_replace(' ', 'T', $endtime);

@@ -36,9 +36,10 @@ class checkWagers implements ShouldQueue
      */
     public function handle()
     {
+        ini_set("memory_limit", "2048M");
         // 比對總筆數 === S ===
         $apiloglist = apilog::select('*')
-            ->whereBetween('created_at', [$this->starttime, $this->endtime])
+            ->whereBetween('timestamp', [$this->starttime, $this->endtime])
             ->get();
 
         $apiloglist = json_decode($apiloglist, true);
@@ -46,7 +47,7 @@ class checkWagers implements ShouldQueue
         $apilogTotal = count($apiloglist);
 
         $wagersTotal = apiwagers::select('*')
-            ->whereBetween('created_at', [$this->starttime, $this->endtime])
+            ->whereBetween('timestamp', [$this->starttime, $this->endtime])
             ->count('*');
 
         if (!$apilogTotal) {
@@ -71,7 +72,7 @@ class checkWagers implements ShouldQueue
 
                 $wagers = apiwagers::select('*')
                     ->where('_id', $apilog['_id'])
-                    ->whereBetween('created_at', [$this->starttime, $this->endtime])
+                    ->whereBetween('timestamp', [$this->starttime, $this->endtime])
                     ->first();
 
                 if (is_null($wagers)) {

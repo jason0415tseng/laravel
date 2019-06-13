@@ -48,9 +48,10 @@ class wagers extends Command
 
         //時間判斷
         if (empty($starttime)) {
-            $starttime = date('Y-m-d H:i', time()) . ':00';
+            $nowTime = date('Y-m-d H:i', time()) . ':00';
+            $starttime = date('Y-m-d H:i:s', strtotime("$nowTime -5 minute"));
             $starttime = str_replace(' ', 'T', $starttime);
-            $endtime = date('Y-m-d H:i', strtotime($starttime)) . ':59';
+            $endtime = date('Y-m-d H:i', strtotime($nowTime)) . ':59';
             $endtime = str_replace(' ', 'T', $endtime);
         }
 
