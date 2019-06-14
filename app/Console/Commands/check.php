@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Jobs\checkWagers;
-use App\Models\apiwagers;
 
 class check extends Command
 {

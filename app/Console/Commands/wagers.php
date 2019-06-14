@@ -3,11 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\betlog;
-use App\Models\wagersDB;
-use Illuminate\Support\Facades\Log;
 use App\Jobs\InsertWagers;
-use Curl;
 
 class wagers extends Command
 {

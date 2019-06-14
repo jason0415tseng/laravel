@@ -34,10 +34,10 @@ class Kernel extends ConsoleKernel
             File::makeDirectory($logPath, 0777, true);
         }
         // 每分鐘執行 
-        $schedule->command('wagers:insert')->everyMinute()->withoutOverlapping()->appendOutputTo($logPath . '/wagers.log');
+        $schedule->command('wagers:insert')->everyMinute()->appendOutputTo($logPath . '/wagers.log');
 
         // 每五分鐘執行 
-        $schedule->command('wagers:check')->everyFiveMinutes()->withoutOverlapping();
+        $schedule->command('wagers:check')->everyFiveMinutes();
     }
 
     /**
