@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('wagers:insert')->everyMinute()->appendOutputTo($logPath . '/wagers.log');
 
         // 每五分鐘執行 
-        $schedule->command('wagers:check')->everyFiveMinutes();
+        $schedule->command('wagers:check')->everyMinute();
     }
 
     /**
