@@ -17,12 +17,12 @@ class ApiLogService
     //取得資料
     public function getApiLog($request)
     {
-        $this->insertData($this->apiLogRepo->getApiLog($request));
+        $this->checkApiLog($this->apiLogRepo->getApiLog($request));
     }
 
     //新增資料
-    public function insertData($ApiLogData)
+    public function checkApiLog($apiLogData)
     {
-        return $this->apiLogRepo->insertData($ApiLogData);
+        return $this->apiLogRepo->checkApiLog($apiLogData);
     }
 }

@@ -15,8 +15,8 @@ class CheckWagersService
     }
 
     //確認資料
-    public function checkWagers($requestTime)
+    public function checkApiLog($requestTime)
     {
-        $this->checkWagersRepo->checkWagers($requestTime);
+        $this->checkWagersRepo->checkApiLog($requestTime);
     }
 }
