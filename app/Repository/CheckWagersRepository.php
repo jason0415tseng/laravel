@@ -9,57 +9,56 @@ use Illuminate\Support\Facades\Log;
 class CheckWagersRepository
 {
 
-    protected $checkWagers;
-
     public function __construct()
     {
-        $this->apiwagers = new apiwagers;
+        //
     }
 
-    //取資料
-    public function checkWagers($requestTime)
+    //確認資料
+    public function checkWagers($apiLogTotal, $apiWagersTotal)
     {
-        $apiLogTotal = $this->getApiLogTotal($requestTime);
-
-        $apiWagersTotal = $this->getApiWagersTotal($requestTime);
-
         //比對
         if ($apiLogTotal == $apiWagersTotal) {
             Log::info(' 總筆數 ' . $apiLogTotal . ' 筆相同 ');
+            $msg = (' 總筆數 ' . $apiLogTotal . ' 筆相同 ') . "\n";
+            print_r($msg);
+
             return;
         }
 
         if ($apiLogTotal > $apiWagersTotal) {
 
-            $this->insertWagers($requestTime);
+            Log::info(' ApiLog 總筆數: ' . $apiLogTotal . ' 筆');
+            Log::info(' Wagers 總筆數: ' . $apiWagersTotal . ' 筆');
+            Log::info(' 筆數: ' . ($apiLogTotal - $apiWagersTotal) . ' 筆不相同');
+
+            $msg = ' ApiLog 總筆數: ' . $apiLogTotal . ' 筆' . "\n";
+            $msg .= (' Wagers 總筆數: ' . $apiWagersTotal . ' 筆') . "\n";
+            $msg .= (' 筆數: ' . ($apiLogTotal - $apiWagersTotal) . ' 筆不相同') . "\n";
+
+            print_r($msg);
+
+            return;
         }
     }
 
     //取apiLogTotal資料
     public function getApiLogTotal($requestTime)
     {
-        $apiLogTotal = count($this->getApiLogList($requestTime));
-
-        return $apiLogTotal;
-    }
-
-    //取apiLog資料
-    public function getApiLogList($requestTime)
-    {
-        $apiLogList = apilog::select('*')
+        $apiLogTotal = apilog::select('*')
             ->whereBetween('timestamp', [$requestTime['starttime'], $requestTime['endtime']])
-            ->get();
+            ->count('*');
 
-        $apiLogList = json_decode($apiLogList, true);
+        $apiLogTotal = json_decode($apiLogTotal, true);
 
-        if (!$apiLogList) {
+        if (!$apiLogTotal) {
             Log::info(' === 開始時間 ' . $requestTime['starttime'] . ' ===');
             Log::error('此時段無任何注單');
             Log::info(' === 結束時間 ' . $requestTime['endtime'] . ' ===');
             return;
         }
 
-        return $apiLogList;
+        return $apiLogTotal;
     }
 
     //取apiWagersTotal資料
@@ -70,44 +69,5 @@ class CheckWagersRepository
             ->count('*');
 
         return $apiWagersTotal;
-    }
-
-    //寫入apiWagers資料
-    public function insertWagers($requestTime)
-    {
-        $apiLogList = $this->getApiLogList($requestTime);
-
-        foreach ($apiLogList as $apilog) {
-
-            $wagers = apiwagers::select('*')
-                ->where('_id', $apilog['_id'])
-                ->whereBetween('timestamp', [$requestTime['starttime'], $requestTime['endtime']])
-                ->first();
-
-            if (is_null($wagers)) {
-
-                $apiwagers = new apiwagers;
-
-                $apiwagers->_index = $apilog['_index'];
-                $apiwagers->_type = $apilog['_type'];
-                $apiwagers->_id = $apilog['_id'];
-                $apiwagers->server_name = $apilog['server_name'];
-                $apiwagers->request_method = $apilog['request_method'];
-                $apiwagers->status = $apilog['status'];
-                $apiwagers->size = $apilog['size'];
-                $apiwagers->timestamp = $apilog['timestamp'];
-
-                $apiwagers->save();
-
-                //判斷是否寫入成功
-                if (!$apiwagers->save()) {
-                    Log::info(' === 寫注單 ' . $apilog['_id'] . ' 失敗 ===');
-                }
-                Log::info(' === 寫注單 ' . $apilog['_id'] . ' ===');
-            } else {
-                Log::info(' === 注單 ' . $apilog['_id'] . ' 已存在 ===');
-            }
-        }
-        return;
     }
 }

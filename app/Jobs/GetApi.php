@@ -7,18 +7,15 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Models\apilog;
-use App\Models\apiwagers;
-use Illuminate\Support\Facades\Log;
-use App\Service\CheckWagersService;
+use App\Service\ApiLogService;
 
-class checkWagers implements ShouldQueue
+class GetApi implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $starttime;
     protected $endtime;
-    protected $checkWagersService;
+    protected $apiLogService;
 
     /**
      * Create a new job instance.
@@ -29,7 +26,7 @@ class checkWagers implements ShouldQueue
     {
         $this->starttime = $starttime;
         $this->endtime = $endtime;
-        $this->checkWagersService = new CheckWagersService;
+        $this->apiLogService = new ApiLogService;
     }
 
     /**
@@ -40,14 +37,21 @@ class checkWagers implements ShouldQueue
     public function handle()
     {
         $params = [
-            'starttime' => $this->starttime,
-            'endtime' => $this->endtime,
+            'start' => $this->starttime,
+            'end' => $this->endtime,
+            'from' => '0',
         ];
 
-        $apiLogTotal = $this->checkWagersService->getApiLogTotal($params);
+        $apiLogData = $this->apiLogService->getApiLog($params);
 
-        $apiWagersTotal = $this->checkWagersService->getApiWagersTotal($params);
+        $checkData = $this->apiLogService->checkApiLog($apiLogData);
 
-        $this->checkWagersService->checkWagers($apiLogTotal, $apiWagersTotal);
+        if ($checkData['insertData']) {
+            $this->apiLogService->insertApiLog($checkData['insertData']);
+        }
+
+        if ($checkData['updateData']) {
+            $this->apiLogService->updateApiLog($checkData['updateData']);
+        }
     }
 }

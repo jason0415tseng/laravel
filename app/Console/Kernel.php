@@ -34,10 +34,10 @@ class Kernel extends ConsoleKernel
             File::makeDirectory($logPath, 0777, true);
         }
         // 每分鐘執行 
-        $schedule->command('wagers:insert')->everyMinute()->appendOutputTo($logPath . '/wagers.log');
+        $schedule->command('apilog:get')->everyMinute()->appendOutputTo($logPath . '/apilog.log');
 
         // 每五分鐘執行 
-        $schedule->command('wagers:check')->everyMinute();
+        $schedule->command('wagers:get')->everyMinute();
     }
 
     /**

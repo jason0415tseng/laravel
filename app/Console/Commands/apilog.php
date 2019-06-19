@@ -3,24 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Jobs\checkWagers;
-use Faker\Provider\DateTime;
+use App\Jobs\GetApi;
 
-class check extends Command
+class apilog extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'wagers:check {--S|starttime= : format: 2019-05-01T00:00:00}  {--E|endtime= : format: 2019-05-01T23:59:59}';
+    protected $signature = 'apilog:get {--S|starttime= : format: 2019-05-01T00:00:00}  {--E|endtime= : format: 2019-05-01T23:59:59}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'check APIlog to Wagers';
+    protected $description = 'Get Apilog';
 
     /**
      * Create a new command instance.
@@ -43,30 +42,17 @@ class check extends Command
         $starttime = $this->option('starttime');
         $endtime = $this->option('endtime');
 
-
-        // $nowTime = new \DateTime();
-        // $nowTime->format('Y-m-d H:i') . ':00';
-        // $starttime = $nowTime->sub(new \DateInterval('PT10M'));
-        // $starttime = $starttime->format('Y-m-d H:i') . ':00';
-        // $starttime = str_replace(' ', 'T', $starttime);
-        // dd($starttime);
-
-        // dd($starttime->format('Y-m-d H:i:s'));
         //時間判斷
         if (empty($starttime)) {
-            $nowTime = new \DateTime();
-            $nowTime->format('Y-m-d H:i') . ':00';
-            $starttime = $nowTime->sub(new \DateInterval('PT10M'));
-            $starttime = $starttime->format('Y-m-d H:i') . ':00';
+            $nowTime = date('Y-m-d H:i', time()) . ':00';
+            $starttime = date('Y-m-d H:i:s', strtotime("$nowTime -5 minute"));
             $starttime = str_replace(' ', 'T', $starttime);
-            $endtime = new \DateTime($starttime);
-            $endtime = $endtime->format('Y-m-d H:i') . ':59';
+            $endtime = date('Y-m-d H:i', strtotime($nowTime)) . ':59';
             $endtime = str_replace(' ', 'T', $endtime);
         }
 
         if (empty($endtime)) {
-            $endtime = new \DateTime($starttime);
-            $endtime = $endtime->format('Y-m-d H:i') . ':59';
+            $endtime = date('Y-m-d H:i', strtotime($starttime)) . ':59';
             $endtime = str_replace(' ', 'T', $endtime);
         }
 
@@ -84,14 +70,7 @@ class check extends Command
             return;
         }
 
-        if (((strtotime($endtime) - strtotime($starttime))) > 60) {
-            $this->info(' === 開始時間 ' . $starttime . ' ===');
-            $this->error('可輸入時間範圍只有一分鐘');
-            $this->info(' === 結束時間 ' . $endtime . ' ===');
-            return;
-        }
-
-        $job = new checkWagers($starttime, $endtime);
+        $job = new GetApi($starttime, $endtime);
         dispatch($job);
     }
 }

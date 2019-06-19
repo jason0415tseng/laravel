@@ -6,7 +6,7 @@ use App\Repository\CheckWagersRepository;
 
 class CheckWagersService
 {
-    protected $apiLogRepo;
+    protected $checkWagersRepo;
 
     // 透過 DI 注入 Repository
     public function __construct()
@@ -15,8 +15,20 @@ class CheckWagersService
     }
 
     //確認資料
-    public function checkApiLog($requestTime)
+    public function getApiLogTotal($requestTime)
     {
-        $this->checkWagersRepo->checkApiLog($requestTime);
+        return $this->checkWagersRepo->getApiLogTotal($requestTime);
+    }
+
+    //確認資料
+    public function getApiWagersTotal($requestTime)
+    {
+        return $this->checkWagersRepo->getApiWagersTotal($requestTime);
+    }
+
+    //確認資料
+    public function checkWagers($apiLogTotal, $apiWagersTotal)
+    {
+        $this->checkWagersRepo->checkWagers($apiLogTotal, $apiWagersTotal);
     }
 }

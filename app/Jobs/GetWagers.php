@@ -7,15 +7,15 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Service\ApiLogService;
+use App\Service\WagersService;
 
-class InsertWagers implements ShouldQueue
+class GetWagers implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $starttime;
     protected $endtime;
-    protected $apiLogService;
+    protected $WagersService;
 
     /**
      * Create a new job instance.
@@ -27,7 +27,7 @@ class InsertWagers implements ShouldQueue
     {
         $this->starttime = $starttime;
         $this->endtime = $endtime;
-        $this->apiLogService = new ApiLogService;
+        $this->WagersService = new WagersService;
     }
 
     /**
@@ -38,11 +38,14 @@ class InsertWagers implements ShouldQueue
     public function handle()
     {
         $params = [
-            'start' => $this->starttime,
-            'end' => $this->endtime,
-            'from' => '0',
+            'starttime' => $this->starttime,
+            'endtime' => $this->endtime,
         ];
 
-        $this->apiLogService->getApiLog($params);
+        $apiLogList = $this->WagersService->getApiLogList($params);
+
+        $insertData = $this->WagersService->checkWagers($apiLogList);
+
+        $this->WagersService->insertWagers($insertData);
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Jobs\InsertWagers;
+use App\Jobs\GetWagers;
 
 class wagers extends Command
 {
@@ -12,14 +12,14 @@ class wagers extends Command
      *
      * @var string
      */
-    protected $signature = 'wagers:insert {--S|starttime= : format: 2019-05-01T00:00:00}  {--E|endtime= : format: 2019-05-01T23:59:59}';
+    protected $signature = 'wagers:get {--S|starttime= : format: 2019-05-01T00:00:00}  {--E|endtime= : format: 2019-05-01T23:59:59}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Insert Betlog to Wagers';
+    protected $description = 'Insert Apilog to Wagers';
 
     /**
      * Create a new command instance.
@@ -70,7 +70,7 @@ class wagers extends Command
             return;
         }
 
-        $job = new InsertWagers($starttime, $endtime);
+        $job = new GetWagers($starttime, $endtime);
         dispatch($job);
     }
 }
