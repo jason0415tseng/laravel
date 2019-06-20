@@ -44,15 +44,19 @@ class wagers extends Command
 
         //時間判斷
         if (empty($starttime)) {
-            $nowTime = date('Y-m-d H:i', time()) . ':00';
-            $starttime = date('Y-m-d H:i:s', strtotime("$nowTime -5 minute"));
+            $nowTime = new \DateTime();
+            $nowTime->format('Y-m-d H:i') . ':00';
+            $starttime = $nowTime->sub(new \DateInterval('PT5M'));
+            $starttime = $starttime->format('Y-m-d H:i') . ':00';
             $starttime = str_replace(' ', 'T', $starttime);
-            $endtime = date('Y-m-d H:i', strtotime($nowTime)) . ':59';
+            $endtime = new \DateTime($starttime);
+            $endtime = $endtime->format('Y-m-d H:i') . ':59';
             $endtime = str_replace(' ', 'T', $endtime);
         }
 
         if (empty($endtime)) {
-            $endtime = date('Y-m-d H:i', strtotime($starttime)) . ':59';
+            $endtime = new \DateTime($starttime);
+            $endtime = $endtime->format('Y-m-d H:i') . ':59';
             $endtime = str_replace(' ', 'T', $endtime);
         }
 
@@ -66,6 +70,13 @@ class wagers extends Command
         if ($starttime == $endtime) {
             $this->info(' === 開始時間 ' . $starttime . ' ===');
             $this->error('結束時間請勿等於開始時間');
+            $this->info(' === 結束時間 ' . $endtime . ' ===');
+            return;
+        }
+
+        if ((strtotime($endtime) - strtotime($starttime)) > 60) {
+            $this->info(' === 開始時間 ' . $starttime . ' ===');
+            $this->error('可輸入時間範圍只有一分鐘');
             $this->info(' === 結束時間 ' . $endtime . ' ===');
             return;
         }

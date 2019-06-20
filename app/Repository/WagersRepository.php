@@ -15,21 +15,28 @@ class WagersRepository
     }
 
     //取apiLog資料
-    public function getApiLogList($requestTime)
+    public function getApiLogList($starttime, $endtime)
     {
         $apiLogList = apilog::select('*')
-            ->whereBetween('timestamp', [$requestTime['starttime'], $requestTime['endtime']])
+            ->whereBetween('timestamp', [$starttime, $endtime])
             ->get();
 
         $apiLogList = json_decode($apiLogList, true);
 
         if (!$apiLogList) {
-            Log::info(' === 開始時間 ' . $requestTime['starttime'] . ' ===');
+            Log::info(' === 開始時間 ' . $starttime . ' ===');
             Log::error('此時段無任何注單');
-            Log::info(' === 結束時間 ' . $requestTime['endtime'] . ' ===');
-            return;
-        }
+            Log::info(' === 結束時間 ' . $endtime . ' ===');
 
+            $msg = (' === 開始時間 ' . $starttime . ' ===') . "\n";
+            $msg .= ('此時段無任何注單') . "\n";
+            $msg .= (' === 結束時間 ' . $endtime . ' ===') . "\n";
+
+            $apiLogList = [
+                'error' => true,
+                'msg' => $msg,
+            ];
+        }
         return $apiLogList;
     }
 
@@ -45,6 +52,16 @@ class WagersRepository
 
         $insertData = json_decode($collection->whereNotIn('_id', $apiWagersDB), true);
 
+        if (!$insertData) {
+            Log::error('目前無任何需新增注單');
+
+            $msg = ('目前無任何需新增注單') . "\n";
+
+            $insertData = [
+                'error' => true,
+                'msg' => $msg,
+            ];
+        }
         return $insertData;
     }
 
@@ -66,6 +83,7 @@ class WagersRepository
                     'status' => $data['status'],
                     'size' => $data['size'],
                     'timestamp' => $data['timestamp'],
+                    'created_at' => date('Y-m-d H:i:s'),
                 ];
             }
             apiwagers::insert($insertArray);

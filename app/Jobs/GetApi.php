@@ -36,22 +36,26 @@ class GetApi implements ShouldQueue
      */
     public function handle()
     {
-        $params = [
-            'start' => $this->starttime,
-            'end' => $this->endtime,
-            'from' => '0',
-        ];
+        $apiLogData = $this->apiLogService->getApiLog($this->starttime, $this->endtime, $from = 0);
 
-        $apiLogData = $this->apiLogService->getApiLog($params);
-
-        $checkData = $this->apiLogService->checkApiLog($apiLogData);
-
-        if ($checkData['insertData']) {
-            $this->apiLogService->insertApiLog($checkData['insertData']);
+        if (isset($apiLogData['error'])) {
+            print_r($apiLogData['msg']);
+            return;
+        } else {
+            $checkData = $this->apiLogService->checkApiLog($apiLogData);
         }
 
-        if ($checkData['updateData']) {
-            $this->apiLogService->updateApiLog($checkData['updateData']);
+        if (isset($checkData['error'])) {
+            print_r($checkData['msg']);
+            return;
+        } else {
+            if ($checkData['insertData']) {
+                $this->apiLogService->insertApiLog($checkData['insertData']);
+            }
+
+            if ($checkData['updateData']) {
+                $this->apiLogService->updateApiLog($checkData['updateData']);
+            }
         }
     }
 }

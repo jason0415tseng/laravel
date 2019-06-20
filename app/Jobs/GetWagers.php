@@ -37,15 +37,21 @@ class GetWagers implements ShouldQueue
      */
     public function handle()
     {
-        $params = [
-            'starttime' => $this->starttime,
-            'endtime' => $this->endtime,
-        ];
 
-        $apiLogList = $this->WagersService->getApiLogList($params);
+        $apiLogList = $this->WagersService->getApiLogList($this->starttime, $this->endtime);
 
-        $insertData = $this->WagersService->checkWagers($apiLogList);
+        if (isset($apiLogList['error'])) {
+            print_r($apiLogList['msg']);
+            return;
+        } else {
+            $insertData = $this->WagersService->checkWagers($apiLogList);
+        }
 
-        $this->WagersService->insertWagers($insertData);
+        if (isset($insertData['error'])) {
+            print_r($insertData['msg']);
+            return;
+        } else {
+            $this->WagersService->insertWagers($insertData);
+        }
     }
 }

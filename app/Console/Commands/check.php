@@ -43,15 +43,6 @@ class check extends Command
         $starttime = $this->option('starttime');
         $endtime = $this->option('endtime');
 
-
-        // $nowTime = new \DateTime();
-        // $nowTime->format('Y-m-d H:i') . ':00';
-        // $starttime = $nowTime->sub(new \DateInterval('PT10M'));
-        // $starttime = $starttime->format('Y-m-d H:i') . ':00';
-        // $starttime = str_replace(' ', 'T', $starttime);
-        // dd($starttime);
-
-        // dd($starttime->format('Y-m-d H:i:s'));
         //時間判斷
         if (empty($starttime)) {
             $nowTime = new \DateTime();
@@ -84,7 +75,7 @@ class check extends Command
             return;
         }
 
-        if (((strtotime($endtime) - strtotime($starttime))) > 60) {
+        if ((strtotime($endtime) - strtotime($starttime)) > 60) {
             $this->info(' === 開始時間 ' . $starttime . ' ===');
             $this->error('可輸入時間範圍只有一分鐘');
             $this->info(' === 結束時間 ' . $endtime . ' ===');

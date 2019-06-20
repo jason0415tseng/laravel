@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Models\apilog;
+use Log;
 use Curl;
 
 class ApiLogRepository
@@ -16,11 +17,17 @@ class ApiLogRepository
     }
 
     //取資料
-    public function getApiLog($params)
+    public function getApiLog($starttime, $endtime, $from = 0)
     {
-        $params = urldecode(http_build_query($params));
+        // dd($from);
+        $params = [
+            'start' => $starttime,
+            'end' => $endtime,
+            'from' => $from
+        ];
+        $urlData = urldecode(http_build_query($params));
 
-        $url = 'http://train.rd6/?' . $params;
+        $url = 'http://train.rd6/?' . $urlData;
 
         $curl = new Curl\Curl();
 
@@ -28,6 +35,20 @@ class ApiLogRepository
 
         $response = json_decode($curl->response, true);
 
+        if (($response['hits']['total']) == 0) {
+            Log::info(' === 開始時間 ' . $params['start'] . ' ===');
+            Log::error('此時段無任何注單');
+            Log::info(' === 結束時間 ' . $params['end'] . ' ===');
+
+            $msg = (' === 開始時間 ' . $params['start'] . ' ===') . "\n";
+            $msg .= ('此時段無任何注單') . "\n";
+            $msg .= (' === 結束時間 ' . $params['end'] . ' ===') . "\n";
+
+            $response = [
+                'error' => true,
+                'msg' => $msg,
+            ];
+        }
         return $response;
     }
 
@@ -45,11 +66,21 @@ class ApiLogRepository
 
         $insertData = json_decode($collection->whereNotIn('_id', $apiLogDB), true);
 
-        $checkData = [
-            'insertData' => $insertData,
-            'updateData' => $updateData,
-        ];
+        if (count($updateData) == 0 && count($insertData) == 0) {
+            Log::error('目前無任何需更新或新增注單');
 
+            $msg = ('目前無任何需更新或新增注單') . "\n";
+
+            $checkData = [
+                'error' => true,
+                'msg' => $msg,
+            ];
+        } else {
+            $checkData = [
+                'insertData' => $insertData,
+                'updateData' => $updateData,
+            ];
+        }
         return $checkData;
     }
 
@@ -93,6 +124,7 @@ class ApiLogRepository
                     'status' => $data['_source']['status'],
                     'size' => $data['_source']['size'],
                     'timestamp' => $time[0],
+                    'created_at' => date('Y-m-d H:i:s'),
                 ];
             }
             apilog::insert($insertArray);
