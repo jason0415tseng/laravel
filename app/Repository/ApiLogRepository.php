@@ -17,14 +17,18 @@ class ApiLogRepository
     }
 
     //取資料
-    public function getApiLog($starttime, $endtime, $from = 0)
+    public function getApiLog($starttime)
     {
-        // dd($from);
+        $endtime = clone $starttime;
+        $starttime = $starttime->format("Y-m-d\TH:i:s");
+        $endtime = $endtime->format("Y-m-d\TH:i:59");
+
         $params = [
             'start' => $starttime,
             'end' => $endtime,
-            'from' => $from
+            'from' => 0
         ];
+
         $urlData = urldecode(http_build_query($params));
 
         $url = 'http://train.rd6/?' . $urlData;

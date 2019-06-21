@@ -15,9 +15,9 @@ class ApiLogService
     }
 
     //取得資料
-    public function getApiLog($starttime, $endtime, $from = 0)
+    public function getApiLog($starttime)
     {
-        return $this->apiLogRepo->getApiLog($starttime, $endtime, $from = 0);
+        return $this->apiLogRepo->getApiLog($starttime);
     }
 
     //確認資料

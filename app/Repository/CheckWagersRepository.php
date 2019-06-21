@@ -45,19 +45,23 @@ class CheckWagersRepository
     }
 
     //取apiLogTotal資料
-    public function getApiLogTotal($starttime, $endtime)
+    public function getApiLogTotal($starttime)
     {
+        $endtime = clone $starttime;
+        $starttime = $starttime->format("Y-m-d H:i:s");
+        $endtime = $endtime->format("Y-m-d H:i:59");
+
         $apiLogTotal = apilog::select('*')
             ->whereBetween('timestamp', [$starttime, $endtime])
             ->count('*');
 
         if (!$apiLogTotal) {
             Log::info(' === 開始時間 ' . $starttime . ' ===');
-            Log::error('此時段無任何注單');
+            Log::error('此時段 ApiLog 無任何注單');
             Log::info(' === 結束時間 ' . $endtime . ' ===');
 
             $msg = (' === 開始時間 ' . $starttime . ' ===') . "\n";
-            $msg .= ('此時段無任何注單') . "\n";
+            $msg .= ('此時段 ApiLog 無任何注單') . "\n";
             $msg .= (' === 結束時間 ' . $endtime . ' ===') . "\n";
 
             $apiLogTotal = [
@@ -69,19 +73,23 @@ class CheckWagersRepository
     }
 
     //取apiWagersTotal資料
-    public function getApiWagersTotal($starttime, $endtime)
+    public function getApiWagersTotal($starttime)
     {
+        $endtime = clone $starttime;
+        $starttime = $starttime->format("Y-m-d H:i:00");
+        $endtime = $endtime->format("Y-m-d H:i:59");
+
         $apiWagersTotal = apiwagers::select('*')
             ->whereBetween('timestamp', [$starttime, $endtime])
             ->count('*');
 
         if (!$apiWagersTotal) {
             Log::info(' === 開始時間 ' . $starttime . ' ===');
-            Log::error('此時段無任何注單');
+            Log::error('此時段 ApiWagers 無任何注單');
             Log::info(' === 結束時間 ' . $endtime . ' ===');
 
             $msg = (' === 開始時間 ' . $starttime . ' ===') . "\n";
-            $msg .= ('此時段無任何注單') . "\n";
+            $msg .= ('此時段 ApiWagers 無任何注單') . "\n";
             $msg .= (' === 結束時間 ' . $endtime . ' ===') . "\n";
 
             $apiWagersTotal = [

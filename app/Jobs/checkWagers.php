@@ -7,9 +7,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Models\apilog;
-use App\Models\apiwagers;
-use Illuminate\Support\Facades\Log;
 use App\Service\CheckWagersService;
 
 class checkWagers implements ShouldQueue
@@ -17,7 +14,6 @@ class checkWagers implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $starttime;
-    protected $endtime;
     protected $checkWagersService;
 
     /**
@@ -25,10 +21,9 @@ class checkWagers implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($starttime, $endtime)
+    public function __construct($starttime)
     {
         $this->starttime = $starttime;
-        $this->endtime = $endtime;
         $this->checkWagersService = new CheckWagersService;
     }
 
@@ -39,13 +34,13 @@ class checkWagers implements ShouldQueue
      */
     public function handle()
     {
-        $apiLogTotal = $this->checkWagersService->getApiLogTotal($this->starttime, $this->endtime);
+        $apiLogTotal = $this->checkWagersService->getApiLogTotal($this->starttime);
 
         if (isset($apiLogTotal['error'])) {
             print_r($apiLogTotal['msg']);
             return;
         } else {
-            $apiWagersTotal = $this->checkWagersService->getApiWagersTotal($this->starttime, $this->endtime);
+            $apiWagersTotal = $this->checkWagersService->getApiWagersTotal($this->starttime);
         }
 
         if (isset($apiWagersTotal['error'])) {

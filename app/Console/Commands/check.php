@@ -22,6 +22,9 @@ class check extends Command
      */
     protected $description = 'check APIlog to Wagers';
 
+    protected $start_Time;
+    protected $end_Time;
+
     /**
      * Create a new command instance.
      *
@@ -40,49 +43,42 @@ class check extends Command
     public function handle()
     {
         //時間
-        $starttime = $this->option('starttime');
-        $endtime = $this->option('endtime');
+        $startTime = $this->option('starttime');
+        $endTime = $this->option('endtime');
+
+        $start_Time = new \DateTime($startTime);
+        $end_Time = new \DateTime($endTime);
 
         //時間判斷
-        if (empty($starttime)) {
-            $nowTime = new \DateTime();
-            $nowTime->format('Y-m-d H:i') . ':00';
-            $starttime = $nowTime->sub(new \DateInterval('PT10M'));
-            $starttime = $starttime->format('Y-m-d H:i') . ':00';
-            $starttime = str_replace(' ', 'T', $starttime);
-            $endtime = new \DateTime($starttime);
-            $endtime = $endtime->format('Y-m-d H:i') . ':59';
-            $endtime = str_replace(' ', 'T', $endtime);
+        if (empty($startTime)) {
+            $start_Time = $start_Time->sub(new \DateInterval('PT10M'));
+            $start_Time = $start_Time->setTime($start_Time->format('H'), $start_Time->format('i'), 00);
         }
 
-        if (empty($endtime)) {
-            $endtime = new \DateTime($starttime);
-            $endtime = $endtime->format('Y-m-d H:i') . ':59';
-            $endtime = str_replace(' ', 'T', $endtime);
+        if (empty($endTime)) {
+            $end_Time = clone $start_Time;
+            $end_Time = $end_Time->setTime($end_Time->format('H'), $end_Time->format('i'), 59);
         }
 
-        if ($starttime > $endtime) {
-            $this->info(' === 開始時間 ' . $starttime . ' ===');
+        if ($start_Time > $end_Time) {
+            $this->info(' === 開始時間 ' . $startTime . ' ===');
             $this->error('結束時間請勿小於開始時間');
-            $this->info(' === 結束時間 ' . $endtime . ' ===');
+            $this->info(' === 結束時間 ' . $endTime . ' ===');
             return;
         }
 
-        if ($starttime == $endtime) {
-            $this->info(' === 開始時間 ' . $starttime . ' ===');
+        if ($start_Time == $end_Time) {
+            $this->info(' === 開始時間 ' . $startTime . ' ===');
             $this->error('結束時間請勿等於開始時間');
-            $this->info(' === 結束時間 ' . $endtime . ' ===');
+            $this->info(' === 結束時間 ' . $endTime . ' ===');
             return;
         }
 
-        if ((strtotime($endtime) - strtotime($starttime)) > 60) {
-            $this->info(' === 開始時間 ' . $starttime . ' ===');
-            $this->error('可輸入時間範圍只有一分鐘');
-            $this->info(' === 結束時間 ' . $endtime . ' ===');
-            return;
-        }
+        while ($start_Time <= $end_Time) {
+            $job = new checkWagers($start_Time);
+            dispatch($job);
 
-        $job = new checkWagers($starttime, $endtime);
-        dispatch($job);
+            $start_Time->add(new \DateInterval('PT1M'));
+        }
     }
 }

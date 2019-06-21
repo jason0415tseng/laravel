@@ -15,10 +15,9 @@ class WagersService
     }
 
     //確認資料
-    public function getApiLogList($starttime, $endtime)
+    public function getApiLogList($starttime)
     {
-
-        return $this->WagersRepo->getApiLogList($starttime, $endtime);
+        return $this->WagersRepo->getApiLogList($starttime);
     }
 
     //確認資料
@@ -28,8 +27,8 @@ class WagersService
     }
 
     //確認資料
-    public function insertWagers($requestTime)
+    public function insertWagers($insertData)
     {
-        $this->WagersRepo->insertWagers($requestTime);
+        $this->WagersRepo->insertWagers($insertData);
     }
 }

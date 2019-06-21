@@ -14,7 +14,6 @@ class GetApi implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $starttime;
-    protected $endtime;
     protected $apiLogService;
 
     /**
@@ -22,10 +21,9 @@ class GetApi implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($starttime, $endtime)
+    public function __construct($starttime)
     {
         $this->starttime = $starttime;
-        $this->endtime = $endtime;
         $this->apiLogService = new ApiLogService;
     }
 
@@ -36,7 +34,7 @@ class GetApi implements ShouldQueue
      */
     public function handle()
     {
-        $apiLogData = $this->apiLogService->getApiLog($this->starttime, $this->endtime, $from = 0);
+        $apiLogData = $this->apiLogService->getApiLog($this->starttime);
 
         if (isset($apiLogData['error'])) {
             print_r($apiLogData['msg']);

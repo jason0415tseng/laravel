@@ -15,8 +15,12 @@ class WagersRepository
     }
 
     //取apiLog資料
-    public function getApiLogList($starttime, $endtime)
+    public function getApiLogList($starttime)
     {
+        $endtime = clone $starttime;
+        $starttime = $starttime->format("Y-m-d H:i:s");
+        $endtime = $endtime->format("Y-m-d H:i:59");
+
         $apiLogList = apilog::select('*')
             ->whereBetween('timestamp', [$starttime, $endtime])
             ->get();

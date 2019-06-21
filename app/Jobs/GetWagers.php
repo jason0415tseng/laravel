@@ -14,7 +14,6 @@ class GetWagers implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $starttime;
-    protected $endtime;
     protected $WagersService;
 
     /**
@@ -22,11 +21,9 @@ class GetWagers implements ShouldQueue
      *
      * @return void
      */
-
-    public function __construct($starttime, $endtime)
+    public function __construct($starttime)
     {
         $this->starttime = $starttime;
-        $this->endtime = $endtime;
         $this->WagersService = new WagersService;
     }
 
@@ -37,8 +34,7 @@ class GetWagers implements ShouldQueue
      */
     public function handle()
     {
-
-        $apiLogList = $this->WagersService->getApiLogList($this->starttime, $this->endtime);
+        $apiLogList = $this->WagersService->getApiLogList($this->starttime);
 
         if (isset($apiLogList['error'])) {
             print_r($apiLogList['msg']);
