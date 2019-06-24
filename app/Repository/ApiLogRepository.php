@@ -17,7 +17,7 @@ class ApiLogRepository
     }
 
     //取資料
-    public function getApiLog($starttime)
+    public function getApiLog($starttime, $from)
     {
         $endtime = clone $starttime;
         $starttime = $starttime->format("Y-m-d\TH:i:s");
@@ -26,7 +26,7 @@ class ApiLogRepository
         $params = [
             'start' => $starttime,
             'end' => $endtime,
-            'from' => 0
+            'from' => $from
         ];
 
         $urlData = urldecode(http_build_query($params));
@@ -41,11 +41,11 @@ class ApiLogRepository
 
         if (($response['hits']['total']) == 0) {
             Log::info(' === 開始時間 ' . $params['start'] . ' ===');
-            Log::error('此時段無任何注單');
+            Log::error('此時段 ApiLog 無任何注單');
             Log::info(' === 結束時間 ' . $params['end'] . ' ===');
 
             $msg = (' === 開始時間 ' . $params['start'] . ' ===') . "\n";
-            $msg .= ('此時段無任何注單') . "\n";
+            $msg .= ('此時段 ApiLog 無任何注單') . "\n";
             $msg .= (' === 結束時間 ' . $params['end'] . ' ===') . "\n";
 
             $response = [

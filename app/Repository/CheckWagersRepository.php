@@ -14,36 +14,6 @@ class CheckWagersRepository
         //
     }
 
-    //確認資料
-    public function checkWagers($apiLogTotal, $apiWagersTotal)
-    {
-        //比對
-        if ($apiLogTotal == $apiWagersTotal) {
-            Log::info(' ApiLog & ApiWagers 總筆數 ' . $apiLogTotal . ' 筆相同 ');
-            $msg = (' ApiLog & ApiWagers 總筆數 ' . $apiLogTotal . ' 筆相同 ') . "\n";
-
-            $checkMsg = [
-                'msg' => $msg,
-            ];
-        }
-
-        if ($apiLogTotal > $apiWagersTotal) {
-
-            Log::info(' ApiLog 總筆數: ' . $apiLogTotal . ' 筆');
-            Log::info(' ApiWagers 總筆數: ' . $apiWagersTotal . ' 筆');
-            Log::info(' 筆數: ' . ($apiLogTotal - $apiWagersTotal) . ' 筆不相同');
-
-            $msg = ' ApiLog 總筆數: ' . $apiLogTotal . ' 筆' . "\n";
-            $msg .= (' ApiWagers 總筆數: ' . $apiWagersTotal . ' 筆') . "\n";
-            $msg .= (' 筆數: ' . ($apiLogTotal - $apiWagersTotal) . ' 筆不相同') . "\n";
-
-            $checkMsg = [
-                'msg' => $msg,
-            ];
-        }
-        return $checkMsg;
-    }
-
     //取apiLogTotal資料
     public function getApiLogTotal($starttime)
     {
@@ -98,5 +68,35 @@ class CheckWagersRepository
             ];
         }
         return $apiWagersTotal;
+    }
+
+    //確認資料
+    public function checkWagers($apiLogTotal, $apiWagersTotal)
+    {
+        //比對
+        if ($apiLogTotal == $apiWagersTotal) {
+            Log::info(' ApiLog & ApiWagers 總筆數 ' . $apiLogTotal . ' 筆相同 ');
+            $msg = (' ApiLog & ApiWagers 總筆數 ' . $apiLogTotal . ' 筆相同 ') . "\n";
+
+            $checkMsg = [
+                'msg' => $msg,
+            ];
+        }
+
+        if ($apiLogTotal > $apiWagersTotal) {
+
+            Log::info(' ApiLog 總筆數: ' . $apiLogTotal . ' 筆');
+            Log::info(' ApiWagers 總筆數: ' . $apiWagersTotal . ' 筆');
+            Log::info(' 筆數: ' . ($apiLogTotal - $apiWagersTotal) . ' 筆不相同');
+
+            $msg = ' ApiLog 總筆數: ' . $apiLogTotal . ' 筆' . "\n";
+            $msg .= (' ApiWagers 總筆數: ' . $apiWagersTotal . ' 筆') . "\n";
+            $msg .= (' 筆數: ' . ($apiLogTotal - $apiWagersTotal) . ' 筆不相同') . "\n";
+
+            $checkMsg = [
+                'msg' => $msg,
+            ];
+        }
+        return $checkMsg;
     }
 }

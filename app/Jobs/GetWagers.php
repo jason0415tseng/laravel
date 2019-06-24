@@ -34,6 +34,7 @@ class GetWagers implements ShouldQueue
      */
     public function handle()
     {
+        ini_set("memory_limit", "512");
         $apiLogList = $this->WagersService->getApiLogList($this->starttime);
 
         if (isset($apiLogList['error'])) {

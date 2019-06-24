@@ -14,8 +14,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        Commands\apilog::class,
         Commands\wagers::class,
-        Commands\check::class,
         Commands\RepositoryMakeCommand::class,
     ];
 

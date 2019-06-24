@@ -29,11 +29,11 @@ class WagersRepository
 
         if (!$apiLogList) {
             Log::info(' === 開始時間 ' . $starttime . ' ===');
-            Log::error('此時段無任何注單');
+            Log::error('此時段 ApiLog 無任何注單');
             Log::info(' === 結束時間 ' . $endtime . ' ===');
 
             $msg = (' === 開始時間 ' . $starttime . ' ===') . "\n";
-            $msg .= ('此時段無任何注單') . "\n";
+            $msg .= ('此時段 ApiLog 無任何注單') . "\n";
             $msg .= (' === 結束時間 ' . $endtime . ' ===') . "\n";
 
             $apiLogList = [
