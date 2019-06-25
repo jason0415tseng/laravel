@@ -21,7 +21,16 @@ class WagersRepository
         $starttime = $starttime->format("Y-m-d H:i:s");
         $endtime = $endtime->format("Y-m-d H:i:59");
 
-        $apiLogList = apilog::select('*')
+        $apiLogList = apilog::select(
+            '_index',
+            '_type',
+            '_id',
+            'server_name',
+            'request_method',
+            'status',
+            'size',
+            'timestamp'
+        )
             ->whereBetween('timestamp', [$starttime, $endtime])
             ->get();
 
@@ -56,23 +65,15 @@ class WagersRepository
 
         $insertData = json_decode($collection->whereNotIn('_id', $apiWagersDB), true);
 
-        if (!$insertData) {
-            Log::error('目前無任何需新增注單');
-
-            $msg = ('目前無任何需新增注單') . "\n";
-
-            $insertData = [
-                'error' => true,
-                'msg' => $msg,
-            ];
+        if ($insertData) {
+            return $insertData;
         }
-        return $insertData;
     }
 
     //寫入apiWagers資料
     public function insertWagers($insertData)
     {
-        foreach (array_chunk($insertData, 2000, true) as $dataList) {
+        foreach (array_chunk($insertData, 500, true) as $dataList) {
 
             $insertArray = [];
 

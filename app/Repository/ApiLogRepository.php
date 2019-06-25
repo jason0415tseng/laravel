@@ -111,7 +111,7 @@ class ApiLogRepository
     //新增資料
     public function insertApiLog($insertData)
     {
-        foreach (array_chunk($insertData, 2000, true) as $dataList) {
+        foreach (array_chunk($insertData, 500, true) as $dataList) {
 
             $insertArray = [];
 

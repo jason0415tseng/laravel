@@ -21,7 +21,7 @@ class CreateApilogTable extends Migration
             $table->string('server_name', 32)->comment("server_name");
             $table->string('request_method', 6)->comment("request_method");
             $table->string('status', 6)->comment("status");
-            $table->string('size', 6)->comment("size");
+            $table->string('size', 12)->comment("size");
             $table->dateTime('timestamp')->comment("timestamp");
             $table->timestamps();
         });

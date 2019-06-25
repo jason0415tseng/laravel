@@ -9,6 +9,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Service\WagersService;
 
+ini_set('memory_limit', '-1');
+
 class GetWagers implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -34,21 +36,19 @@ class GetWagers implements ShouldQueue
      */
     public function handle()
     {
-        ini_set("memory_limit", "512");
         $apiLogList = $this->WagersService->getApiLogList($this->starttime);
 
         if (isset($apiLogList['error'])) {
             print_r($apiLogList['msg']);
             return;
         } else {
-            $insertData = $this->WagersService->checkWagers($apiLogList);
-        }
+            foreach (array_chunk($apiLogList, 2000, true) as $apiList) {
+                $insertData = $this->WagersService->checkWagers($apiList);
 
-        if (isset($insertData['error'])) {
-            print_r($insertData['msg']);
-            return;
-        } else {
-            $this->WagersService->insertWagers($insertData);
+                if ($insertData) {
+                    $this->WagersService->insertWagers($insertData);
+                }
+            }
         }
     }
 }

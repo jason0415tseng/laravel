@@ -9,6 +9,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Service\ApiLogService;
 
+ini_set('memory_limit', '-1');
+
 class GetApi implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -38,10 +40,8 @@ class GetApi implements ShouldQueue
      */
     public function handle()
     {
-        ini_set("memory_limit", "512");
         while ($this->from <= $this->total) {
             $apiLogData = $this->apiLogService->getApiLog($this->starttime, $this->from);
-            $this->total = $apiLogData['hits']['total'];
 
             if (isset($apiLogData['error'])) {
                 print_r($apiLogData['msg']);
@@ -61,6 +61,7 @@ class GetApi implements ShouldQueue
                         $this->apiLogService->updateApiLog($checkData['updateData']);
                     }
                 }
+                $this->total = $apiLogData['hits']['total'];
                 $this->from += 10000;
             }
         }
