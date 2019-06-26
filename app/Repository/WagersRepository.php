@@ -54,9 +54,9 @@ class WagersRepository
     }
 
     //確認資料
-    public function checkWagers($apiLogList)
+    public function checkWagers($apiData)
     {
-        $collection = collect($apiLogList);
+        $collection = collect($apiData);
 
         $idArray =  $collection->pluck('_id');
 
@@ -73,25 +73,22 @@ class WagersRepository
     //寫入apiWagers資料
     public function insertWagers($insertData)
     {
-        foreach (array_chunk($insertData, 500, true) as $dataList) {
+        $insertArray = [];
 
-            $insertArray = [];
+        foreach ($insertData as $data) {
 
-            foreach ($dataList as $data) {
-
-                $insertArray[] = [
-                    '_index' => $data['_index'],
-                    '_type' => $data['_type'],
-                    '_id' => $data['_id'],
-                    'server_name' => $data['server_name'],
-                    'request_method' => $data['request_method'],
-                    'status' => $data['status'],
-                    'size' => $data['size'],
-                    'timestamp' => $data['timestamp'],
-                    'created_at' => date('Y-m-d H:i:s'),
-                ];
-            }
-            apiwagers::insert($insertArray);
+            $insertArray[] = [
+                '_index' => $data['_index'],
+                '_type' => $data['_type'],
+                '_id' => $data['_id'],
+                'server_name' => $data['server_name'],
+                'request_method' => $data['request_method'],
+                'status' => $data['status'],
+                'size' => $data['size'],
+                'timestamp' => $data['timestamp'],
+                'created_at' => date('Y-m-d H:i:s'),
+            ];
         }
+        apiwagers::insert($insertArray);
     }
 }

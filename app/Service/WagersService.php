@@ -21,9 +21,9 @@ class WagersService
     }
 
     //確認資料
-    public function checkWagers($apiLogList)
+    public function checkWagers($apiData)
     {
-        return $this->WagersRepo->checkWagers($apiLogList);
+        return $this->WagersRepo->checkWagers($apiData);
     }
 
     //確認資料
