@@ -17,13 +17,21 @@ class ApiLogService
     //取得資料
     public function getApiLog($starttime, $from)
     {
-        return $this->apiLogRepo->getApiLog($starttime, $from);
+        $apiLogData = $this->apiLogRepo->getApiLog($starttime, $from);
+        if (($apiLogData['hits']['total']) == 0) {
+            return false;
+        }
+        return $apiLogData;
     }
 
     //確認資料
     public function checkApiLog($apiLogData)
     {
-        return $this->apiLogRepo->checkApiLog($apiLogData);
+        $checkData =  $this->apiLogRepo->checkApiLog($apiLogData);
+        if (empty($checkData['updateData']) && empty($checkData['insertData'])) {
+            $checkData = false;
+        }
+        return $checkData;
     }
 
     //新增資料

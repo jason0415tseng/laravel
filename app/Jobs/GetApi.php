@@ -43,26 +43,20 @@ class GetApi implements ShouldQueue
         while ($this->from <= $this->total) {
             $apiLogData = $this->apiLogService->getApiLog($this->starttime, $this->from);
 
-            if (isset($apiLogData['error'])) {
-                print_r($apiLogData['msg']);
-                return;
-            } else {
+            if ($apiLogData) {
                 $checkData = $this->apiLogService->checkApiLog($apiLogData);
 
-                if (isset($checkData['error'])) {
-                    print_r($checkData['msg']);
-                    return;
-                } else {
-                    if ($checkData['insertData']) {
-                        $this->apiLogService->insertApiLog($checkData['insertData']);
-                    }
+                if (!empty($checkData['insertData'])) {
+                    $this->apiLogService->insertApiLog($checkData['insertData']);
+                }
 
-                    if ($checkData['updateData']) {
-                        $this->apiLogService->updateApiLog($checkData['updateData']);
-                    }
+                if (!empty($checkData['updateData'])) {
+                    $this->apiLogService->updateApiLog($checkData['updateData']);
                 }
                 $this->total = $apiLogData['hits']['total'];
                 $this->from += 10000;
+            } else {
+                return;
             }
         }
     }

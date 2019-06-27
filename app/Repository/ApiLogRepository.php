@@ -37,23 +37,7 @@ class ApiLogRepository
 
         $curl->get($url);
 
-        $response = json_decode($curl->response, true);
-
-        if (($response['hits']['total']) == 0) {
-            Log::info(' === 開始時間 ' . $params['start'] . ' ===');
-            Log::error('此時段 ApiLog 無任何注單');
-            Log::info(' === 結束時間 ' . $params['end'] . ' ===');
-
-            $msg = (' === 開始時間 ' . $params['start'] . ' ===') . "\n";
-            $msg .= ('此時段 ApiLog 無任何注單') . "\n";
-            $msg .= (' === 結束時間 ' . $params['end'] . ' ===') . "\n";
-
-            $response = [
-                'error' => true,
-                'msg' => $msg,
-            ];
-        }
-        return $response;
+        return json_decode($curl->response, true);
     }
 
     //確認資料
@@ -66,25 +50,14 @@ class ApiLogRepository
         $apiLogDB = apilog::whereIN('_id', $idArray)
             ->pluck('_id');
 
-        $updateData = json_decode($collection->whereIn('_id', $apiLogDB), true);
+        $updateData = $collection->whereIn('_id', $apiLogDB)->toArray();
 
-        $insertData = json_decode($collection->whereNotIn('_id', $apiLogDB), true);
+        $insertData = $collection->whereNotIn('_id', $apiLogDB)->toArray();
 
-        if (count($updateData) == 0 && count($insertData) == 0) {
-            Log::error('目前無任何需更新或新增注單');
-
-            $msg = ('目前無任何需更新或新增注單') . "\n";
-
-            $checkData = [
-                'error' => true,
-                'msg' => $msg,
-            ];
-        } else {
-            $checkData = [
-                'insertData' => $insertData,
-                'updateData' => $updateData,
-            ];
-        }
+        $checkData = [
+            'insertData' => $insertData,
+            'updateData' => $updateData,
+        ];
         return $checkData;
     }
 

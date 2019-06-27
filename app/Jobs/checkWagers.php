@@ -36,17 +36,11 @@ class checkWagers implements ShouldQueue
     {
         $apiLogTotal = $this->checkWagersService->getApiLogTotal($this->starttime);
 
-        if (isset($apiLogTotal['error'])) {
-            print_r($apiLogTotal['msg']);
-            return;
-        } else {
+        if ($apiLogTotal) {
             $apiWagersTotal = $this->checkWagersService->getApiWagersTotal($this->starttime);
         }
 
-        if (isset($apiWagersTotal['error'])) {
-            print_r($apiWagersTotal['msg']);
-            return;
-        } else {
+        if ($apiWagersTotal) {
             $checkMsg = $this->checkWagersService->checkWagers($apiLogTotal, $apiWagersTotal);
         }
 

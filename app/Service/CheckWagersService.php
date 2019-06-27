@@ -17,13 +17,21 @@ class CheckWagersService
     //確認資料
     public function getApiLogTotal($starttime)
     {
-        return $this->checkWagersRepo->getApiLogTotal($starttime);
+        $apiLogTotal = $this->checkWagersRepo->getApiLogTotal($starttime);
+        if (!$apiLogTotal) {
+            return false;
+        }
+        return $apiLogTotal;
     }
 
     //確認資料
     public function getApiWagersTotal($starttime)
     {
-        return $this->checkWagersRepo->getApiWagersTotal($starttime);
+        $apiWagersTotal = $this->checkWagersRepo->getApiWagersTotal($starttime);
+        if (!$apiWagersTotal) {
+            return false;
+        }
+        return $apiWagersTotal;
     }
 
     //確認資料

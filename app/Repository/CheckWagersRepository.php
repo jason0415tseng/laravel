@@ -25,20 +25,6 @@ class CheckWagersRepository
             ->whereBetween('timestamp', [$starttime, $endtime])
             ->count('*');
 
-        if (!$apiLogTotal) {
-            Log::info(' === 開始時間 ' . $starttime . ' ===');
-            Log::error('此時段 ApiLog 無任何注單');
-            Log::info(' === 結束時間 ' . $endtime . ' ===');
-
-            $msg = (' === 開始時間 ' . $starttime . ' ===') . "\n";
-            $msg .= ('此時段 ApiLog 無任何注單') . "\n";
-            $msg .= (' === 結束時間 ' . $endtime . ' ===') . "\n";
-
-            $apiLogTotal = [
-                'error' => true,
-                'msg' => $msg,
-            ];
-        }
         return $apiLogTotal;
     }
 
@@ -53,20 +39,6 @@ class CheckWagersRepository
             ->whereBetween('timestamp', [$starttime, $endtime])
             ->count('*');
 
-        if (!$apiWagersTotal) {
-            Log::info(' === 開始時間 ' . $starttime . ' ===');
-            Log::error('此時段 ApiWagers 無任何注單');
-            Log::info(' === 結束時間 ' . $endtime . ' ===');
-
-            $msg = (' === 開始時間 ' . $starttime . ' ===') . "\n";
-            $msg .= ('此時段 ApiWagers 無任何注單') . "\n";
-            $msg .= (' === 結束時間 ' . $endtime . ' ===') . "\n";
-
-            $apiWagersTotal = [
-                'error' => true,
-                'msg' => $msg,
-            ];
-        }
         return $apiWagersTotal;
     }
 

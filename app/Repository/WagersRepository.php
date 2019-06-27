@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Models\apilog;
 use App\Models\apiwagers;
-use Illuminate\Support\Facades\Log;
 
 class WagersRepository
 {
@@ -32,24 +31,8 @@ class WagersRepository
             'timestamp'
         )
             ->whereBetween('timestamp', [$starttime, $endtime])
-            ->get();
+            ->get()->toArray();
 
-        $apiLogList = json_decode($apiLogList, true);
-
-        if (!$apiLogList) {
-            Log::info(' === 開始時間 ' . $starttime . ' ===');
-            Log::error('此時段 ApiLog 無任何注單');
-            Log::info(' === 結束時間 ' . $endtime . ' ===');
-
-            $msg = (' === 開始時間 ' . $starttime . ' ===') . "\n";
-            $msg .= ('此時段 ApiLog 無任何注單') . "\n";
-            $msg .= (' === 結束時間 ' . $endtime . ' ===') . "\n";
-
-            $apiLogList = [
-                'error' => true,
-                'msg' => $msg,
-            ];
-        }
         return $apiLogList;
     }
 
@@ -63,11 +46,9 @@ class WagersRepository
         $apiWagersDB = apiwagers::whereIN('_id', $idArray)
             ->pluck('_id');
 
-        $insertData = json_decode($collection->whereNotIn('_id', $apiWagersDB), true);
+        $insertData = $collection->whereNotIn('_id', $apiWagersDB)->toArray();
 
-        if ($insertData) {
-            return $insertData;
-        }
+        return $insertData;
     }
 
     //寫入apiWagers資料

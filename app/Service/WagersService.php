@@ -17,13 +17,21 @@ class WagersService
     //確認資料
     public function getApiLogList($starttime)
     {
-        return $this->WagersRepo->getApiLogList($starttime);
+        $apiLogList = $this->WagersRepo->getApiLogList($starttime);
+        if (!$apiLogList) {
+            return false;
+        }
+        return $apiLogList;
     }
 
     //確認資料
     public function checkWagers($apiData)
     {
-        return $this->WagersRepo->checkWagers($apiData);
+        $insertData = $this->WagersRepo->checkWagers($apiData);
+        if (!$insertData) {
+            return false;
+        }
+        return $insertData;
     }
 
     //確認資料
