@@ -37,6 +37,8 @@ class WagersService
     //確認資料
     public function insertWagers($insertData)
     {
-        $this->WagersRepo->insertWagers($insertData);
+        if (!empty($insertData)) {
+            $this->WagersRepo->insertWagers($insertData);
+        }
     }
 }

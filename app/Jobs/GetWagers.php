@@ -45,8 +45,6 @@ class GetWagers implements ShouldQueue
                     $this->WagersService->insertWagers($insertData);
                 }
             }
-        } else {
-            return;
         }
     }
 }

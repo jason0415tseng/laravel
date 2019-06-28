@@ -46,13 +46,8 @@ class GetApi implements ShouldQueue
             if ($apiLogData) {
                 $checkData = $this->apiLogService->checkApiLog($apiLogData);
 
-                if (!empty($checkData['insertData'])) {
-                    $this->apiLogService->insertApiLog($checkData['insertData']);
-                }
-
-                if (!empty($checkData['updateData'])) {
-                    $this->apiLogService->updateApiLog($checkData['updateData']);
-                }
+                $this->apiLogService->insertApiLog($checkData['insertData']);
+                $this->apiLogService->updateApiLog($checkData['updateData']);
                 $this->total = $apiLogData['hits']['total'];
                 $this->from += 10000;
             } else {

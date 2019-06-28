@@ -19,6 +19,7 @@ class CheckWagersService
     {
         $apiLogTotal = $this->checkWagersRepo->getApiLogTotal($starttime);
         if (!$apiLogTotal) {
+            print_r('此時段 ApiLog 無任何注單' . "\n");
             return false;
         }
         return $apiLogTotal;
@@ -29,6 +30,7 @@ class CheckWagersService
     {
         $apiWagersTotal = $this->checkWagersRepo->getApiWagersTotal($starttime);
         if (!$apiWagersTotal) {
+            print_r('此時段 ApiWagers 無任何注單' . "\n");
             return false;
         }
         return $apiWagersTotal;
@@ -37,6 +39,8 @@ class CheckWagersService
     //確認資料
     public function checkWagers($apiLogTotal, $apiWagersTotal)
     {
-        return $this->checkWagersRepo->checkWagers($apiLogTotal, $apiWagersTotal);
+        if (!empty($apiLogTotal) && !empty($apiWagersTotal)) {
+            return $this->checkWagersRepo->checkWagers($apiLogTotal, $apiWagersTotal);
+        }
     }
 }

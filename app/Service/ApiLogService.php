@@ -19,6 +19,7 @@ class ApiLogService
     {
         $apiLogData = $this->apiLogRepo->getApiLog($starttime, $from);
         if (($apiLogData['hits']['total']) == 0) {
+            print_r('此時段 ApiLog 無任何注單' . "\n");
             return false;
         }
         return $apiLogData;
@@ -37,12 +38,16 @@ class ApiLogService
     //新增資料
     public function insertApiLog($insertData)
     {
-        return $this->apiLogRepo->insertApiLog($insertData);
+        if (!empty($insertData)) {
+            $this->apiLogRepo->insertApiLog($insertData);
+        }
     }
 
     //更新資料
     public function updateApiLog($updateData)
     {
-        return $this->apiLogRepo->updateApiLog($updateData);
+        if (!empty($updateData)) {
+            $this->apiLogRepo->updateApiLog($updateData);
+        }
     }
 }
