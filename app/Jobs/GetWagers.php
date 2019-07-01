@@ -37,7 +37,6 @@ class GetWagers implements ShouldQueue
     public function handle()
     {
         $apiLogList = $this->WagersService->getApiLogList($this->starttime);
-
         if ($apiLogList) {
             foreach (array_chunk($apiLogList, 500, true) as $apiData) {
                 $insertData = $this->WagersService->checkWagers($apiData);

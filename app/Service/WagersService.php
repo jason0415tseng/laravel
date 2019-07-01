@@ -19,6 +19,7 @@ class WagersService
     {
         $apiLogList = $this->WagersRepo->getApiLogList($starttime);
         if (!$apiLogList) {
+            print_r('此時段 ApiLog 無任何注單' . "\n");
             return false;
         }
         return $apiLogList;

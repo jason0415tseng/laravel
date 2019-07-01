@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Repository\CheckWagersRepository;
+use Illuminate\Support\Facades\Log;
 
 class CheckWagersService
 {
@@ -40,7 +41,24 @@ class CheckWagersService
     public function checkWagers($apiLogTotal, $apiWagersTotal)
     {
         if (!empty($apiLogTotal) && !empty($apiWagersTotal)) {
-            return $this->checkWagersRepo->checkWagers($apiLogTotal, $apiWagersTotal);
+            //比對
+            if ($apiLogTotal == $apiWagersTotal) {
+                Log::info(' ApiLog & ApiWagers 總筆數 ' . $apiLogTotal . ' 筆相同 ');
+                print_r(' ApiLog & ApiWagers 總筆數 ' . $apiLogTotal . ' 筆相同 ' . "\n");
+            }
+
+            if ($apiLogTotal > $apiWagersTotal) {
+
+                Log::info(' ApiLog 總筆數: ' . $apiLogTotal . ' 筆');
+                Log::info(' ApiWagers 總筆數: ' . $apiWagersTotal . ' 筆');
+                Log::info(' 筆數: ' . ($apiLogTotal - $apiWagersTotal) . ' 筆不相同');
+
+                $msg = ' ApiLog 總筆數: ' . $apiLogTotal . ' 筆' . "\n";
+                $msg .= (' ApiWagers 總筆數: ' . $apiWagersTotal . ' 筆') . "\n";
+                $msg .= (' 筆數: ' . ($apiLogTotal - $apiWagersTotal) . ' 筆不相同') . "\n";
+
+                print_r($msg);
+            }
         }
     }
 }

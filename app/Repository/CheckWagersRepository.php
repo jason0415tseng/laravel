@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Models\apilog;
 use App\Models\apiwagers;
-use Illuminate\Support\Facades\Log;
 
 class CheckWagersRepository
 {
@@ -40,35 +39,5 @@ class CheckWagersRepository
             ->count('*');
 
         return $apiWagersTotal;
-    }
-
-    //確認資料
-    public function checkWagers($apiLogTotal, $apiWagersTotal)
-    {
-        //比對
-        if ($apiLogTotal == $apiWagersTotal) {
-            Log::info(' ApiLog & ApiWagers 總筆數 ' . $apiLogTotal . ' 筆相同 ');
-            $msg = (' ApiLog & ApiWagers 總筆數 ' . $apiLogTotal . ' 筆相同 ') . "\n";
-
-            $checkMsg = [
-                'msg' => $msg,
-            ];
-        }
-
-        if ($apiLogTotal > $apiWagersTotal) {
-
-            Log::info(' ApiLog 總筆數: ' . $apiLogTotal . ' 筆');
-            Log::info(' ApiWagers 總筆數: ' . $apiWagersTotal . ' 筆');
-            Log::info(' 筆數: ' . ($apiLogTotal - $apiWagersTotal) . ' 筆不相同');
-
-            $msg = ' ApiLog 總筆數: ' . $apiLogTotal . ' 筆' . "\n";
-            $msg .= (' ApiWagers 總筆數: ' . $apiWagersTotal . ' 筆') . "\n";
-            $msg .= (' 筆數: ' . ($apiLogTotal - $apiWagersTotal) . ' 筆不相同') . "\n";
-
-            $checkMsg = [
-                'msg' => $msg,
-            ];
-        }
-        return $checkMsg;
     }
 }

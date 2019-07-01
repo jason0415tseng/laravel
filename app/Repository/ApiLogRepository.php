@@ -3,8 +3,6 @@
 namespace App\Repository;
 
 use App\Models\apilog;
-use Log;
-use Curl;
 
 class ApiLogRepository
 {
@@ -14,30 +12,6 @@ class ApiLogRepository
     public function __construct()
     {
         $this->apilog = new apilog;
-    }
-
-    //取資料
-    public function getApiLog($starttime, $from)
-    {
-        $endtime = clone $starttime;
-        $starttime = $starttime->format("Y-m-d\TH:i:s");
-        $endtime = $endtime->format("Y-m-d\TH:i:59");
-
-        $params = [
-            'start' => $starttime,
-            'end' => $endtime,
-            'from' => $from
-        ];
-
-        $urlData = urldecode(http_build_query($params));
-
-        $url = 'http://train.rd6/?' . $urlData;
-
-        $curl = new Curl\Curl();
-
-        $curl->get($url);
-
-        return json_decode($curl->response, true);
     }
 
     //確認資料
