@@ -12,7 +12,7 @@ class ApiLogService
     // 透過 DI 注入 Repository
     public function __construct()
     {
-        $this->apiLogRepo = new ApiLogRepository;
+        $this->apiLogRepository = new ApiLogRepository;
     }
 
     //取得資料
@@ -48,9 +48,9 @@ class ApiLogService
     //確認資料
     public function checkApiLog($apiLogData)
     {
-        $checkData =  $this->apiLogRepo->checkApiLog($apiLogData);
+        $checkData =  $this->apiLogRepository->checkApiLog($apiLogData);
         if (empty($checkData['updateData']) && empty($checkData['insertData'])) {
-            $checkData = false;
+            return false;
         }
         return $checkData;
     }
@@ -59,7 +59,7 @@ class ApiLogService
     public function insertApiLog($insertData)
     {
         if (!empty($insertData)) {
-            $this->apiLogRepo->insertApiLog($insertData);
+            $this->apiLogRepository->insertApiLog($insertData);
         }
     }
 
@@ -67,7 +67,7 @@ class ApiLogService
     public function updateApiLog($updateData)
     {
         if (!empty($updateData)) {
-            $this->apiLogRepo->updateApiLog($updateData);
+            $this->apiLogRepository->updateApiLog($updateData);
         }
     }
 }
