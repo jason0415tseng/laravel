@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Service\ApiLogService;
+use App\Repository\ApiLogRepository;
 
 ini_set('memory_limit', '-1');
 
@@ -18,7 +19,7 @@ class GetApi implements ShouldQueue
     protected $starttime;
     protected $from;
     protected $total;
-    protected $apiLogService;
+    protected $apiLogRepository;
 
     /**
      * Create a new job instance.
@@ -30,7 +31,7 @@ class GetApi implements ShouldQueue
         $this->starttime = $starttime;
         $this->from = 0;
         $this->total = 1;
-        $this->apiLogService = new ApiLogService;
+        $this->apiLogRepository = new ApiLogRepository;
     }
 
     /**
@@ -41,12 +42,12 @@ class GetApi implements ShouldQueue
     public function handle()
     {
         while ($this->from <= $this->total) {
-            $apiLogData = $this->apiLogService->getApiLog($this->starttime, $this->from);
-            if ($apiLogData) {
-                $checkData = $this->apiLogService->checkApiLog($apiLogData);
-                if ($checkData) {
-                    $this->apiLogService->insertApiLog($checkData['insertData']);
-                    $this->apiLogService->updateApiLog($checkData['updateData']);
+            $apiLogData = $this->apiLogRepository->getApiLog($this->starttime, $this->from);
+            if (!empty($apiLogData)) {
+                $checkData = $this->apiLogRepository->checkApiLog($apiLogData);
+                if (!empty($checkData)) {
+                    $this->apiLogRepository->insertApiLog($checkData['insertData']);
+                    $this->apiLogRepository->updateApiLog($checkData['updateData']);
                     $this->total = $apiLogData['hits']['total'];
                     $this->from += 10000;
                 }
