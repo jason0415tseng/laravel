@@ -46,7 +46,7 @@ class ApiLogRepository
     }
 
     //確認資料
-    public function checkApiLog($apiLogData)
+    public function checkData($apiLogData)
     {
         $collection = collect($apiLogData['hits']['hits']);
 
@@ -67,7 +67,7 @@ class ApiLogRepository
     }
 
     //更新資料
-    public function updateApiLog($updateData)
+    public function updateData($updateData)
     {
         foreach ($updateData as $data) {
 
@@ -87,7 +87,7 @@ class ApiLogRepository
     }
 
     //新增資料
-    public function insertApiLog($insertData)
+    public function insertData($insertData)
     {
         foreach (array_chunk($insertData, 500, true) as $dataList) {
 

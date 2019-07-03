@@ -14,7 +14,7 @@ class WagersRepository
     }
 
     //取apiLog資料
-    public function getApiLogList($starttime)
+    public function getApiLog($starttime)
     {
         $endtime = clone $starttime;
         $starttime = $starttime->format("Y-m-d H:i:s");
@@ -37,7 +37,7 @@ class WagersRepository
     }
 
     //確認資料
-    public function checkWagers($apiData)
+    public function checkData($apiData)
     {
         $collection = collect($apiData);
 
@@ -52,7 +52,7 @@ class WagersRepository
     }
 
     //寫入apiWagers資料
-    public function insertWagers($insertData)
+    public function insertData($insertData)
     {
         $insertArray = [];
 
