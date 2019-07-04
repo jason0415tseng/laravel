@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use File;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,7 +14,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\apilog::class,
+        Commands\wagers::class,
+        Commands\RepositoryMakeCommand::class,
     ];
 
     /**
@@ -24,8 +27,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        //log位置
+        $logPath = storage_path('logs/' . date('Ymd'));
+
+        if (!File::isDirectory($logPath)) {
+            File::makeDirectory($logPath, 0777, true);
+        }
+        // 每分鐘執行 
+        $schedule->command('apilog:get')->everyMinute()->appendOutputTo($logPath . '/apilog.log');
+
+        // 每五分鐘執行 
+        $schedule->command('wagers:get')->everyMinute();
     }
 
     /**
@@ -35,7 +47,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

@@ -11,6 +11,8 @@
 |
 */
 
+Auth::routes();
+
 //首頁
 Route::get('/', 'HelloController@index');
 

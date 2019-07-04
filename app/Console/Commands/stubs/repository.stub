@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Repository;
+
+
+class DummyClass
+{
+
+    public function __construct ()
+    {
+
+    }
+
+}
